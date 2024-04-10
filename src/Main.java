@@ -21,18 +21,34 @@ import org.json.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
 import javax.swing.*;
 
 public class Main {
-    public static String vstr = "debug";
-    public static String vcode = "Natasha";
-    public static int vint = 0;
+    // Build Information
+    public static final String vstr = "debug";
+    public static final String vcode = "Natasha";
+    public static final int vint = 0;
 
+    // User Settings
     public static String outpath; //game assets location
     public static String inpath = System.getProperty("user.home") + "/.firestar/"; //game assets location
     public static boolean repatch; //are we in compat mode?
     public static boolean wine; //are we on Linux, MINIX, BSD?
     //public static String psarc; //sdk location
+
+    public class Mod {
+        public String path;
+        public int version = 1;
+        //public int gameversion; //TODO detect a game version and compatibility? // no
+        public int priority = 0;
+        public String friendlyName;
+    }
+
+    // Mods
+    public static List<Mod> Mods;
 
     public static void main(String[] args) {
         // license string
@@ -63,7 +79,19 @@ public class Main {
     }
 
     public static void writeConf(){
+        JSONObject container = new JSONObject();
+        container.put("version", vint);
+        container.put("2048path", outpath);
+        container.put("HDpath", "TODO"); // proposed hd/fury support for ps3, will use very simplified Fast Mode due to less difficulty installing
+        container.put("safemode", repatch);
+        container.put("isUnix", wine);
+        container.put("currentPlaylist", "TODO"); // proposed feature: store separate mod lists in lists/ to load/save later?
 
+        try {
+            Files.write(Paths.get(System.getProperty("user.home") + "/.firestar/firestar.conf"), container.toString().getBytes());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static void loadConf(){

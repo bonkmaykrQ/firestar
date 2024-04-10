@@ -50,7 +50,7 @@ public class Kermit implements ActionListener {
         }
     }
 
-    JDialog frame = new JDialog();;
+    JDialog frame = new JDialog();
     JButton button = new JButton("Next");
     JButton button2 = new JButton("Quit");
     JButton button3 = new JButton("Cancel");

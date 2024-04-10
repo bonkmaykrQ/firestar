@@ -16,9 +16,14 @@
  *     along with this program.  If not, see https://www.gnu.org/licenses/.
  */
 
+import javax.swing.*;
+
 public class MissPiggy {
+    JDialog frame = new JDialog();
     public void MissPiggy() {
         // todo construct contents
         // todo display modlist
+
+
     }
 }
