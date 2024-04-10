@@ -52,14 +52,21 @@ public class Main {
                 "along with this program.  If not, see https://www.gnu.org/licenses/.\n\n\n\n");
 
         //begin
-        // todo create main window
-
         // check and load configs
         File fConf = new File(System.getProperty("user.home") + "/.firestar/firestar.conf");
         if (!fConf.isFile()) {
             new Kermit().setup(fConf); // this is a fresh install, run the OOBE.
+        } else {
+            // todo load modlist
+            new MissPiggy();
         }
+    }
 
-        // todo load modlist and send to MissPiggy
+    public static void writeConf(){
+
+    }
+
+    public static void loadConf(){
+
     }
 }

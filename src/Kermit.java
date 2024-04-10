@@ -138,7 +138,7 @@ public class Kermit implements ActionListener {
                     changePage(Pages.DONE);
                     break;
                 case DONE:
-                    // todo Enable MissPiggy
+                    new MissPiggy();
 
                     page = Pages.AGREEMENT; //set it here since we're disposing of the entire thing
                     frame.dispose();
@@ -345,48 +345,10 @@ public class Kermit implements ActionListener {
                 button3.setVisible(false);frame.remove(button3);
                 dialogText.setVisible(false);frame.remove(dialogText);
 
-                //see if we can safely assume the user's choice for them before we bother asking
-                if(System.getProperty("os.name").equals("Linux")) {Main.wine = true;System.out.println("Assuming we should use WINE based on known system variables.");changePage(Pages.EXPORT_LOCATION);} else
-                if(System.getProperty("os.name").contains("Windows")) {Main.wine = false;System.out.println("Assuming we should NOT use WINE based on known system variables.");changePage(Pages.EXPORT_LOCATION);} else {
+                //check if this is windows or not
+                if(System.getProperty("os.name").contains("Windows")) {Main.wine = false;System.out.println("Assuming we should NOT use WINE based on known system variables.");changePage(Pages.EXPORT_LOCATION);}
+                else {Main.wine = true;System.out.println("Assuming we should use WINE based on known system variables.");changePage(Pages.EXPORT_LOCATION);}
 
-                // real stuff now
-                button.setVisible(true);
-                button.setEnabled(false);
-                button.setBounds(292, 343, 300, 30);
-                frame.add(button);
-
-                button3.setVisible(true);
-                button3.setBounds(0, 343, 292, 30);
-                frame.add(button3);
-
-                dialogText.setVisible(true);
-                dialogText.setHighlighter(null);
-                dialogText.getCaret().setVisible(false);
-                dialogText.setFocusable(false);
-                dialogText.setBounds(0, 40, 592, 150);
-                StyleConstants.setAlignment(align, StyleConstants.ALIGN_CENTER);
-                document.setParagraphAttributes(0, document.getLength(), align, false);
-                dialogText.setText("Firestar was unable to detect your native operating system. Do you use WINE?");
-                frame.add(dialogText);
-
-                buttonNoWine.setBounds(40, 200, 300, 25);
-                buttonHaveWine.setBounds(40, 230, 300, 25);
-                buttonNoWine.setBackground(Color.WHITE);
-                buttonHaveWine.setBackground(Color.WHITE);
-                buttonCompat.setVisible(true);
-                buttonHaveWine.setVisible(true);
-                frame.add(buttonNoWine);
-                frame.add(buttonHaveWine);
-
-                frame.setSize(600, 400);
-                frame.setTitle("Initial Setup");
-                frame.setAlwaysOnTop(true);
-                frame.setDefaultCloseOperation(0);
-                frame.setResizable(false);
-                frame.setLayout(null);
-                frame.setVisible(true);
-                }
-                break;
             case EXPORT_LOCATION:
                 page = Pages.EXPORT_LOCATION;
 
@@ -468,6 +430,45 @@ public class Kermit implements ActionListener {
                 break;
             case DONE:
                 page = Pages.DONE;
+
+                Main.writeConf(); // save changes
+
+                //SERIOUS!!!!!!!!!!!!!! cleanup
+                button.setVisible(false);frame.remove(button);
+                button2.setVisible(false);frame.remove(button2);
+                button3.setVisible(false);frame.remove(button3);
+                button4.setVisible(false);frame.remove(button4);
+                openconfigfolderbutton.setVisible(false);frame.remove(openconfigfolderbutton);
+                pathInput.setVisible(false);frame.remove(pathInput);
+                buttonFast.setVisible(false);frame.remove(buttonFast);
+                buttonCompat.setVisible(false);frame.remove(buttonCompat);
+                buttonHaveWine.setVisible(false);frame.remove(buttonHaveWine);
+                buttonNoWine.setVisible(false);frame.remove(buttonNoWine);
+
+                //congrations, your did it (party time)
+                dialogText.setVisible(true);
+                dialogText.setHighlighter(null);
+                dialogText.getCaret().setVisible(false);
+                dialogText.setFocusable(false);
+                dialogText.setBounds(30, 40, 542, 200);
+                StyleConstants.setAlignment(align, StyleConstants.ALIGN_CENTER);
+                document.setParagraphAttributes(0, document.getLength(), align, false);
+                dialogText.setText("Firestar is ready!\n\n" +
+                        "For technical support, email\nbonkmaykr@screwgravity.net.");
+                frame.add(dialogText);
+
+                button.setVisible(true);
+                button.setBounds(292, 343, 300, 30);
+                button.setText("OK");
+                frame.add(button);
+
+                frame.setSize(600, 400);
+                frame.setTitle("Initial Setup");
+                frame.setAlwaysOnTop(true);
+                frame.setDefaultCloseOperation(0);
+                frame.setResizable(false);
+                frame.setLayout(null);
+                frame.setVisible(true);
                 break;
             default:
                 throw new UnsupportedOperationException("ERROR: Undefined behavior in Kermit.changePage(). Get a programmer!");
