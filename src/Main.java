@@ -30,11 +30,14 @@ public class Main {
 
     public static String path; //game assets location
     public static boolean repatch; //are we in compat mode?
+    public static boolean wine; //are we on Linux, MINIX, BSD?
     //public static String psarc; //sdk location
 
     public static void main(String[] args) {
         // license string
-        System.out.printf("FIRESTAR MOD MANAGER for WipEout 2048\nversion " + vstr + " (codename " + vcode + ")\nCopyright (C) 2024  bonkmaykr\n\nThis program is free software: you can redistribute it and/or modify\n" +
+        System.out.printf("FIRESTAR MOD MANAGER for WipEout 2048\nversion " + vstr + " (codename " + vcode + ")\n" +
+                "JVM host appears to be " + System.getProperty("os.name") +
+                "\nCopyright (C) 2024  bonkmaykr\n\nThis program is free software: you can redistribute it and/or modify\n" +
                 "it under the terms of the GNU General Public License as published by\n" +
                 "the Free Software Foundation, either version 3 of the License, or\n" +
                 "(at your option) any later version.\n" +

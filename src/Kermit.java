@@ -21,7 +21,15 @@ import javax.swing.text.StyleConstants;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
+import java.io.*;
+import java.math.BigInteger;
+import java.net.URL;
+import java.nio.file.*;
+import java.security.*;
+import java.util.concurrent.TimeUnit;
+
+import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
+import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 
 // handles setup window
 public class Kermit implements ActionListener {
@@ -51,6 +59,9 @@ public class Kermit implements ActionListener {
     JRadioButton buttonCompat = new JRadioButton("Compatibility (for consoles)");
     JRadioButton buttonFast = new JRadioButton("Fast Mode (for Vita3K emulator)");
     ButtonGroup radg1 = new ButtonGroup();
+    JRadioButton buttonNoWine = new JRadioButton("No, I use Microsoft Windows");
+    JRadioButton buttonHaveWine = new JRadioButton("Yes, I have a POSIX system with WINE.");
+    ButtonGroup radg2 = new ButtonGroup();
     Pages page = Pages.AGREEMENT;
     javax.swing.text.StyledDocument document = dialogText.getStyledDocument();
     javax.swing.text.SimpleAttributeSet align= new javax.swing.text.SimpleAttributeSet();
@@ -61,6 +72,8 @@ public class Kermit implements ActionListener {
         frame.getContentPane().setBackground(Color.WHITE);
         radg1.add(buttonCompat);
         radg1.add(buttonFast);
+        radg2.add(buttonNoWine);
+        radg2.add(buttonHaveWine);
 
         button.addActionListener(this);
         button2.addActionListener(this);
@@ -68,6 +81,8 @@ public class Kermit implements ActionListener {
         button4.addActionListener(this);
         buttonCompat.addActionListener(this);
         buttonFast.addActionListener(this);
+        buttonNoWine.addActionListener(this);
+        buttonHaveWine.addActionListener(this);
 
         changePage(Pages.AGREEMENT);
     }
@@ -87,17 +102,22 @@ public class Kermit implements ActionListener {
                     break;
                 case EXPORT_MODE:
                     button.setVisible(false);frame.remove(button);
-                    button2.setVisible(false);frame.remove(button3);
+                    button3.setVisible(false);frame.remove(button3);
                     dialogText.setVisible(false);frame.remove(dialogText);
                     buttonCompat.setVisible(false);frame.remove(buttonCompat);
                     buttonFast.setVisible(false);frame.remove(buttonFast);
-                    if (Main.repatch) {changePage(Pages.SDK_INSTALL);} else {changePage(Pages.EXPORT_LOCATION);}
+                    if (Main.repatch) {
+                        changePage(Pages.SDK_INSTALL);
+                    } else {changePage(Pages.EXPORT_LOCATION);}
                     break;
                 case SDK_INSTALL:
                     break;
                 case SDK_FAILURE:
                     break;
                 case WHAT_OS:
+                    button.setVisible(false);frame.remove(button);
+                    button3.setVisible(false);frame.remove(button3);
+                    dialogText.setVisible(false);frame.remove(dialogText);
                     break;
                 case EXPORT_LOCATION:
                     changePage(Pages.IMPORT_LOCATION);
@@ -145,10 +165,16 @@ public class Kermit implements ActionListener {
         } else if (actionEvent.getSource() == buttonFast) {
             Main.repatch = false;
             button.setEnabled(true);
+        } else if (actionEvent.getSource() == buttonHaveWine) {
+            Main.wine = true;
+            button.setEnabled(true);
+        } else if (actionEvent.getSource() == buttonNoWine) {
+            Main.wine = false;
+            button.setEnabled(true);
         }
     }
 
-    public void changePage(Pages GoTo) {
+    public void changePage(Pages GoTo){
         switch (GoTo) {
             case AGREEMENT:
                 page = Pages.AGREEMENT;
@@ -229,16 +255,6 @@ public class Kermit implements ActionListener {
             case SDK_INSTALL:
                 page = Pages.SDK_INSTALL;
 
-                button.setVisible(true);
-                button.setBounds(292, 343, 300, 30);
-                button.addActionListener(this);
-                frame.add(button);
-
-                button3.setVisible(true);
-                button3.setBounds(0, 343, 292, 30);
-                button3.addActionListener(this);
-                frame.add(button3);
-
                 dialogText.setVisible(true);
                 dialogText.setHighlighter(null);
                 dialogText.getCaret().setVisible(false);
@@ -246,7 +262,7 @@ public class Kermit implements ActionListener {
                 dialogText.setBounds(0, 40, 592, 300);
                 StyleConstants.setAlignment(align, StyleConstants.ALIGN_CENTER);
                 document.setParagraphAttributes(0, document.getLength(), align, false);
-                dialogText.setText("it works!");
+                dialogText.setText("Firestar is downloading important dependencies. Please wait."); //some kind of race condition prevents this from displaying?
                 frame.add(dialogText);
 
                 frame.setSize(600, 400);
@@ -256,12 +272,102 @@ public class Kermit implements ActionListener {
                 frame.setResizable(false);
                 frame.setLayout(null);
                 frame.setVisible(true);
+
+                //md5 checksum 4ef707b2dba6944a726d46950aaddfd2
+                try {
+                    File downloadLocationDir = new File(System.getProperty("user.home") + "/.firestar/");
+                    File downloadLocation = new File(System.getProperty("user.home") + "/.firestar/psp2psarc.exe");
+                    downloadLocationDir.mkdirs();
+                    if (!downloadLocation.isFile()) {
+                        downloadLocation.createNewFile();
+                    }
+                    BufferedInputStream in = new BufferedInputStream(new URL("http://bonkmaykr.worlio.com/http/firestar/psp2psarc.exe").openStream());
+                    //FileOutputStream downloadOutput = new FileOutputStream(new File(System.getProperty("user.home") + "/.firestar/psp2psarc.exe"));
+                    Files.copy(in, Paths.get(System.getProperty("user.home") + "/.firestar/psp2psarc.exe"), StandardCopyOption.REPLACE_EXISTING);
+
+                    int tests = 0;
+                    String checksum ="";
+                    while (tests < 60 /*while(true)*/) {
+                        byte[] hash = MessageDigest.getInstance("MD5").digest(Files.readAllBytes(Paths.get(System.getProperty("user.home") + "/.firestar/psp2psarc.exe")));
+                        checksum = new BigInteger(1, hash).toString(16);
+                        System.out.println("Downloaded psp2psarc.exe successfully.");
+                        if(checksum.equals("4ef707b2dba6944a726d46950aaddfd2")) {changePage(Pages.WHAT_OS);break;}
+                        Thread.sleep(20);
+                        tests++;
+                    }
+
+                    if(checksum.equals("4ef707b2dba6944a726d46950aaddfd2")) {changePage(Pages.WHAT_OS);} else {
+                        System.out.println("Failed to download PSARC tool because the connection stalled.");
+                        dialogText.setText("Firestar tried to download important files needed for operation, but they were either corrupted or did not finish.\n" + "\n\nYou will need to manually install psp2psarc.exe into your Firestar config folder after setup is complete! Or, you can retry the download later.");
+                        //frame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+
+                        button.setVisible(true);
+                        button.setBounds(292, 343, 300, 30);
+                        frame.add(button);
+                    }
+                } catch (Exception e) {
+                    System.out.println("Failed to download PSARC tool due to an internal error:" + e.getMessage());
+                    dialogText.setText("An error has occured.\n" + e.getMessage() + "\n\nYou will need to manually install psp2psarc.exe into your Firestar config folder after setup is complete!!!");
+                    //frame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+
+                    button.setVisible(true);
+                    button.setBounds(292, 343, 300, 30);
+                    frame.add(button);
+                }
+
                 break;
             case SDK_FAILURE:
-                page = Pages.SDK_FAILURE;
+                page = Pages.SDK_FAILURE; //unused
                 break;
             case WHAT_OS:
                 page = Pages.WHAT_OS;
+
+                //do window clear here since the page is never called by the event handler
+                button.setVisible(false);frame.remove(button);
+                button3.setVisible(false);frame.remove(button3);
+                dialogText.setVisible(false);frame.remove(dialogText);
+
+                //see if we can safely assume the user's choice for them before we bother asking
+                if(System.getProperty("os.name").equals("Linux")) {Main.wine = true;changePage(Pages.EXPORT_LOCATION);} else
+                if(System.getProperty("os.name").contains("Windows")) {Main.wine = false;changePage(Pages.EXPORT_LOCATION);} else {
+
+                // real stuff now
+                button.setVisible(true);
+                button.setEnabled(false);
+                button.setBounds(292, 343, 300, 30);
+                frame.add(button);
+
+                button3.setVisible(true);
+                button3.setBounds(0, 343, 292, 30);
+                frame.add(button3);
+
+                dialogText.setVisible(true);
+                dialogText.setHighlighter(null);
+                dialogText.getCaret().setVisible(false);
+                dialogText.setFocusable(false);
+                dialogText.setBounds(0, 40, 592, 150);
+                StyleConstants.setAlignment(align, StyleConstants.ALIGN_CENTER);
+                document.setParagraphAttributes(0, document.getLength(), align, false);
+                dialogText.setText("Firestar was unable to detect your native operating system. Do you use WINE?");
+                frame.add(dialogText);
+
+                buttonNoWine.setBounds(40, 200, 300, 25);
+                buttonHaveWine.setBounds(40, 230, 300, 25);
+                buttonNoWine.setBackground(Color.WHITE);
+                buttonHaveWine.setBackground(Color.WHITE);
+                buttonCompat.setVisible(true);
+                buttonHaveWine.setVisible(true);
+                frame.add(buttonNoWine);
+                frame.add(buttonHaveWine);
+
+                frame.setSize(600, 400);
+                frame.setTitle("Initial Setup");
+                frame.setAlwaysOnTop(true);
+                frame.setDefaultCloseOperation(0);
+                frame.setResizable(false);
+                frame.setLayout(null);
+                frame.setVisible(true);
+                }
                 break;
             case EXPORT_LOCATION:
                 page = Pages.EXPORT_LOCATION;
