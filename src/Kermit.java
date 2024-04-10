@@ -62,6 +62,8 @@ public class Kermit implements ActionListener {
     JRadioButton buttonNoWine = new JRadioButton("No, I use Microsoft Windows");
     JRadioButton buttonHaveWine = new JRadioButton("Yes, I have a POSIX system with WINE.");
     ButtonGroup radg2 = new ButtonGroup();
+    JTextField pathInput = new JTextField();
+    JButton openconfigfolderbutton = new JButton("Open Firestar Folder");
     Pages page = Pages.AGREEMENT;
     javax.swing.text.StyledDocument document = dialogText.getStyledDocument();
     javax.swing.text.SimpleAttributeSet align= new javax.swing.text.SimpleAttributeSet();
@@ -83,6 +85,7 @@ public class Kermit implements ActionListener {
         buttonFast.addActionListener(this);
         buttonNoWine.addActionListener(this);
         buttonHaveWine.addActionListener(this);
+        openconfigfolderbutton.addActionListener(this);
 
         changePage(Pages.AGREEMENT);
     }
@@ -120,9 +123,18 @@ public class Kermit implements ActionListener {
                     dialogText.setVisible(false);frame.remove(dialogText);
                     break;
                 case EXPORT_LOCATION:
+                    button.setVisible(false);frame.remove(button);
+                    button3.setVisible(false);frame.remove(button3);
+                    dialogText.setVisible(false);frame.remove(dialogText);
+                    buttonNoWine.setVisible(false);frame.remove(buttonNoWine);
+                    buttonHaveWine.setVisible(false);frame.remove(buttonHaveWine);
                     changePage(Pages.IMPORT_LOCATION);
                     break;
                 case IMPORT_LOCATION:
+                    Main.outpath = pathInput.getText();
+                    pathInput.setText("");
+                    dialogText.setVisible(false);frame.remove(dialogText);
+                    pathInput.setVisible(false);frame.remove(pathInput);
                     changePage(Pages.DONE);
                     break;
                 case DONE:
@@ -171,6 +183,12 @@ public class Kermit implements ActionListener {
         } else if (actionEvent.getSource() == buttonNoWine) {
             Main.wine = false;
             button.setEnabled(true);
+        }else if (actionEvent.getSource() == openconfigfolderbutton) {
+            try {
+                Desktop.getDesktop().open(new File(Main.inpath));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -328,8 +346,8 @@ public class Kermit implements ActionListener {
                 dialogText.setVisible(false);frame.remove(dialogText);
 
                 //see if we can safely assume the user's choice for them before we bother asking
-                if(System.getProperty("os.name").equals("Linux")) {Main.wine = true;changePage(Pages.EXPORT_LOCATION);} else
-                if(System.getProperty("os.name").contains("Windows")) {Main.wine = false;changePage(Pages.EXPORT_LOCATION);} else {
+                if(System.getProperty("os.name").equals("Linux")) {Main.wine = true;System.out.println("Assuming we should use WINE based on known system variables.");changePage(Pages.EXPORT_LOCATION);} else
+                if(System.getProperty("os.name").contains("Windows")) {Main.wine = false;System.out.println("Assuming we should NOT use WINE based on known system variables.");changePage(Pages.EXPORT_LOCATION);} else {
 
                 // real stuff now
                 button.setVisible(true);
@@ -371,9 +389,82 @@ public class Kermit implements ActionListener {
                 break;
             case EXPORT_LOCATION:
                 page = Pages.EXPORT_LOCATION;
+
+                button.setVisible(true);
+                button.setBounds(292, 343, 300, 30);
+                frame.add(button);
+
+                button3.setVisible(true);
+                button3.setBounds(0, 343, 292, 30);
+                frame.add(button3);
+
+                dialogText.setVisible(true);
+                dialogText.setHighlighter(null);
+                dialogText.getCaret().setVisible(false);
+                dialogText.setFocusable(false);
+                dialogText.setBounds(30, 40, 542, 150);
+                StyleConstants.setAlignment(align, StyleConstants.ALIGN_CENTER);
+                document.setParagraphAttributes(0, document.getLength(), align, false);
+                dialogText.setText("Now enter the location of your game's asset folder.\n" +
+                        "This can be your install directory on your emulator, your repatch folder on your Vita memory card, or a temporary directory you'd like to copy over yourself.\n\n" +
+                        "PLEASE DO NOT POINT THIS DIRECTLY TO WHERE THE GAME IS INSTALLED ON A REAL VITA\n" +
+                        "(ux0:/app, ux0:/patch or ux0:/addcont)\n" +
+                        "AS THIS WILL CORRUPT YOUR GAME AND YOU WILL NEED TO REINSTALL IT.\nDoing this on an emulator is fine.");
+                frame.add(dialogText);
+
+                pathInput.setVisible(true);
+                pathInput.setBounds(30,200,542,30);
+                frame.add(pathInput);
+
+                frame.setSize(600, 400);
+                frame.setTitle("Initial Setup");
+                frame.setAlwaysOnTop(true);
+                frame.setDefaultCloseOperation(0);
+                frame.setResizable(false);
+                frame.setLayout(null);
+                frame.setVisible(true);
                 break;
             case IMPORT_LOCATION:
+                // I think for Fast Mode this step may be unnecessary? look into alternatives perhaps
+
                 page = Pages.IMPORT_LOCATION;
+                pathInput.setVisible(false); //GET OUT OF MY HEAD
+
+                button.setVisible(true);
+                button.setBounds(292, 343, 300, 30);
+                frame.add(button);
+
+                button3.setVisible(true);
+                button3.setBounds(0, 343, 292, 30);
+                frame.add(button3);
+
+                dialogText.setVisible(true);
+                dialogText.setHighlighter(null);
+                dialogText.getCaret().setVisible(false);
+                dialogText.setFocusable(false);
+                dialogText.setBounds(30, 40, 542, 200);
+                StyleConstants.setAlignment(align, StyleConstants.ALIGN_CENTER);
+                document.setParagraphAttributes(0, document.getLength(), align, false);
+                dialogText.setText("You're almost done!\n\n" +
+                        "Please move all of your original PSARC files for WipEout (base game, patches, and HD Fury DLC) to the config folder and press Next when you are done.\n" +
+                        "Firestar will use these to generate new PSARCs in place of the old ones.\n\n" +
+                        "If you play on a real console, you will need to use VitaShell (remember to \"Open Decrypted\"). Check /app, /patch, and /addcont. Getting all of them is important since WipEout always loads them in a specific order and which ones you have determines where Firestar can compress the modified files to.");
+                frame.add(dialogText);
+
+                //pathInput.setVisible(true);
+                //pathInput.setBounds(30,200,542,30);
+                //frame.add(pathInput);
+                openconfigfolderbutton.setVisible(true);
+                openconfigfolderbutton.setBounds(30,250,542,30);
+                frame.add(openconfigfolderbutton);
+
+                frame.setSize(600, 400);
+                frame.setTitle("Initial Setup");
+                frame.setAlwaysOnTop(true);
+                frame.setDefaultCloseOperation(0);
+                frame.setResizable(false);
+                frame.setLayout(null);
+                frame.setVisible(true);
                 break;
             case DONE:
                 page = Pages.DONE;

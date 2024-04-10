@@ -28,7 +28,8 @@ public class Main {
     public static String vcode = "Natasha";
     public static int vint = 0;
 
-    public static String path; //game assets location
+    public static String outpath; //game assets location
+    public static String inpath = System.getProperty("user.home") + "/.firestar/"; //game assets location
     public static boolean repatch; //are we in compat mode?
     public static boolean wine; //are we on Linux, MINIX, BSD?
     //public static String psarc; //sdk location
