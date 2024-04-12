@@ -23,7 +23,7 @@ import java.awt.event.ActionListener;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.List;
+import java.util.*;
 import javax.swing.*;
 
 public class Main {
@@ -45,10 +45,13 @@ public class Main {
         //public int gameversion; //TODO detect a game version and compatibility? // no
         public int priority = 0;
         public String friendlyName;
+        public String game; //TODO for multi game support
+        public int loaderversion = 0; //minimum required vint or feature level from Firestar
+        public String author; // if null, "Author is unknown."
     }
 
     // Mods
-    public static List<Mod> Mods;
+    public static List<Mod> Mods = new ArrayList<Mod>();
 
     public static void main(String[] args) {
         // license string
@@ -74,7 +77,7 @@ public class Main {
             new Kermit().setup(fConf); // this is a fresh install, run the OOBE.
         } else {
             // todo load modlist
-            new MissPiggy();
+            new MissPiggy().Action(); // Quick! Start singing Firework by Katy Perry! (or open the main window i guess...)
         }
     }
 

@@ -138,7 +138,7 @@ public class Kermit implements ActionListener {
                     changePage(Pages.DONE);
                     break;
                 case DONE:
-                    new MissPiggy();
+                    new MissPiggy().Action();
 
                     page = Pages.AGREEMENT; //set it here since we're disposing of the entire thing
                     frame.dispose();
