@@ -18,26 +18,33 @@
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 
-public class MissPiggy {
+public class MissPiggy implements ActionListener {
     JFrame frame = new JFrame();
     JPanel frameContainer;
     JPanel actionsContainer;
     JPanel descriptionContainer;
 
-    JMenuBar menuBar;
-    JMenu menu;
-    JMenuItem menuItem;
+    //JPanel menuBarContainerPanel = new JPanel();
+    public JMenuBar menuBar;
+    public JMenu fileMenu;
+    public JMenu toolsMenu;
+    public JMenu helpMenu;
+    //JMenuItem menuItem;
+
     JScrollPane modListScrollContainer;
-    JList<String/*Main.Mod*/> modList;
+    public JList<String/*Main.Mod*/> modList;
     private JButton toggleButton;
     private JButton moveUpButton;
     private JButton deleteButton1;
     private JButton moveDownButton;
     private JButton optionsButton;
     private JButton importButton;
-    private JButton generateButton;
+    private JButton deployButton;
 
     private int selectedItem;
 
@@ -59,10 +66,37 @@ public class MissPiggy {
         Main.Mods.add(testModEntry);
         ///-/////-///
 
-        InitializeModListInGUI();
+        // populate menu bar
+        menuBar = new JMenuBar();
+        fileMenu = new JMenu("File");
+        toolsMenu = new JMenu("Tools");
+        helpMenu = new JMenu("Help");
+
+        fileMenu.add(new JMenuItem("Deploy All Mods"));
+        fileMenu.add(new JMenuItem("Import Mod..."));
+        fileMenu.add(new JMenuItem("Remove All"));
+        fileMenu.add(new JSeparator());
+        fileMenu.add(new JMenuItem("Options"));
+        fileMenu.add(new JMenuItem("Quit"));
+
+        toolsMenu.add(new JMenuItem("Edit Metadata")); // disabled if a mod is not selected from the list
+        toolsMenu.add(new JMenuItem("Generate New Mod from Folder..."));
+
+        helpMenu.add(new JMenuItem("About Firestar"));
+
+        menuBar.add(fileMenu);
+        menuBar.add(toolsMenu);
+        menuBar.add(helpMenu);
+        menuBar.setVisible(true);
+        frame.setJMenuBar(menuBar);
 
         frame.add(frameContainer); // initialize window contents -- will be handled by IntelliJ IDEA
 
+        InitializeModListInGUI(); // present mod list
+
+        fileMenu.getItem(5).addActionListener(this);
+
+        // display window
         frame.setSize(800, 600); // 1280 800
         frame.setTitle("Firestar Mod Manager");
         frame.setResizable(true);
@@ -80,7 +114,9 @@ public class MissPiggy {
         int i = 0;
         System.out.println("Initializing modList to GUI with length of" + Main.Mods.size() + "units"); //debug
         while (i < Main.Mods.size()) {
-            modList.add(new JLabel(Main.Mods.get(i).friendlyName));
+            JLabel label = new JLabel(Main.Mods.get(i).friendlyName);
+            label.setVisible(true);
+            modList.add(label);
 
             //debug
             if (Main.Mods.get(i).author == null) {Main.Mods.get(i).author = "Anonymous";}
@@ -88,5 +124,10 @@ public class MissPiggy {
 
             i++;
         }
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent actionEvent) {
+        if (actionEvent.getSource() == fileMenu.getItem(5)) {System.exit(0);}
     }
 }
