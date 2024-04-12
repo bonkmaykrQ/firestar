@@ -94,7 +94,14 @@ public class MissPiggy implements ActionListener {
 
         InitializeModListInGUI(); // present mod list
 
+        fileMenu.getItem(0).addActionListener(this);
+        fileMenu.getItem(1).addActionListener(this);
+        fileMenu.getItem(2).addActionListener(this);
+        fileMenu.getItem(4).addActionListener(this);
         fileMenu.getItem(5).addActionListener(this);
+        toolsMenu.getItem(0).addActionListener(this);
+        toolsMenu.getItem(1).addActionListener(this);
+        helpMenu.getItem(0).addActionListener(this);
 
         // display window
         frame.setSize(800, 600); // 1280 800
@@ -109,6 +116,8 @@ public class MissPiggy implements ActionListener {
         // cleanup
         modList.clearSelection();
         modList.removeAll();
+
+        // todo this needs fixing before we can map it to Main.Mods and finish the other functionality around it
 
         // add text entry for each
         int i = 0;
@@ -128,6 +137,41 @@ public class MissPiggy implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        if (actionEvent.getSource() == fileMenu.getItem(5)) {System.exit(0);}
+        if (actionEvent.getSource() == fileMenu.getItem(5)) {System.exit(0);} else
+        if (actionEvent.getSource() == fileMenu.getItem(0)) {deployModGUI();} else
+        if (actionEvent.getSource() == fileMenu.getItem(1)) {importModGUI();} else
+        if (actionEvent.getSource() == fileMenu.getItem(2)) {removeAllGUI();} else
+        if (actionEvent.getSource() == fileMenu.getItem(4)) {optionsGUI();}
+    }
+
+    // Will likely split the below functions into separate classes to work with intellij GUI designer.
+
+    public void deployModGUI() {
+        // todo dialog that monitors psarc progress, handles file transfers, etc
+        // could prevent closing program during this process? (may also be unnecessary)
+    }
+
+    public void importModGUI() {
+        // todo call system shell to request file picker
+    }
+
+    public void removeAllGUI() {
+        // todo warning dialog that nukes list when Yes is clicked
+    }
+
+    public void optionsGUI() {
+        // todo settings page w/ reset switch
+    }
+
+    public void generatorGUI() {
+        // todo mod packer
+    }
+
+    public void metaEditorGUI() {
+        // todo tag editor
+    }
+
+    public void aboutGUI() {
+        // todo about page
     }
 }
