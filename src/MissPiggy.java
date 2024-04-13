@@ -109,6 +109,7 @@ public class MissPiggy implements ActionListener {
         frame.setResizable(true);
         frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
         frame.setLayout(new GridLayout());
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
 
@@ -141,7 +142,8 @@ public class MissPiggy implements ActionListener {
         if (actionEvent.getSource() == fileMenu.getItem(0)) {deployModGUI();} else
         if (actionEvent.getSource() == fileMenu.getItem(1)) {importModGUI();} else
         if (actionEvent.getSource() == fileMenu.getItem(2)) {removeAllGUI();} else
-        if (actionEvent.getSource() == fileMenu.getItem(4)) {optionsGUI();}
+        if (actionEvent.getSource() == fileMenu.getItem(4)) {optionsGUI();} else
+        if (actionEvent.getSource() == helpMenu.getItem(0)) {new Rowlf().displayAboutScreen();}
     }
 
     // Will likely split the below functions into separate classes to work with intellij GUI designer.

@@ -268,6 +268,7 @@ public class Kermit implements ActionListener {
                 frame.setDefaultCloseOperation(0);
                 frame.setResizable(false);
                 frame.setLayout(null);
+                frame.setLocationRelativeTo(null);
                 frame.setVisible(true);
                 break;
             case SDK_INSTALL:

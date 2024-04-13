@@ -28,7 +28,7 @@ import javax.swing.*;
 
 public class Main {
     // Build Information
-    public static final String vstr = "debug";
+    public static final String vstr = "PREALPHA";
     public static final String vcode = "Natasha";
     public static final int vint = 0;
 
@@ -57,6 +57,7 @@ public class Main {
         // license string
         System.out.printf("FIRESTAR MOD MANAGER for WipEout 2048\nversion " + vstr + " (codename " + vcode + ")\n" +
                 "JVM host appears to be " + System.getProperty("os.name") +
+                "\nRunning from " + System.getProperty("user.dir") +
                 "\nCopyright (C) 2024  bonkmaykr\n\nThis program is free software: you can redistribute it and/or modify\n" +
                 "it under the terms of the GNU General Public License as published by\n" +
                 "the Free Software Foundation, either version 3 of the License, or\n" +
