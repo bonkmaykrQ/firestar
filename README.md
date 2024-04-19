@@ -1,6 +1,6 @@
 ![](https://files.worlio.com/users/bonkmaykr/http/git/embed/firestar.png)
 
-# about 10% complete (basic frontend in progress, nonfunctional)
+# about 30% complete (basic frontend in progress, nonfunctional)
 
 Firestar is a mod manager for WipEout 2048 which automatically handles sorting mods by priority and repacking game assets based on selected add-on packs. It runs on a desktop/laptop computer and aims to allow easy installation of mods for users who have only a surface level understanding of hacking the PSVita.  
 TODO: modlist window screenshot

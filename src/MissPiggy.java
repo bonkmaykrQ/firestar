@@ -17,9 +17,13 @@
  */
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 
 import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 
@@ -37,7 +41,7 @@ public class MissPiggy implements ActionListener {
     //JMenuItem menuItem;
 
     JScrollPane modListScrollContainer;
-    public JList<String/*JLabel*/> modList;
+    public JList<String> modList;
     private JButton toggleButton;
     private JButton moveUpButton;
     private JButton deleteButton1;
@@ -45,6 +49,7 @@ public class MissPiggy implements ActionListener {
     private JButton optionsButton;
     private JButton importButton;
     private JButton deployButton;
+    private JTextPane descriptionField;
 
     private int selectedItem;
 
@@ -54,16 +59,29 @@ public class MissPiggy implements ActionListener {
         // todo display modlist
 
         /// DEBUG ///
-        Main.Mod testModEntry = /*entryPoint*/new Main().new Mod(); //this is retarded? we're making a new object of a certain type, why the fuck do you care where it comes from? static or regardless??
-        testModEntry.friendlyName = "Example Mod";
+        Main.Mod testModEntry = new Main().new Mod(); //this is retarded? we're making a new object of a certain type, why the fuck do you care where it comes from? static or regardless??
+        testModEntry.friendlyName = "Example Mod 1";
         testModEntry.game = "2048";
-        testModEntry.path = "unused";
+        testModEntry.path = "/home/bonkyboo/madarao_sneaky2_square.png"; //used to test file sizes
         testModEntry.version = 1;
-        testModEntry.priority = 0; //might discard this in favor of the list index for simplicity
-        testModEntry.loaderversion = 0;
+        //testModEntry.priority = 0; //will discard this in favor of the list index for simplicity
         Main.Mods.add(testModEntry);
-        Main.Mods.add(testModEntry);
-        Main.Mods.add(testModEntry);
+        Main.Mod testModEntry2 = new Main().new Mod();
+        testModEntry2.friendlyName = "Example Mod 2";
+        testModEntry2.author = "Daniel Chang";
+        testModEntry2.game = "2048";
+        testModEntry2.path = "/home/bonkyboo/chengou.mp4";
+        testModEntry2.version = 1;
+        testModEntry2.loaderversion = 0;
+        Main.Mods.add(testModEntry2);
+        Main.Mod testModEntry3 = new Main().new Mod();
+        testModEntry3.friendlyName = "Example Mod 3";
+        testModEntry3.author = "John Dekka";
+        testModEntry3.game = "2048";
+        testModEntry3.path = "/home/bonkyboo/round2.mp4";
+        testModEntry3.version = 1;
+        testModEntry3.loaderversion = 0;
+        Main.Mods.add(testModEntry3);
         ///-/////-///
 
         // populate menu bar
@@ -103,8 +121,42 @@ public class MissPiggy implements ActionListener {
         toolsMenu.getItem(1).addActionListener(this);
         helpMenu.getItem(0).addActionListener(this);
 
+        descriptionField.getDocument().putProperty("filterNewlines", Boolean.FALSE);
+        modList.addListSelectionListener(e -> {
+            String authorDisplay;
+            File pathReference = new File(Main.Mods.get(modList.getSelectedIndex()).path);
+            DecimalFormat df = new DecimalFormat("##.##");
+            df.setRoundingMode(RoundingMode.UP);
+            float modFileSize = pathReference.length(); //precise units
+            String modFileSizeStr = String.valueOf(modFileSize);
+            String modFileSizeUnits = "bytes";
+            if (pathReference.length() >= 1024) {
+                modFileSizeStr = String.valueOf(df.format(modFileSize / 1024));
+                modFileSizeUnits = "Kilobytes";
+            }
+            if (pathReference.length() >= 1024 * 1024) {
+                modFileSizeStr = String.valueOf(df.format(modFileSize / (1024 * 1024)));
+                modFileSizeUnits = "Megabytes";
+            }
+            if (pathReference.length() >= 1024 * 1024 * 1024) {
+                modFileSizeStr = String.valueOf(df.format(modFileSize / (1024 * 1024 * 1024)));
+                modFileSizeUnits = "Gigabytes";
+            }
+            if (Main.Mods.get(modList.getSelectedIndex()).author == null) {
+                authorDisplay = "an Unknown Author";
+            } else {
+                authorDisplay = Main.Mods.get(modList.getSelectedIndex()).author;
+            }
+            descriptionField.setText(
+                "\"" + Main.Mods.get(modList.getSelectedIndex()).friendlyName + "\"\n" +
+                "by " + authorDisplay + "\n\n" +
+                "Version " + Main.Mods.get(modList.getSelectedIndex()).version + "\n" +
+                        modFileSizeStr + " " + modFileSizeUnits + " in size"
+        );});
+
         // display window
         frame.setSize(800, 600); // 1280 800
+        frame.setMinimumSize(new Dimension(640,480));
         frame.setTitle("Firestar Mod Manager");
         frame.setResizable(true);
         frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -115,6 +167,7 @@ public class MissPiggy implements ActionListener {
 
     public void InitializeModListInGUI() { // i really wanted this to be "lights, camera, action" but the code organizing kept getting stupider and stupider so i gave up
         // cleanup
+        descriptionField.setText("Select a mod from the list on the right to view more details, or to make changes to your installation.");
         modList.clearSelection();
         modList.removeAll();
         modList.setVisibleRowCount(Main.Mods.size());
@@ -125,20 +178,22 @@ public class MissPiggy implements ActionListener {
         // add text entry for each
         int i = 0;
         /*JLabel[]*/String[] contents = new String[Main.Mods.size()];
-        System.out.println("Initializing modList to GUI with length of" + Main.Mods.size() + "units"); //debug
+        System.out.println("Initializing modList to GUI with length of " + Main.Mods.size() + "units"); //debug
         while (i < Main.Mods.size()) {
-            //JLabel label = new JLabel(Main.Mods.get(i).friendlyName);
-            //label.setVisible(true);
-            //contents[i] = label; //modList.add(label);
             contents[i] = Main.Mods.get(i).friendlyName;
 
             //debug
-            if (Main.Mods.get(i).author == null) {Main.Mods.get(i).author = "Anonymous";}
-            System.out.println("Added " + Main.Mods.get(i).friendlyName + " by " + Main.Mods.get(i).author);
+            String authorDisplay;
+            if (Main.Mods.get(i).author == null) {authorDisplay = "Anonymous";} else {authorDisplay = "\"" + Main.Mods.get(i).author + "\"";}
+            System.out.println("Added " + Main.Mods.get(i).friendlyName + " by " + authorDisplay);
 
             i++;
         }
         modList.setListData(contents);
+    }
+
+    private ListSelectionListener whenItemSelected() {
+        return null;
     }
 
     @Override

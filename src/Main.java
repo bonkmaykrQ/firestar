@@ -40,10 +40,10 @@ public class Main {
     //public static String psarc; //sdk location
 
     public class Mod {
-        public String path;
+        public String path; // file name
         public int version = 1;
         //public int gameversion; //TODO detect a game version and compatibility? // no
-        public int priority = 0;
+        public int priority = 0; //unused
         public String friendlyName;
         public String game; //TODO for multi game support
         public int loaderversion = 0; //minimum required vint or feature level from Firestar
