@@ -32,7 +32,10 @@
         <children>
           <component id="d80ff" class="javax.swing.JList" binding="modList">
             <constraints/>
-            <properties/>
+            <properties>
+              <foreground color="-16777216"/>
+              <valueIsAdjusting value="false"/>
+            </properties>
             <clientProperties>
               <html.disable class="java.lang.Boolean" value="true"/>
             </clientProperties>

@@ -37,7 +37,7 @@ public class MissPiggy implements ActionListener {
     //JMenuItem menuItem;
 
     JScrollPane modListScrollContainer;
-    public JList<String/*Main.Mod*/> modList;
+    public JList<String/*JLabel*/> modList;
     private JButton toggleButton;
     private JButton moveUpButton;
     private JButton deleteButton1;
@@ -117,16 +117,20 @@ public class MissPiggy implements ActionListener {
         // cleanup
         modList.clearSelection();
         modList.removeAll();
+        modList.setVisibleRowCount(Main.Mods.size());
+        modList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         // todo this needs fixing before we can map it to Main.Mods and finish the other functionality around it
 
         // add text entry for each
         int i = 0;
+        /*JLabel[]*/String[] contents = new String[Main.Mods.size()];
         System.out.println("Initializing modList to GUI with length of" + Main.Mods.size() + "units"); //debug
         while (i < Main.Mods.size()) {
-            JLabel label = new JLabel(Main.Mods.get(i).friendlyName);
-            label.setVisible(true);
-            modList.add(label);
+            //JLabel label = new JLabel(Main.Mods.get(i).friendlyName);
+            //label.setVisible(true);
+            //contents[i] = label; //modList.add(label);
+            contents[i] = Main.Mods.get(i).friendlyName;
 
             //debug
             if (Main.Mods.get(i).author == null) {Main.Mods.get(i).author = "Anonymous";}
@@ -134,6 +138,7 @@ public class MissPiggy implements ActionListener {
 
             i++;
         }
+        modList.setListData(contents);
     }
 
     @Override
