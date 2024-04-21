@@ -6,8 +6,8 @@ Firestar is a mod manager for WipEout 2048 which automatically handles sorting m
 TODO: modlist window screenshot
   
 # System Requirements
-- You will need a computer running Microsoft Windows, or POSIX-compliant desktop operating system such as Linux, BSD, or MINIX (Firestar does not run on the PSVita). ***Wayland support has not been tested.***
-- You will also need the Java Runtime Environment installed, at least version 17 or newer.
+- You will need a computer running Microsoft Windows, or any POSIX-compliant desktop operating system such as Linux, BSD, or MINIX (Firestar does not run directly on the PSVita). ***Wayland support has not been tested.***
+- You will also need the Java Runtime Environment installed, at least version 17 or newer. Non-Windows systems will require WINE to be installed for some functionality.
 - Please run Firestar on an EXT or NTFS partition as some of the larger file operations it performs may cause glitches in certain filesystems used on memory cards. Do NOT install Firestar directly to your PSVita's storage.
 
 # Mod File Structure
@@ -20,7 +20,7 @@ TODO: More details will be provided once I/O routines are completed.
 ## What is the difference between Compatibility Mode and Fast Mode?
 Fast Mode is the most intuitive solution. It simply unpacks all of the assets into a folder for the game to read. This makes it trivial to go back and modify it later without repacking anything and it means you don't need stolen Sony-confidential equipment. However, PSVita and PSTV memory cards use the exFAT filesystem which really does not play nice with WipEout assets and causes all sorts of glitches, so using a genuine PSARC is an absolute necessity when playing on a real console. Compatibility mode uses a real PSARC tool to try and create mod files as similar to the original game files as possible and create minimal friction with the game engine. 
 
-## (Linux Users) Do I need WINE?
+## (Linux Users) Do I need WINE? And why?
 Only if you use Compatibility Mode. psp2psarc.exe is a Windows-only tool so we call WINE internally when needed, but Firestar itself will run on any desktop platform with a compliant Java runtime.
 
 ## Why do I need a leaked Playstation SDK?
