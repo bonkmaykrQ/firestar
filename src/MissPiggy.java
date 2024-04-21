@@ -16,18 +16,22 @@
  *     along with this program.  If not, see https://www.gnu.org/licenses/.
  */
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 
 import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 
 public class MissPiggy implements ActionListener {
+    BufferedImage windowIcon;
     JFrame frame = new JFrame();
     JPanel frameContainer;
     JPanel actionsContainer;
@@ -55,9 +59,6 @@ public class MissPiggy implements ActionListener {
 
     // Initialize the main window
     public void Action(/*Main entryPoint*/) {
-        // todo construct contents
-        // todo display modlist
-
         /// DEBUG ///
         Main.Mod testModEntry = new Main().new Mod(); //this is retarded? we're making a new object of a certain type, why the fuck do you care where it comes from? static or regardless??
         testModEntry.friendlyName = "Example Mod 1";
@@ -155,6 +156,12 @@ public class MissPiggy implements ActionListener {
         );});
 
         // display window
+        try {
+            windowIcon = ImageIO.read(new File(System.getProperty("user.dir") + "/resources/titleIcon.png"));
+            frame.setIconImage(windowIcon);
+        } catch (IOException e) {
+            System.out.println("ERROR: Failed to find /resources/titleIcon.png. Window will not have an icon.");
+        }
         frame.setSize(800, 600); // 1280 800
         frame.setMinimumSize(new Dimension(640,480));
         frame.setTitle("Firestar Mod Manager");
@@ -173,12 +180,10 @@ public class MissPiggy implements ActionListener {
         modList.setVisibleRowCount(Main.Mods.size());
         modList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-        // todo this needs fixing before we can map it to Main.Mods and finish the other functionality around it
-
         // add text entry for each
         int i = 0;
         /*JLabel[]*/String[] contents = new String[Main.Mods.size()];
-        System.out.println("Initializing modList to GUI with length of " + Main.Mods.size() + "units"); //debug
+        System.out.println("Initializing modList to GUI with length of " + Main.Mods.size() + " units"); //debug
         while (i < Main.Mods.size()) {
             contents[i] = Main.Mods.get(i).friendlyName;
 
