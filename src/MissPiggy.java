@@ -32,6 +32,8 @@ import java.util.Arrays;
 import java.util.regex.Pattern;
 
 import net.lingala.zip4j.*;
+import net.lingala.zip4j.exception.ZipException;
+import org.json.JSONObject;
 
 import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 
@@ -94,6 +96,7 @@ public class MissPiggy implements ActionListener {
 
         frame.add(frameContainer); // initialize window contents -- will be handled by IntelliJ IDEA
 
+        InitializeModListStructure();
         InitializeModListInGUI(); // present mod list
 
         fileMenu.getItem(0).addActionListener(this);
@@ -108,12 +111,12 @@ public class MissPiggy implements ActionListener {
         descriptionField.getDocument().putProperty("filterNewlines", Boolean.FALSE);
         modList.addListSelectionListener(e -> {
             String authorDisplay;
-            File pathReference = new File(Main.Mods.get(modList.getSelectedIndex()).path);
+            File pathReference = new File(System.getProperty("user.home") + "/.firestar/mods/" + Main.Mods.get(modList.getSelectedIndex()).path);
             DecimalFormat df = new DecimalFormat("##.##");
             df.setRoundingMode(RoundingMode.UP);
             float modFileSize = pathReference.length(); //precise units
             String modFileSizeStr = String.valueOf(modFileSize);
-            String modFileSizeUnits = "bytes";
+            String modFileSizeUnits = "bytes"; //todo: don't show decimals for bytes
             if (pathReference.length() >= 1024) {
                 modFileSizeStr = String.valueOf(df.format(modFileSize / 1024));
                 modFileSizeUnits = "Kilobytes";
@@ -156,16 +159,12 @@ public class MissPiggy implements ActionListener {
         frame.setVisible(true);
     }
 
-    public void InitializeModListInGUI() { // i really wanted this to be "lights, camera, action" but the code organizing kept getting stupider and stupider so i gave up
+    public void InitializeModListStructure() {
         // cleanup
-        descriptionField.setText("Select a mod from the list on the right to view more details, or to make changes to your installation.");
-        modList.clearSelection();
-        modList.removeAll();
-        modList.setVisibleRowCount(Main.Mods.size());
-        modList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        Main.Mods.clear();
 
-        //get current list of mods
-        //todo: rewrite when modpacks/playlists are added
+        // get current list of mods from file
+        // todo: rewrite when modpacks/playlists are added
         try {
             priorityList = new String(Files.readAllBytes(Paths.get(System.getProperty("user.home") + "/.firestar/mods/index")));
         } catch (IOException e) {
@@ -182,19 +181,48 @@ public class MissPiggy implements ActionListener {
         }
 
         // initialize data structures from each list entry
-        Pattern pattern = Pattern.compile("/[0-9]+=/g");
         String[] pListArray = priorityList.split("\n");
         Arrays.sort(pListArray);
-        //int i = 0;
+        System.out.println("Initializing modList from file with length of " + pListArray.length + " units"); //debug
         for (String s : pListArray) {
-            //s.charAt(0);
-            if (!s.split("=")[0].matches("/[0-9]+=/g")) {
+            /*
+            Do nothing if the index number is not valid.
+            there probably is not a practical reason to do this, but I want to eliminate any undefined behaviors while we're here.
+            we'll also eliminate any syntax errors caused by the lack of a = sign
+            */
+            if (s.split("=")[0].matches("[0-9]+=*")) {
+                //append mod to list from substring
+                Main.Mod m = new Main().new Mod();
+                m.path = s.substring(s.indexOf("=") + 1);
+                System.out.println("found file " + m.path);
 
-            } else {
-                //append mod to list from substring -- use zip lib
-                //i++;
+                //get json metadata from zip comment
+                JSONObject metadata;
+                try {
+                    metadata = new JSONObject(new ZipFile(System.getProperty("user.home") + "/.firestar/mods/" + m.path).getComment());
+                } catch (ZipException e) {
+                    throw new RuntimeException(e); //todo: fault tolerance
+                }
+                if (metadata.has("friendlyName")) {m.friendlyName = metadata.get("friendlyName").toString();} else {m.friendlyName = m.path;}
+                if (metadata.has("description")) {m.description = metadata.get("description").toString();}
+                if (metadata.has("version")) {m.version = Integer.parseInt(metadata.get("version").toString());}
+                if (metadata.has("author")) {m.author = metadata.get("author").toString();}
+                if (metadata.has("loaderversion")) {m.loaderversion = Integer.parseInt(metadata.get("loaderversion").toString());}
+                if (metadata.has("game")) {m.game = metadata.get("game").toString();}
+
+                //send to list
+                Main.Mods.add(m);
             }
         }
+    }
+
+    public void InitializeModListInGUI() { // i really wanted this to be "lights, camera, action" but the code organizing kept getting stupider and stupider so i gave up
+        // cleanup
+        descriptionField.setText("Select a mod from the list on the right to view more details, or to make changes to your installation.");
+        modList.clearSelection();
+        modList.removeAll();
+        modList.setVisibleRowCount(Main.Mods.size());
+        modList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         // add text entry for each
         int i = 0;
