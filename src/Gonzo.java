@@ -87,7 +87,7 @@ public class Gonzo {
         final Thread managerThread = new Thread() {
             @Override
             public void run() {
-                if (Main.repatch) {
+                if (!Main.repatch) {
                     CompatibilityRoutine();
                 } else {
                     FastRoutine();
