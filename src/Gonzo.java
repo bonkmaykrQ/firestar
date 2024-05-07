@@ -87,17 +87,17 @@ public class Gonzo {
         final Thread managerThread = new Thread() {
             @Override
             public void run() {
-                if (!Main.wine) {
-                    POSIXRoutine();
+                if (Main.repatch) {
+                    CompatibilityRoutine();
                 } else {
-                    Win32Routine();
+                    FastRoutine();
                 }
             }
         };
         managerThread.start();
     }
 
-    private void POSIXRoutine() {
+    private void CompatibilityRoutine() {
         // create temporary working area for asset dump
         new File(System.getProperty("user.home") + "/.firestar/temp/").mkdirs();
 
@@ -190,7 +190,7 @@ public class Gonzo {
                 // We need to clean up the path here on Linux to avoid psp2psarc getting confused about where the hell "/" is.
                 // In WINE it should see it as Z: by default, but if it's somewhere else then I don't have an elegant way of knowing what drive letter it's on, so
                 // relative paths are kind of the only choice here. This can be extended to Windows too as it works there, though completely unnecessary.
-                oFilesList2.add(p.replace("\\", "/").split(System.getProperty("user.home") + "/.firestar/temp/data/")[1]);
+                oFilesList2.add(p.replace("\\", "/").split(System.getProperty("user.home") + "/.firestar/temp/")[1]);
             }
             //oFilesList2.forEach(System.out::println); //debug
             File oFilesListO = new File(System.getProperty("user.home") + "/.firestar/temp/list.txt");
@@ -215,7 +215,7 @@ public class Gonzo {
         try {
             System.out.println("Firestar is compiling the final build");
             consoleDisplay.append("Firestar is compiling the final build" + "\n");
-            Process p = Runtime.getRuntime().exec(new String[]{"bash","-c","cd " + System.getProperty("user.home") + "/.firestar/temp/data" + ";wine ../../psp2psarc.exe create --skip-missing-files -j12 -a -i --input-file=../list.txt -o ../" + oArcTarget});
+            Process p = Runtime.getRuntime().exec(new String[]{"bash","-c","cd " + System.getProperty("user.home") + "/.firestar/temp" + ";wine ../psp2psarc.exe create --skip-missing-files -j12 -a -i --input-file=list.txt -o " + oArcTarget});
             final Thread ioThread = new Thread() {
                 @Override
                 public void run() {
@@ -271,14 +271,14 @@ public class Gonzo {
         AllowExit();
     }
 
-    private void Win32Routine() {
+    private void FastRoutine() {
 
     }
 
     public void AllowExit() {
-        scrollPane.getVerticalScrollBar().setValue(scrollPane.getVerticalScrollBar().getMaximum());
         System.out.println("\n\nYou may now close the pop-up window.");
         consoleDisplay.append("\n\n\nYou may now close the pop-up window.");
+        scrollPane.getVerticalScrollBar().setValue(scrollPane.getVerticalScrollBar().getMaximum());
         frame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e)
