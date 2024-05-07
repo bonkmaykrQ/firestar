@@ -62,6 +62,7 @@ public class MissPiggy implements ActionListener {
         /// DEBUG ///
         Main.Mod testModEntry = new Main().new Mod(); //this is retarded? we're making a new object of a certain type, why the fuck do you care where it comes from? static or regardless??
         testModEntry.friendlyName = "Example Mod 1";
+        testModEntry.description = "Example Mod 1";
         testModEntry.game = "2048";
         testModEntry.path = "/home/bonkyboo/madarao_sneaky2_square.png"; //used to test file sizes
         testModEntry.version = 1;
@@ -69,6 +70,7 @@ public class MissPiggy implements ActionListener {
         Main.Mods.add(testModEntry);
         Main.Mod testModEntry2 = new Main().new Mod();
         testModEntry2.friendlyName = "Example Mod 2";
+        testModEntry2.description = "Example Mod 2";
         testModEntry2.author = "Daniel Chang";
         testModEntry2.game = "2048";
         testModEntry2.path = "/home/bonkyboo/chengou.mp4";
@@ -77,6 +79,7 @@ public class MissPiggy implements ActionListener {
         Main.Mods.add(testModEntry2);
         Main.Mod testModEntry3 = new Main().new Mod();
         testModEntry3.friendlyName = "Example Mod 3";
+        testModEntry3.description = "Example Mod 3";
         testModEntry3.author = "John Dekka";
         testModEntry3.game = "2048";
         testModEntry3.path = "/home/bonkyboo/round2.mp4";
@@ -152,7 +155,8 @@ public class MissPiggy implements ActionListener {
                 "\"" + Main.Mods.get(modList.getSelectedIndex()).friendlyName + "\"\n" +
                 "by " + authorDisplay + "\n\n" +
                 "Version " + Main.Mods.get(modList.getSelectedIndex()).version + "\n" +
-                        modFileSizeStr + " " + modFileSizeUnits + " in size"
+                        modFileSizeStr + " " + modFileSizeUnits + " in size" +
+                "\n\n" + Main.Mods.get(modList.getSelectedIndex()).description
         );});
 
         // display window

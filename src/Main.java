@@ -45,6 +45,7 @@ public class Main {
         //public int gameversion; //TODO detect a game version and compatibility? // no
         public int priority = 0; //unused
         public String friendlyName;
+        public String description;
         public String game; //TODO for multi game support
         public int loaderversion = 0; //minimum required vint or feature level from Firestar
         public String author; // if null, "Author is unknown."

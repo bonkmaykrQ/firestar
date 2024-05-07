@@ -316,7 +316,7 @@ public class Kermit implements ActionListener {
                     }
 
                     if(checksum.equals("4ef707b2dba6944a726d46950aaddfd2")) {changePage(Pages.WHAT_OS);} else {
-                        System.out.println("Failed to download PSARC tool because the connection stalled.");
+                        System.out.println("ERROR: Failed to download PSARC tool. Check connection and ensure the file is not corrupt or infected.");
                         dialogText.setText("Firestar tried to download important files needed for operation, but they were either corrupted or did not finish.\n" + "\n\nYou will need to manually install psp2psarc.exe into your Firestar config folder after setup is complete! Or, you can retry the download later.");
                         //frame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
