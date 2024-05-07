@@ -68,7 +68,9 @@ public class MissPiggy implements ActionListener {
 
     // Initialize the main window
     public void Action(/*Main entryPoint*/) {
-// populate menu bar
+        System.out.println("Main window created");
+
+        // populate menu bar
         menuBar = new JMenuBar();
         fileMenu = new JMenu("File");
         toolsMenu = new JMenu("Tools");

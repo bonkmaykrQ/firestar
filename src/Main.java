@@ -75,9 +75,9 @@ public class Main {
         // check and load configs
         File fConf = new File(System.getProperty("user.home") + "/.firestar/firestar.conf");
         if (!fConf.isFile()) {
+            System.out.println("No configuration was found. Starting the initial setup");
             new Kermit().setup(fConf); // this is a fresh install, run the OOBE.
         } else {
-            // todo load modlist
             new MissPiggy().Action(); // Quick! Start singing Firework by Katy Perry! (or open the main window i guess...)
         }
     }

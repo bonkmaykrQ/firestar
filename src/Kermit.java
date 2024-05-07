@@ -69,8 +69,6 @@ public class Kermit implements ActionListener {
     javax.swing.text.SimpleAttributeSet align= new javax.swing.text.SimpleAttributeSet();
 
     public void setup(File fConf) { //File variable is redundant. unused
-        // todo Disable MissPiggy
-
         frame.getContentPane().setBackground(Color.WHITE);
         radg1.add(buttonCompat);
         radg1.add(buttonFast);
