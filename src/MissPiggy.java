@@ -26,7 +26,9 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.math.RoundingMode;
+import java.nio.file.*;
 import java.text.DecimalFormat;
+import net.lingala.zip4j.*;
 
 import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 
@@ -57,38 +59,11 @@ public class MissPiggy implements ActionListener {
 
     private int selectedItem;
 
+    public String priorityList;
+
     // Initialize the main window
     public void Action(/*Main entryPoint*/) {
-        /// DEBUG ///
-        Main.Mod testModEntry = new Main().new Mod(); //this is retarded? we're making a new object of a certain type, why the fuck do you care where it comes from? static or regardless??
-        testModEntry.friendlyName = "Example Mod 1";
-        testModEntry.description = "Example Mod 1";
-        testModEntry.game = "2048";
-        testModEntry.path = "/home/bonkyboo/madarao_sneaky2_square.png"; //used to test file sizes
-        testModEntry.version = 1;
-        //testModEntry.priority = 0; //will discard this in favor of the list index for simplicity
-        Main.Mods.add(testModEntry);
-        Main.Mod testModEntry2 = new Main().new Mod();
-        testModEntry2.friendlyName = "Example Mod 2";
-        testModEntry2.description = "Example Mod 2";
-        testModEntry2.author = "Daniel Chang";
-        testModEntry2.game = "2048";
-        testModEntry2.path = "/home/bonkyboo/chengou.mp4";
-        testModEntry2.version = 1;
-        testModEntry2.loaderversion = 0;
-        Main.Mods.add(testModEntry2);
-        Main.Mod testModEntry3 = new Main().new Mod();
-        testModEntry3.friendlyName = "Example Mod 3";
-        testModEntry3.description = "Example Mod 3";
-        testModEntry3.author = "John Dekka";
-        testModEntry3.game = "2048";
-        testModEntry3.path = "/home/bonkyboo/round2.mp4";
-        testModEntry3.version = 1;
-        testModEntry3.loaderversion = 0;
-        Main.Mods.add(testModEntry3);
-        ///-/////-///
-
-        // populate menu bar
+// populate menu bar
         menuBar = new JMenuBar();
         fileMenu = new JMenu("File");
         toolsMenu = new JMenu("Tools");
@@ -103,6 +78,8 @@ public class MissPiggy implements ActionListener {
 
         toolsMenu.add(new JMenuItem("Edit Metadata")); // disabled if a mod is not selected from the list
         toolsMenu.add(new JMenuItem("Generate New Mod from Folder..."));
+        toolsMenu.add(new JMenuItem("Create Soundtrack Mod..."));
+        //toolsMenu.add(new JMenuItem("Download Mod from URL")); // TODO: implement. move option to File menu. should be ez
 
         helpMenu.add(new JMenuItem("About Firestar"));
 
@@ -183,6 +160,13 @@ public class MissPiggy implements ActionListener {
         modList.removeAll();
         modList.setVisibleRowCount(Main.Mods.size());
         modList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        try {
+            priorityList = new String(Files.readAllBytes(Paths.get(Main.inpath + "mods/index"))); //let's please stop repasting the config path over and over - refactor this if customizable inpath is implemented
+        } catch (IOException e) {
+            //new File();
+            priorityList = "";
+        }
 
         // add text entry for each
         int i = 0;
