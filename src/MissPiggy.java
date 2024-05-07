@@ -28,6 +28,9 @@ import java.io.IOException;
 import java.math.RoundingMode;
 import java.nio.file.*;
 import java.text.DecimalFormat;
+import java.util.Arrays;
+import java.util.regex.Pattern;
+
 import net.lingala.zip4j.*;
 
 import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
@@ -161,11 +164,36 @@ public class MissPiggy implements ActionListener {
         modList.setVisibleRowCount(Main.Mods.size());
         modList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
+        //get current list of mods
+        //todo: rewrite when modpacks/playlists are added
         try {
-            priorityList = new String(Files.readAllBytes(Paths.get(Main.inpath + "mods/index"))); //let's please stop repasting the config path over and over - refactor this if customizable inpath is implemented
+            priorityList = new String(Files.readAllBytes(Paths.get(System.getProperty("user.home") + "/.firestar/mods/index")));
         } catch (IOException e) {
-            //new File();
+            File priorityListFileHandle = new File(System.getProperty("user.home") + "/.firestar/mods/index");
+            new File(System.getProperty("user.home") + "/.firestar/mods/").mkdirs();
+            if(!priorityListFileHandle.isFile()){
+                try {
+                    priorityListFileHandle.createNewFile();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
             priorityList = "";
+        }
+
+        // initialize data structures from each list entry
+        Pattern pattern = Pattern.compile("/[0-9]+=/g");
+        String[] pListArray = priorityList.split("\n");
+        Arrays.sort(pListArray);
+        //int i = 0;
+        for (String s : pListArray) {
+            //s.charAt(0);
+            if (!s.split("=")[0].matches("/[0-9]+=/g")) {
+
+            } else {
+                //append mod to list from substring -- use zip lib
+                //i++;
+            }
         }
 
         // add text entry for each
