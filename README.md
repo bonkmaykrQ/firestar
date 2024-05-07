@@ -1,6 +1,6 @@
 ![](https://files.worlio.com/users/bonkmaykr/http/git/embed/firestar.png)
 
-# about 50% complete (I/O in progress)
+# about 60% complete (config I/O in progress, basic systems functional)
 
 Firestar is a mod manager for WipEout 2048 which automatically handles sorting mods by priority and repacking game assets based on selected add-on packs. It runs on a desktop/laptop computer and aims to allow easy installation of mods for users who have only a surface level understanding of hacking the PSVita.  
 ![](https://files.worlio.com/users/bonkmaykr/http/git/embed/firestar_window.png)
@@ -13,8 +13,18 @@ Firestar is a mod manager for WipEout 2048 which automatically handles sorting m
 # Mod File Structure
 Mod files are contained inside of ZIP archives with the metadata being stored inside of the archive's embedded comments. The "data" folder inside contains the actual game assets for repacking.  
 Next to it at root level a pack.png will be supplied for displaying your mod's icon in later versions of Firestar. This feature is currently unimplemented.  
+Later versions of Firestar will have a built-in tool to handle these for you, since some archive programs don't make it easy enough to do by hand.  
   
-TODO: More details will be provided once I/O routines are completed.
+Typical mod metadata will look something like this:
+```json
+{
+  "version": 1,
+  "friendlyName": "Custom soundtrack",
+  "loaderversion": 0,
+  "author": "bonkmaykr",
+  "description": "I need sugar"
+}
+```
 
 # FAQ
 ## What is the difference between Compatibility Mode and Fast Mode?
