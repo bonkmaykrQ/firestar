@@ -260,8 +260,18 @@ public class MissPiggy implements ActionListener {
     // Will likely split the below functions into separate classes to work with intellij GUI designer.
 
     public void deployModGUI() {
-        // todo dialog that monitors psarc progress, handles file transfers, etc
-        // could prevent closing program during this process? (may also be unnecessary)
+        // prevent interruptions
+        frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        frame.setEnabled(false);
+
+        // start
+        new Gonzo().DeployMods();
+    }
+
+    public void wrapUpDeployment() {
+        // restore functionality to main window
+        frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        frame.setEnabled(true);
     }
 
     public void importModGUI() {
