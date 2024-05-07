@@ -32,7 +32,9 @@ public class Main {
     public static final int vint = 0;
 
     // User Settings
-    public static String outpath; //game assets location
+    // TODO: replace with user preference when config i/o is done
+    // also please double check that outpath is actually valid
+    public static String outpath = System.getProperty("user.home") + "/.firestar/out/"; //game assets location
     public static String inpath = System.getProperty("user.home") + "/.firestar/"; //game assets location
     public static boolean repatch; //are we in compat mode?
     public static boolean wine; //are we on Linux, MINIX, BSD?

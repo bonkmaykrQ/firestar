@@ -265,7 +265,7 @@ public class MissPiggy implements ActionListener {
         frame.setEnabled(false);
 
         // start
-        new Gonzo().DeployMods();
+        new Gonzo().DeployMods(this);
     }
 
     public void wrapUpDeployment() {
