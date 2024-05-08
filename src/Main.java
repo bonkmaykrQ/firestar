@@ -21,6 +21,7 @@ import org.json.*;
 import java.io.*;
 import java.nio.file.*;
 import java.util.*;
+import javax.swing.JOptionPane;
 
 public class Main {
     // Build Information
@@ -98,6 +99,32 @@ public class Main {
     }
 
     public static void loadConf(){
+        try {
+            JSONObject container = new JSONObject(new String(Files.readAllBytes(Paths.get(System.getProperty("user.home") + "/.firestar/firestar.conf"))));
+            System.out.println(container.toString()); // debug
+            int confvint = (int) container.get("version"); // used for converting configs between program versions later down the line
+            outpath = container.get("2048path").toString();
+            repatch = (boolean) container.get("safemode");
+            windows = (boolean) container.get("isWin32");
+        } catch (IOException e) {
+            System.out.println("ERROR: Failed to load firestar.conf");
+            System.out.println(e.getMessage());
+        }
+        return;
+    }
 
+    public static void loadConf(MissPiggy w){
+        try {
+            JSONObject container = new JSONObject(new String(Files.readAllBytes(Paths.get(System.getProperty("user.home") + "/.firestar/firestar.conf"))));
+            System.out.println(container.toString()); // debug
+            int confvint = (int) container.get("version"); // used for converting configs between program versions later down the line
+            outpath = container.get("2048path").toString();
+            repatch = (boolean) container.get("safemode");
+            windows = (boolean) container.get("isWin32");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(w.frame, "Firestar couldn't load your config file. Tread lightly.\n\n" + e.getMessage(), "Critical Error", JOptionPane.ERROR_MESSAGE);
+            System.out.println("ERROR: Failed to load firestar.conf");
+            System.out.println(e.getMessage());
+        }
     }
 }

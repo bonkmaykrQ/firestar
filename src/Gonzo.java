@@ -86,7 +86,7 @@ public class Gonzo {
         final Thread managerThread = new Thread() {
             @Override
             public void run() {
-                if (!Main.repatch) {
+                if (Main.repatch) {
                     CompatibilityRoutine();
                 } else {
                     FastRoutine();
@@ -128,7 +128,7 @@ public class Gonzo {
                                 System.out.println(line);
                                 consoleDisplay.append(line + "\n");
                                 try {scrollPane.getVerticalScrollBar().setValue(scrollPane.getVerticalScrollBar().getMaximum());}
-                                catch (Exception e) {System.out.println("WARNING: Swing failed to paint window due to race condition.\n" + e.getMessage());}
+                                catch (Exception e) {System.out.println("WARNING: Swing failed to paint window due to race condition. You can safely ignore this.\n" + e.getMessage());}
                             }
                             reader.close();
                         } catch (final Exception e) {
@@ -141,6 +141,7 @@ public class Gonzo {
             } catch (IOException | InterruptedException e) {
                 System.out.println(e.getMessage());
                 consoleDisplay.append("CRITICAL FAILURE: " + e.getMessage());
+                JOptionPane.showMessageDialog(this.frame, "CRITICAL FAILURE: " + e.getMessage(), "Fatal Error", JOptionPane.ERROR_MESSAGE);
                 frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
                 AllowExit();
                 return;
@@ -189,6 +190,7 @@ public class Gonzo {
             } catch (Exception e) {
                 System.out.println(e.getMessage());
                 consoleDisplay.append("CRITICAL FAILURE: " + e.getMessage());
+                JOptionPane.showMessageDialog(this.frame, "CRITICAL FAILURE: " + e.getMessage(), "Fatal Error", JOptionPane.ERROR_MESSAGE);
                 frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
                 AllowExit();
                 return;
@@ -223,6 +225,7 @@ public class Gonzo {
         } catch (Exception e) {
             System.out.println(e.getMessage());
             consoleDisplay.append("CRITICAL FAILURE: " + e.getMessage());
+            JOptionPane.showMessageDialog(this.frame, "CRITICAL FAILURE: " + e.getMessage(), "Fatal Error", JOptionPane.ERROR_MESSAGE);
             frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
             AllowExit();
             return;
@@ -259,15 +262,17 @@ public class Gonzo {
         } catch (IOException | InterruptedException e) {
             System.out.println(e.getMessage());
             consoleDisplay.append("CRITICAL FAILURE: " + e.getMessage());
+            JOptionPane.showMessageDialog(this.frame, "CRITICAL FAILURE: " + e.getMessage(), "Fatal Error", JOptionPane.ERROR_MESSAGE);
             frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
             AllowExit();
             return;
         }
 
         // cleanup
-        new File(Main.outpath).mkdirs();
-        if (!Main.windows) {new File(System.getProperty("user.home") + "/.firestar/temp/" + oArcTarget).renameTo(new File(Main.outpath + oArcTarget));}
-        else {new File(System.getProperty("user.home") + "\\.firestar\\temp\\" + oArcTarget).renameTo(new File(Main.outpath + oArcTarget));}
+        System.out.println("created export folder: " + new File(Main.outpath).mkdirs());
+        if (!Main.windows) {System.out.println("moved file to destination: " + new File(System.getProperty("user.home") + "/.firestar/temp/" + oArcTarget).renameTo(new File(Main.outpath + oArcTarget)));}
+        else {System.out.println("moved file to destination: " + new File(System.getProperty("user.home") + "\\.firestar\\temp\\" + oArcTarget).renameTo(new File(Main.outpath + oArcTarget)));} System.out.println("file should be located at " + Main.outpath + oArcTarget);
+        //try {TimeUnit.SECONDS.sleep(2);} catch (InterruptedException e) {}
         try {
             Process p;
             if (!Main.windows) {p = Runtime.getRuntime().exec(new String[]{"bash","-c","rm -rf " + System.getProperty("user.home") + "/.firestar/temp/"});} // Scary!
@@ -302,6 +307,7 @@ public class Gonzo {
     public void AllowExit() {
         System.out.println("\n\nYou may now close the pop-up window.");
         consoleDisplay.append("\n\n\nYou may now close the pop-up window.");
+        try {TimeUnit.MILLISECONDS.sleep(200);} catch (InterruptedException e) {} //ignore
         scrollPane.getVerticalScrollBar().setValue(scrollPane.getVerticalScrollBar().getMaximum());
         frame.addWindowListener(new WindowAdapter() {
             @Override

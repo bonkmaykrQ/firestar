@@ -69,6 +69,8 @@ public class MissPiggy implements ActionListener {
     // Initialize the main window
     public void Action(/*Main entryPoint*/) {
         System.out.println("Main window created");
+        System.out.println("Loading program configuration");
+        Main.loadConf(this);
 
         // populate menu bar
         menuBar = new JMenuBar();
@@ -109,6 +111,7 @@ public class MissPiggy implements ActionListener {
         toolsMenu.getItem(0).addActionListener(this);
         toolsMenu.getItem(1).addActionListener(this);
         helpMenu.getItem(0).addActionListener(this);
+        deployButton.addActionListener(this);
 
         descriptionField.getDocument().putProperty("filterNewlines", Boolean.FALSE);
         modList.addListSelectionListener(e -> {
@@ -251,6 +254,7 @@ public class MissPiggy implements ActionListener {
     public void actionPerformed(ActionEvent actionEvent) {
         if (actionEvent.getSource() == fileMenu.getItem(5)) {System.exit(0);} else
         if (actionEvent.getSource() == fileMenu.getItem(0)) {deployModGUI();} else
+        if (actionEvent.getSource() == deployButton) {deployModGUI();} else
         if (actionEvent.getSource() == fileMenu.getItem(1)) {importModGUI();} else
         if (actionEvent.getSource() == fileMenu.getItem(2)) {removeAllGUI();} else
         if (actionEvent.getSource() == fileMenu.getItem(4)) {optionsGUI();} else

@@ -341,8 +341,8 @@ public class Kermit implements ActionListener {
                 dialogText.setVisible(false);frame.remove(dialogText);
 
                 //check if this is windows or not
-                if(System.getProperty("os.name").contains("Windows")) {Main.windows = false;System.out.println("Assuming we should NOT use WINE based on known system variables.");changePage(Pages.EXPORT_LOCATION);}
-                else {Main.windows = true;System.out.println("Assuming we should use WINE based on known system variables.");changePage(Pages.EXPORT_LOCATION);}
+                if(System.getProperty("os.name").contains("Windows")) {Main.windows = true;System.out.println("Assuming we should NOT use WINE based on known system variables.");changePage(Pages.EXPORT_LOCATION);}
+                else {Main.windows = false;System.out.println("Assuming we should use WINE based on known system variables.");changePage(Pages.EXPORT_LOCATION);}
 
             case EXPORT_LOCATION:
                 page = Pages.EXPORT_LOCATION;
