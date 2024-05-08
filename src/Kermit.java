@@ -26,10 +26,6 @@ import java.math.BigInteger;
 import java.net.URL;
 import java.nio.file.*;
 import java.security.*;
-import java.util.concurrent.TimeUnit;
-
-import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
-import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 
 // handles setup window
 public class Kermit implements ActionListener {
@@ -176,10 +172,10 @@ public class Kermit implements ActionListener {
             Main.repatch = false;
             button.setEnabled(true);
         } else if (actionEvent.getSource() == buttonHaveWine) {
-            Main.wine = true;
+            Main.windows = true;
             button.setEnabled(true);
         } else if (actionEvent.getSource() == buttonNoWine) {
-            Main.wine = false;
+            Main.windows = false;
             button.setEnabled(true);
         }else if (actionEvent.getSource() == openconfigfolderbutton) {
             try {
@@ -345,8 +341,8 @@ public class Kermit implements ActionListener {
                 dialogText.setVisible(false);frame.remove(dialogText);
 
                 //check if this is windows or not
-                if(System.getProperty("os.name").contains("Windows")) {Main.wine = false;System.out.println("Assuming we should NOT use WINE based on known system variables.");changePage(Pages.EXPORT_LOCATION);}
-                else {Main.wine = true;System.out.println("Assuming we should use WINE based on known system variables.");changePage(Pages.EXPORT_LOCATION);}
+                if(System.getProperty("os.name").contains("Windows")) {Main.windows = false;System.out.println("Assuming we should NOT use WINE based on known system variables.");changePage(Pages.EXPORT_LOCATION);}
+                else {Main.windows = true;System.out.println("Assuming we should use WINE based on known system variables.");changePage(Pages.EXPORT_LOCATION);}
 
             case EXPORT_LOCATION:
                 page = Pages.EXPORT_LOCATION;

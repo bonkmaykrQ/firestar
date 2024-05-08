@@ -18,12 +18,9 @@
 
 import org.json.*;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.*;
 import java.nio.file.*;
 import java.util.*;
-import javax.swing.*;
 
 public class Main {
     // Build Information
@@ -37,7 +34,7 @@ public class Main {
     public static String outpath = System.getProperty("user.home") + "/.firestar/out/"; //game assets location
     public static String inpath = System.getProperty("user.home") + "/.firestar/"; //game assets location
     public static boolean repatch; //are we in compat mode?
-    public static boolean wine; //are we on Linux, MINIX, BSD?
+    public static boolean windows; //True = windows
     //public static String psarc; //sdk location
 
     public class Mod {
@@ -90,7 +87,7 @@ public class Main {
         container.put("2048path", outpath);
         container.put("HDpath", "TODO"); // proposed hd/fury support for ps3, will use very simplified Fast Mode due to less difficulty installing
         container.put("safemode", repatch);
-        container.put("isUnix", wine);
+        container.put("isWin32", windows);
         container.put("currentPlaylist", "TODO"); // proposed feature: store separate mod lists in lists/ to load/save later?
 
         try {

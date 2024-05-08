@@ -17,7 +17,6 @@
  */
 
 import net.lingala.zip4j.ZipFile;
-import net.lingala.zip4j.util.FileUtils;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -116,8 +115,8 @@ public class Gonzo {
                 consoleDisplay.append("Firestar is extracting " + s + "\n");
                 //Process p = Runtime.getRuntime().exec(new String[]{"bash","-c","aplay /home/bonkyboo/kittens_loop.wav"}); // DEBUG
                 Process p;
-                if (!Main.wine) {p = Runtime.getRuntime().exec(new String[]{"bash","-c","cd " + System.getProperty("user.home") + "/.firestar/temp/" + ";wine ../psp2psarc.exe extract -y ../" + s});}
-                else {p = Runtime.getRuntime().exec(new String[]{"cd " + System.getProperty("user.home") + "/.firestar/temp/" + " && ../psp2psarc.exe extract -y ../" + s});}
+                if (!Main.windows) {p = Runtime.getRuntime().exec(new String[]{"bash","-c","cd " + System.getProperty("user.home") + "/.firestar/temp/" + ";wine ../psp2psarc.exe extract -y ../" + s});}
+                else {p = Runtime.getRuntime().exec(new String[]{new String(System.getProperty("user.home") + "\\.firestar\\psp2psarc.exe"), "extract", "-y", "..\\" + s}, null, new File(new String(System.getProperty("user.home") + "/.firestar/temp/").replace("/", "\\")));}
                 final Thread ioThread = new Thread() {
                     @Override
                     public void run() {
@@ -141,9 +140,10 @@ public class Gonzo {
                 p.waitFor();
             } catch (IOException | InterruptedException e) {
                 System.out.println(e.getMessage());
+                consoleDisplay.append("CRITICAL FAILURE: " + e.getMessage());
                 frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
                 AllowExit();
-                break;
+                return;
             }
         }
 
@@ -160,6 +160,7 @@ public class Gonzo {
                     consoleDisplay.append("Firestar is deleting files that conflict with " + m.friendlyName + " by " + m.author + "\n");
 
                     String deleteQueue = new String(Files.readAllBytes(Paths.get(System.getProperty("user.home") + "/.firestar/temp/delete.txt")));
+                    if (Main.windows) {deleteQueue = new String(Files.readAllBytes(Paths.get(System.getProperty("user.home") + "\\.firestar\\temp\\delete.txt")));} // might be unnecessary
                     String[] dQarray = deleteQueue.split("\n");
                     Arrays.sort(dQarray);
                     System.out.println("The deletion queue is " + dQarray.length + " files long!"); //debug
@@ -169,17 +170,24 @@ public class Gonzo {
                             System.out.println("WARNING: Firestar skipped a potentially dangerous delete command. Please ensure the mod you're installing is from someone you trust!");
                             consoleDisplay.append("WARNING: Firestar skipped a potentially dangerous delete command. Please ensure the mod you're installing is from someone you trust!\n");
                         } else {
-                            System.out.println("Deleting " + System.getProperty("user.home") + "/.firestar/temp/data/" + file);
-                            consoleDisplay.append("Deleting " + System.getProperty("user.home") + "/.firestar/temp/data/" + file + "\n");
-                            new File(System.getProperty("user.home") + "/.firestar/temp/data/" + file).delete();
+                            if (!Main.windows) {
+                                System.out.println("Deleting " + System.getProperty("user.home") + "/.firestar/temp/data/" + file);
+                                consoleDisplay.append("Deleting " + System.getProperty("user.home") + "/.firestar/temp/data/" + file + "\n");
+                                new File(System.getProperty("user.home") + "/.firestar/temp/data" + file).delete();}
+                            else {
+                                System.out.println("Deleting " + new String(System.getProperty("user.home") + "\\.firestar\\temp\\data" + file).replace("/", "\\"));
+                                consoleDisplay.append("Deleting " + new String(System.getProperty("user.home") + "\\.firestar\\temp\\data" + file).replace("/", "\\") + "\n");
+                                new File(new String(System.getProperty("user.home") + "\\.firestar\\temp\\data" + file).replace("/", "\\")).delete();
+                            }
                         }
                     }
                 }
-            } catch (IOException e) {
+            } catch (Exception e) {
                 System.out.println(e.getMessage());
+                consoleDisplay.append("CRITICAL FAILURE: " + e.getMessage());
                 frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
                 AllowExit();
-                break;
+                return;
             }
         }
 
@@ -192,7 +200,8 @@ public class Gonzo {
                 // We need to clean up the path here on Linux to avoid psp2psarc getting confused about where the hell "/" is.
                 // In WINE it should see it as Z: by default, but if it's somewhere else then I don't have an elegant way of knowing what drive letter it's on, so
                 // relative paths are kind of the only choice here. This can be extended to Windows too as it works there, though completely unnecessary.
-                oFilesList2.add(p.replace("\\", "/").split(System.getProperty("user.home") + "/.firestar/temp/")[1]);
+                if (!Main.windows) {oFilesList2.add(p.replace("\\", "/").split(new String(System.getProperty("user.home") + "/.firestar/temp/"))[1]);}
+                else {oFilesList2.add(p.split(new String(System.getProperty("user.home") + "\\.firestar\\temp\\").replace("\\", "\\\\"))[1]);} // path wont match regex unless adjusted for windows here
             }
             //oFilesList2.forEach(System.out::println); //debug
             File oFilesListO = new File(System.getProperty("user.home") + "/.firestar/temp/list.txt");
@@ -207,10 +216,12 @@ public class Gonzo {
                 i++;
             }
             oFilesListWr.close();
-        } catch (IOException e) {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
+            consoleDisplay.append("CRITICAL FAILURE: " + e.getMessage());
             frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
             AllowExit();
+            return;
         }
 
         // invoke psp2psarc.exe one final time to reconstruct the assets
@@ -218,8 +229,8 @@ public class Gonzo {
             System.out.println("Firestar is compiling the final build");
             consoleDisplay.append("Firestar is compiling the final build" + "\n");
             Process p;
-            if (!Main.wine) {p = Runtime.getRuntime().exec(new String[]{"bash","-c","cd " + System.getProperty("user.home") + "/.firestar/temp" + ";wine ../psp2psarc.exe create --skip-missing-files -j12 -a -i --input-file=list.txt -o " + oArcTarget});}
-            else {p = Runtime.getRuntime().exec(new String[]{"cd " + System.getProperty("user.home") + "/.firestar/temp" + " && ../psp2psarc.exe create --skip-missing-files -j12 -a -i --input-file=list.txt -o " + oArcTarget});}
+            if (!Main.windows) {p = Runtime.getRuntime().exec(new String[]{"bash","-c","cd " + System.getProperty("user.home") + "/.firestar/temp" + ";wine ../psp2psarc.exe create --skip-missing-files -j12 -a -i --input-file=list.txt -o " + oArcTarget});}
+            else {p = Runtime.getRuntime().exec(new String[]{new String(System.getProperty("user.home") + "\\.firestar\\psp2psarc.exe"), "create", "--skip-missing-files", "-j12", "-a", "-i", "--input-file=list.txt", "-o" + oArcTarget}, null, new File(new String(System.getProperty("user.home") + "/.firestar/temp/").replace("/", "\\")));}
             final Thread ioThread = new Thread() {
                 @Override
                 public void run() {
@@ -243,17 +254,20 @@ public class Gonzo {
             p.waitFor();
         } catch (IOException | InterruptedException e) {
             System.out.println(e.getMessage());
+            consoleDisplay.append("CRITICAL FAILURE: " + e.getMessage());
             frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
             AllowExit();
+            return;
         }
 
         // cleanup
         new File(Main.outpath).mkdirs();
-        new File(System.getProperty("user.home") + "/.firestar/temp/" + oArcTarget).renameTo(new File(Main.outpath + oArcTarget));
+        if (!Main.windows) {new File(System.getProperty("user.home") + "/.firestar/temp/" + oArcTarget).renameTo(new File(Main.outpath + oArcTarget));}
+        else {new File(System.getProperty("user.home") + "\\.firestar\\temp\\" + oArcTarget).renameTo(new File(Main.outpath + oArcTarget));}
         try {
             Process p;
-            if (!Main.wine) {p = Runtime.getRuntime().exec(new String[]{"bash","-c","rm -rf " + System.getProperty("user.home") + "/.firestar/temp/"});} // Scary!
-            else {p = Runtime.getRuntime().exec(new String[]{"rmdir " + System.getProperty("user.home") + "\\.firestar\\temp\\ /s /q"});}
+            if (!Main.windows) {p = Runtime.getRuntime().exec(new String[]{"bash","-c","rm -rf " + System.getProperty("user.home") + "/.firestar/temp/"});} // Scary!
+            else {p = Runtime.getRuntime().exec(new String[]{"rmdir", new String(System.getProperty("user.home") + "/.firestar/temp/").replace("/", "\\").replace("\\", "\\\\"), "/s", "/q"});}
             //new File(System.getProperty("user.home") + "/.firestar/temp/").delete();
         } catch (IOException e) {
             System.out.println("WARNING: Temporary files may not have been properly cleared.\n" + e.getMessage());
