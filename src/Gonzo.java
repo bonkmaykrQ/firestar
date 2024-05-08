@@ -181,6 +181,10 @@ public class Gonzo {
                             }
                         }
                     }
+
+                    // cleanup so we don't run it again for the next mod unless needed
+                    // this is not necessary but good practice
+                    new File(System.getProperty("user.home") + "/.firestar/temp/delete.txt").delete();
                 }
             } catch (Exception e) {
                 System.out.println(e.getMessage());
