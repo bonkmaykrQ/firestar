@@ -1,8 +1,17 @@
 ![](https://files.worlio.com/users/bonkmaykr/http/git/embed/firestar.png)
 
-# about 60% complete (config I/O in progress, basic systems functional)
-
 Firestar is a mod manager for WipEout 2048 which automatically handles sorting mods by priority and repacking game assets based on selected add-on packs. It runs on a desktop/laptop computer and aims to allow easy installation of mods for users who have only a surface level understanding of hacking the PSVita.  
+  
+# about 75% complete (config I/O in progress, basic systems functional)  
+**What works:**
+- Repacking mods
+- Cross-platform support
+
+**What doesn't work yet:**
+- config loading
+- managing mods within the program
+- misc. tools (pack creator, soundtrack mod generator...)
+
 ![](https://files.worlio.com/users/bonkmaykr/http/git/embed/firestar_window.png)
   
 # System Requirements
@@ -31,7 +40,8 @@ Typical mod metadata will look something like this:
 Fast Mode is the most intuitive solution. It simply unpacks all of the assets into a folder for the game to read. This makes it trivial to go back and modify it later without repacking anything and it means you don't need stolen Sony-confidential equipment. However, PSVita and PSTV memory cards use the exFAT filesystem which really does not play nice with WipEout assets and causes all sorts of glitches, so using a genuine PSARC is an absolute necessity when playing on a real console. Compatibility mode uses a real PSARC tool to try and create mod files as similar to the original game files as possible and create minimal friction with the game engine. 
 
 ## (Non-Windows) Do I need WINE? And why?
-Only if you use Compatibility Mode. psp2psarc.exe is a Windows-only tool so we call WINE internally when needed, but Firestar itself will run on any desktop platform with a compliant Java runtime.
+Only if you use Compatibility Mode. psp2psarc.exe is a Windows-only tool so we call WINE internally when needed, but Firestar itself will run on any desktop platform with a compliant Java runtime.  
+**If you are on Mac OS X you will need an older OS version that is still compatible with 32-bit applications.**
 
 ## Why do I need a leaked Playstation SDK?
 Because many third-party programs for opening PSARC files either have no ability to create new ones or are prone to corruption bugs. Using the one made by the developers of the file format is the best option as it's what the game developers would have used. Obviously this creates all kinds of legal grey areas so I can't distribute Sony's proprietary software next to my code. It's downloaded separately.
