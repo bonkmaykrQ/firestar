@@ -115,7 +115,9 @@ public class Gonzo {
                 System.out.println("Firestar is extracting " + s);
                 consoleDisplay.append("Firestar is extracting " + s + "\n");
                 //Process p = Runtime.getRuntime().exec(new String[]{"bash","-c","aplay /home/bonkyboo/kittens_loop.wav"}); // DEBUG
-                Process p = Runtime.getRuntime().exec(new String[]{"bash","-c","cd " + System.getProperty("user.home") + "/.firestar/temp/" + ";wine ../psp2psarc.exe extract -y ../" + s});
+                Process p;
+                if (!Main.wine) {p = Runtime.getRuntime().exec(new String[]{"bash","-c","cd " + System.getProperty("user.home") + "/.firestar/temp/" + ";wine ../psp2psarc.exe extract -y ../" + s});}
+                else {p = Runtime.getRuntime().exec(new String[]{"cd " + System.getProperty("user.home") + "/.firestar/temp/" + " && ../psp2psarc.exe extract -y ../" + s});}
                 final Thread ioThread = new Thread() {
                     @Override
                     public void run() {
@@ -215,7 +217,9 @@ public class Gonzo {
         try {
             System.out.println("Firestar is compiling the final build");
             consoleDisplay.append("Firestar is compiling the final build" + "\n");
-            Process p = Runtime.getRuntime().exec(new String[]{"bash","-c","cd " + System.getProperty("user.home") + "/.firestar/temp" + ";wine ../psp2psarc.exe create --skip-missing-files -j12 -a -i --input-file=list.txt -o " + oArcTarget});
+            Process p;
+            if (!Main.wine) {p = Runtime.getRuntime().exec(new String[]{"bash","-c","cd " + System.getProperty("user.home") + "/.firestar/temp" + ";wine ../psp2psarc.exe create --skip-missing-files -j12 -a -i --input-file=list.txt -o " + oArcTarget});}
+            else {p = Runtime.getRuntime().exec(new String[]{"cd " + System.getProperty("user.home") + "/.firestar/temp" + " && ../psp2psarc.exe create --skip-missing-files -j12 -a -i --input-file=list.txt -o " + oArcTarget});}
             final Thread ioThread = new Thread() {
                 @Override
                 public void run() {
@@ -247,7 +251,9 @@ public class Gonzo {
         new File(Main.outpath).mkdirs();
         new File(System.getProperty("user.home") + "/.firestar/temp/" + oArcTarget).renameTo(new File(Main.outpath + oArcTarget));
         try {
-            Process p = Runtime.getRuntime().exec(new String[]{"bash","-c","rm -rf " + System.getProperty("user.home") + "/.firestar/temp/"}); // Scary!
+            Process p;
+            if (!Main.wine) {p = Runtime.getRuntime().exec(new String[]{"bash","-c","rm -rf " + System.getProperty("user.home") + "/.firestar/temp/"});} // Scary!
+            else {p = Runtime.getRuntime().exec(new String[]{"rmdir " + System.getProperty("user.home") + "\\.firestar\\temp\\ /s /q"});}
             //new File(System.getProperty("user.home") + "/.firestar/temp/").delete();
         } catch (IOException e) {
             System.out.println("WARNING: Temporary files may not have been properly cleared.\n" + e.getMessage());
