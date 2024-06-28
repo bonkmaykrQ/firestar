@@ -275,7 +275,7 @@ public class Gonzo {
         if (!Main.windows) {two = new File(System.getProperty("user.home") + "/.firestar/temp/" + oArcTarget).renameTo(new File(Main.outpath + oArcTarget));}
         else {two = new File(System.getProperty("user.home") + "\\.firestar\\temp\\" + oArcTarget).renameTo(new File(Main.outpath + oArcTarget));}
         System.out.println("moved file to destination: " + two);
-        if (one && two) {System.out.println("file should be located at " + Main.outpath + oArcTarget);} else {
+        if (two) {System.out.println("file should be located at " + Main.outpath + oArcTarget);} else {
             System.out.println("CRITICAL FAILURE: Please check that your output path is correct and that you have write permissions!");
             consoleDisplay.append("CRITICAL FAILURE: Please check that your output path is correct and that you have write permissions!");
             JOptionPane.showMessageDialog(this.frame, "CRITICAL FAILURE: Please check that your output path is correct and that you have write permissions!", "Fatal Error", JOptionPane.ERROR_MESSAGE);

@@ -280,6 +280,22 @@ public class MissPiggy implements ActionListener {
 
     public void importModGUI() {
         // todo call system shell to request file picker
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+        int result = fileChooser.showOpenDialog(frame);
+
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+            System.out.println("Importing selected mod file \"" + selectedFile.getName() + "\"");
+
+            ZipFile zipImporterHandler = new ZipFile(selectedFile.getPath());
+            if (zipImporterHandler.isValidZipFile()) {
+
+            } else {
+                System.out.println("ERROR: File is not a valid ZIP archive. Aborting.");
+                JOptionPane.showMessageDialog(frame, "Whoops, that's not a valid ZIP archive.\nMod files should be in .zip, .agr, .agrc or .agrf.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }
 
     public void removeAllGUI() {
