@@ -36,9 +36,6 @@ Typical mod metadata will look something like this:
 ```
 
 # FAQ
-## What is the difference between Compatibility Mode and Fast Mode?
-Fast Mode is the most intuitive solution. It simply unpacks all of the assets into a folder for the game to read. This makes it trivial to go back and modify it later without repacking anything and it means you don't need stolen Sony-confidential equipment. However, PSVita and PSTV memory cards use the exFAT filesystem which really does not play nice with WipEout assets and causes all sorts of glitches, so using a genuine PSARC is an absolute necessity when playing on a real console. Compatibility mode uses a real PSARC tool to try and create mod files as similar to the original game files as possible and create minimal friction with the game engine. 
-
 ## (Non-Windows) Do I need WINE? And why?
 Only if you use Compatibility Mode. psp2psarc.exe is a Windows-only tool so we call WINE internally when needed, but Firestar itself will run on any desktop platform with a compliant Java runtime.  
 **If you are on Mac OS X you will need an older OS version that is still compatible with 32-bit applications.**
@@ -51,3 +48,6 @@ Cross-platform support with no hassle, a built-in UI framework, and I don't need
   
 ## Why the name "Firestar"?
 Firestar was a secret track in the original WipEout which you unlocked after beating the game at least once, the mod manager is just named after that. Major versions are named after pilots or tracks. Internal class names are named after Muppets characters as this is the same naming convention that Sony used to codename parts inside the PSVita's SOC.
+
+## Fast Mode vs. Compatibility Mode
+"Fast Mode" was a legacy option that was scrapped before it could be developed. It skipped the creation of a PSARC file and simply dumped the final game assets to their destination folder. This works great for emulators, and doesn't require proprietary stolen SDKs from SCE. However the filesystem on the Playstation Vita really hated this method and would glitch out when this was done, causing textures to be corrupted once placed on the memory card. The WipEout engine has no fault tolerance for malformed or missing assets, so it just crashes instantly when it encounters one. This is where Compatibility mode comes from, which is the default setting for 2048.
