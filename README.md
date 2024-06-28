@@ -37,7 +37,7 @@ Typical mod metadata will look something like this:
 
 # FAQ
 ## (Non-Windows) Do I need WINE? And why?
-Only if you use Compatibility Mode. psp2psarc.exe is a Windows-only tool so we call WINE internally when needed, but Firestar itself will run on any desktop platform with a compliant Java runtime.  
+Yes. psp2psarc.exe is a Windows-only tool. Firestar can run natively on the system but it needs WINE in order to pack the game assets.
 **If you are on Mac OS X you will need an older OS version that is still compatible with 32-bit applications.**
 
 ## Why do I need a leaked Playstation SDK?
