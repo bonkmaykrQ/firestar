@@ -74,6 +74,7 @@ public class MissPiggy implements ActionListener {
     //private int selectedItem;
 
     public String priorityList;
+    public String blackList;
 
     public boolean listenersAlreadySet = false; // was written to troubleshoot a bug but this wasn't actually the cause
 
@@ -217,6 +218,33 @@ public class MissPiggy implements ActionListener {
                 if (!s.isEmpty()) {System.out.println("WARNING: mod entry for " + s + " doesn't actually exist. skipping");}
             }
         }
+
+        try {
+            blackList = new String(Files.readAllBytes(Paths.get(System.getProperty("user.home") + "/.firestar/mods/blacklist")));
+        } catch (IOException e) {
+            File blackListFileHandle = new File(System.getProperty("user.home") + "/.firestar/mods/blacklist");
+            new File(System.getProperty("user.home") + "/.firestar/mods/").mkdirs();
+            if(!blackListFileHandle.isFile()){
+                try {
+                    blackListFileHandle.createNewFile();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+            blackList = "";
+        }
+
+        // initialize data structures from each list entry
+        String[] bListArray = blackList.split("\n");
+        //Arrays.sort(bListArray);
+        System.out.println("Initializing blacklist from file with length of " + bListArray.length + " units"); //debug
+        for (String s : bListArray) {
+            for (Main.Mod m : Main.Mods) {
+                if (s.equals(m.path)) {
+                    m.enabled = false;
+                }
+            }
+        }
     }
 
     public void InitializeModListInGUI() {
@@ -233,7 +261,8 @@ public class MissPiggy implements ActionListener {
         /*JLabel[]*/String[] contents = new String[Main.Mods.size()];
         System.out.println("Initializing modList to GUI with length of " + Main.Mods.size() + " units"); //debug
         while (i < Main.Mods.size()) {
-            contents[i] = Main.Mods.get(i).friendlyName;
+            if (Main.Mods.get(i).enabled) {contents[i] = Main.Mods.get(i).friendlyName;}
+            else {contents[i] = Main.Mods.get(i).friendlyName + " (Disabled)";}
 
             //debug
             String authorDisplay;
@@ -264,7 +293,7 @@ public class MissPiggy implements ActionListener {
         if (actionEvent.getSource() == moveUpButton) {moveUp(modList.getSelectedIndex());} else
         if (actionEvent.getSource() == moveDownButton) {moveDown(modList.getSelectedIndex());} else
 
-        if (actionEvent.getSource() == toggleButton) {throwUnimplemented();} else // todo
+        if (actionEvent.getSource() == toggleButton) {toggleSelected(modList.getSelectedIndex());} else
         if (actionEvent.getSource() == deleteButton1) {deleteSelected();} else
 
         if (actionEvent.getSource() == toolsMenu.getItem(0)) {throwUnimplemented();} else
@@ -293,14 +322,23 @@ public class MissPiggy implements ActionListener {
     // Will likely split the below functions into separate classes to work with intellij GUI designer.
 
     public void deployModGUI() {
-        int result = JOptionPane.showConfirmDialog(frame, "A new PSARC will be generated. This can take several minutes.\nDuring this time, your computer may be very busy or slow.\n\nAre you sure you want to continue?", "Deploy Mods", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-        if (result == JOptionPane.YES_OPTION) {
-            // prevent interruptions
-            frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-            frame.setEnabled(false);
+        int i = 0;
+        for (Main.Mod m : Main.Mods) {
+            if (m.enabled) {i++;}
+        }
 
-            // start
-            new Gonzo().DeployMods(this);
+        if (i > 0) {
+            int result = JOptionPane.showConfirmDialog(frame, "A new PSARC will be generated. This can take several minutes.\nDuring this time, your computer may be very busy or slow.\n\nAre you sure you want to continue?", "Deploy Mods", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+            if (result == JOptionPane.YES_OPTION) {
+                // prevent interruptions
+                frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+                frame.setEnabled(false);
+
+                // start
+                new Gonzo().DeployMods(this);
+            }
+        } else {
+            JOptionPane.showMessageDialog(frame, "Please add at least one mod file to continue.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -411,6 +449,15 @@ public class MissPiggy implements ActionListener {
         }
     }
 
+    private void toggleSelected(int index) {
+        if (index >= 0) {
+            Main.Mods.get(index).enabled = !Main.Mods.get(index).enabled;
+            regenerateModBlacklist(true);
+        } else {
+            JOptionPane.showMessageDialog(frame, "Please select a mod to toggle first.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
     public void throwUnimplemented() {
         JOptionPane.showMessageDialog(frame, "This feature is unimplemented and will be coming soon.\nSee README at https://git.worlio.com/bonkmaykr/firestar", "Unimplemented", JOptionPane.INFORMATION_MESSAGE);
     }
@@ -476,7 +523,6 @@ public class MissPiggy implements ActionListener {
             File priorityListFileHandle = new File(System.getProperty("user.home") + "/.firestar/mods/index");
             priorityListFileHandle.createNewFile();
 
-
             BufferedWriter bw = new BufferedWriter(new FileWriter(System.getProperty("user.home") + "/.firestar/mods/index", true));
             int i = 0;
             for (Main.Mod m : Main.Mods) {
@@ -485,6 +531,7 @@ public class MissPiggy implements ActionListener {
                 i++;
             }
             bw.close();
+            System.out.println("Mod index file regenerated.");
 
             if(reload) {
                 Main.Mods.clear(); //cleanup
@@ -492,7 +539,38 @@ public class MissPiggy implements ActionListener {
                 InitializeModListStructure();
                 InitializeModListInGUI();
             }
-            System.out.println("Mod index file regenerated.");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            JOptionPane.showMessageDialog(frame, "An error has occured.\n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public void regenerateModBlacklist(boolean reload) {
+        try {
+            System.out.println("Regenerating blacklist..."); //debug
+
+            new File(System.getProperty("user.home") + "/.firestar/mods/blacklist").delete();
+            File blackListFileHandle = new File(System.getProperty("user.home") + "/.firestar/mods/blacklist");
+            blackListFileHandle.createNewFile();
+
+            BufferedWriter bw2 = new BufferedWriter(new FileWriter(System.getProperty("user.home") + "/.firestar/mods/blacklist", true));
+            int i2 = 0;
+            for (Main.Mod m : Main.Mods) {
+                if (!m.enabled) {
+                    bw2.write(m.path);
+                    bw2.newLine();
+                    i2++;
+                }
+            }
+            bw2.close();
+            System.out.println("Mod blacklist file regenerated.");
+
+            if(reload) {
+                Main.Mods.clear(); //cleanup
+                blackList = "";
+                InitializeModListStructure();
+                InitializeModListInGUI();
+            }
         } catch (Exception e) {
             System.out.println(e.getMessage());
             JOptionPane.showMessageDialog(frame, "An error has occured.\n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);

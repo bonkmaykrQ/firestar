@@ -48,6 +48,7 @@ public class Main {
         public String game; //TODO for multi game support
         public int loaderversion = 0; //minimum required vint or feature level from Firestar
         public String author; // if null, "Author is unknown."
+        public boolean enabled = true;
     }
 
     // Mods

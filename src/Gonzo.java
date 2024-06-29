@@ -151,49 +151,51 @@ public class Gonzo {
         // overwrite assets with custom ones from each mod and/or perform operations as specified in mod's delete list
         // todo: implement RegEx functions after delete.txt
         for (Main.Mod m : Main.Mods) {
-            try {
-                System.out.println("Firestar is extracting " + m.friendlyName + " by " + m.author);
-                consoleDisplay.append("Firestar is extracting " + m.friendlyName + " by " + m.author + "\n");
-                new ZipFile(System.getProperty("user.home") + "/.firestar/mods/" + m.path).extractAll(System.getProperty("user.home") + "/.firestar/temp/");
+            if (m.enabled) {
+                try {
+                    System.out.println("Firestar is extracting " + m.friendlyName + " by " + m.author);
+                    consoleDisplay.append("Firestar is extracting " + m.friendlyName + " by " + m.author + "\n");
+                    new ZipFile(System.getProperty("user.home") + "/.firestar/mods/" + m.path).extractAll(System.getProperty("user.home") + "/.firestar/temp/");
 
-                if (new File(System.getProperty("user.home") + "/.firestar/temp/delete.txt").isFile()) {
-                    System.out.println("Firestar is deleting files that conflict with " + m.friendlyName + " by " + m.author);
-                    consoleDisplay.append("Firestar is deleting files that conflict with " + m.friendlyName + " by " + m.author + "\n");
+                    if (new File(System.getProperty("user.home") + "/.firestar/temp/delete.txt").isFile()) {
+                        System.out.println("Firestar is deleting files that conflict with " + m.friendlyName + " by " + m.author);
+                        consoleDisplay.append("Firestar is deleting files that conflict with " + m.friendlyName + " by " + m.author + "\n");
 
-                    String deleteQueue = new String(Files.readAllBytes(Paths.get(System.getProperty("user.home") + "/.firestar/temp/delete.txt")));
-                    if (Main.windows) {deleteQueue = new String(Files.readAllBytes(Paths.get(System.getProperty("user.home") + "\\.firestar\\temp\\delete.txt")));} // might be unnecessary
-                    String[] dQarray = deleteQueue.split("\n");
-                    Arrays.sort(dQarray);
-                    System.out.println("The deletion queue is " + dQarray.length + " files long!"); //debug
+                        String deleteQueue = new String(Files.readAllBytes(Paths.get(System.getProperty("user.home") + "/.firestar/temp/delete.txt")));
+                        if (Main.windows) {deleteQueue = new String(Files.readAllBytes(Paths.get(System.getProperty("user.home") + "\\.firestar\\temp\\delete.txt")));} // might be unnecessary
+                        String[] dQarray = deleteQueue.split("\n");
+                        Arrays.sort(dQarray);
+                        System.out.println("The deletion queue is " + dQarray.length + " files long!"); //debug
 
-                    for (String file : dQarray) {
-                        if(file.contains("..")) { //todo: find all possible hazardous paths and blacklist them with regex
-                            System.out.println("WARNING: Firestar skipped a potentially dangerous delete command. Please ensure the mod you're installing is from someone you trust!");
-                            consoleDisplay.append("WARNING: Firestar skipped a potentially dangerous delete command. Please ensure the mod you're installing is from someone you trust!\n");
-                        } else {
-                            if (!Main.windows) {
-                                System.out.println("Deleting " + System.getProperty("user.home") + "/.firestar/temp/data/" + file);
-                                consoleDisplay.append("Deleting " + System.getProperty("user.home") + "/.firestar/temp/data/" + file + "\n");
-                                new File(System.getProperty("user.home") + "/.firestar/temp/data" + file).delete();}
-                            else {
-                                System.out.println("Deleting " + new String(System.getProperty("user.home") + "\\.firestar\\temp\\data" + file).replace("/", "\\"));
-                                consoleDisplay.append("Deleting " + new String(System.getProperty("user.home") + "\\.firestar\\temp\\data" + file).replace("/", "\\") + "\n");
-                                new File(new String(System.getProperty("user.home") + "\\.firestar\\temp\\data" + file).replace("/", "\\")).delete();
+                        for (String file : dQarray) {
+                            if(file.contains("..")) { //todo: find all possible hazardous paths and blacklist them with regex
+                                System.out.println("WARNING: Firestar skipped a potentially dangerous delete command. Please ensure the mod you're installing is from someone you trust!");
+                                consoleDisplay.append("WARNING: Firestar skipped a potentially dangerous delete command. Please ensure the mod you're installing is from someone you trust!\n");
+                            } else {
+                                if (!Main.windows) {
+                                    System.out.println("Deleting " + System.getProperty("user.home") + "/.firestar/temp/data/" + file);
+                                    consoleDisplay.append("Deleting " + System.getProperty("user.home") + "/.firestar/temp/data/" + file + "\n");
+                                    new File(System.getProperty("user.home") + "/.firestar/temp/data" + file).delete();}
+                                else {
+                                    System.out.println("Deleting " + new String(System.getProperty("user.home") + "\\.firestar\\temp\\data" + file).replace("/", "\\"));
+                                    consoleDisplay.append("Deleting " + new String(System.getProperty("user.home") + "\\.firestar\\temp\\data" + file).replace("/", "\\") + "\n");
+                                    new File(new String(System.getProperty("user.home") + "\\.firestar\\temp\\data" + file).replace("/", "\\")).delete();
+                                }
                             }
                         }
-                    }
 
-                    // cleanup so we don't run it again for the next mod unless needed
-                    // this is not necessary but good practice
-                    new File(System.getProperty("user.home") + "/.firestar/temp/delete.txt").delete();
+                        // cleanup so we don't run it again for the next mod unless needed
+                        // this is not necessary but good practice
+                        new File(System.getProperty("user.home") + "/.firestar/temp/delete.txt").delete();
+                    }
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                    consoleDisplay.append("CRITICAL FAILURE: " + e.getMessage());
+                    JOptionPane.showMessageDialog(this.frame, "CRITICAL FAILURE: " + e.getMessage(), "Fatal Error", JOptionPane.ERROR_MESSAGE);
+                    frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+                    AllowExit();
+                    return;
                 }
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-                consoleDisplay.append("CRITICAL FAILURE: " + e.getMessage());
-                JOptionPane.showMessageDialog(this.frame, "CRITICAL FAILURE: " + e.getMessage(), "Fatal Error", JOptionPane.ERROR_MESSAGE);
-                frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-                AllowExit();
-                return;
             }
         }
 
