@@ -19,21 +19,25 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.math.RoundingMode;
 import java.nio.file.*;
 import java.text.DecimalFormat;
 import java.util.Arrays;
+import java.util.Random;
 import java.util.regex.Pattern;
-
 import net.lingala.zip4j.*;
 import net.lingala.zip4j.exception.ZipException;
 import org.json.JSONObject;
+import static java.nio.file.StandardCopyOption.*;
 
 import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 
@@ -111,7 +115,14 @@ public class MissPiggy implements ActionListener {
         toolsMenu.getItem(0).addActionListener(this);
         toolsMenu.getItem(1).addActionListener(this);
         helpMenu.getItem(0).addActionListener(this);
+
         deployButton.addActionListener(this);
+        importButton.addActionListener(this);
+        deleteButton1.addActionListener(this);
+        optionsButton.addActionListener(this);
+        moveUpButton.addActionListener(this);
+        moveDownButton.addActionListener(this);
+        toggleButton.addActionListener(this);
 
         descriptionField.getDocument().putProperty("filterNewlines", Boolean.FALSE);
         modList.addListSelectionListener(e -> {
@@ -194,8 +205,11 @@ public class MissPiggy implements ActionListener {
             Do nothing if the index number is not valid.
             there probably is not a practical reason to do this, but I want to eliminate any undefined behaviors while we're here.
             we'll also eliminate any syntax errors caused by the lack of a = sign
+
+            06/29/24 - also skip files that were manually removed but remain in the list
             */
-            if (s.split("=")[0].matches("[0-9]+=*")) {
+            if (s.split("=")[0].matches("[0-9]+=*") &&
+                    new File(System.getProperty("user.home") + "/.firestar/mods/" + s.substring(s.indexOf("=") + 1)).exists()) {
                 //append mod to list from substring
                 Main.Mod m = new Main().new Mod();
                 m.path = s.substring(s.indexOf("=") + 1);
@@ -205,18 +219,20 @@ public class MissPiggy implements ActionListener {
                 JSONObject metadata;
                 try {
                     metadata = new JSONObject(new ZipFile(System.getProperty("user.home") + "/.firestar/mods/" + m.path).getComment());
-                } catch (ZipException e) {
-                    throw new RuntimeException(e); //todo: fault tolerance
-                }
-                if (metadata.has("friendlyName")) {m.friendlyName = metadata.get("friendlyName").toString();} else {m.friendlyName = m.path;}
-                if (metadata.has("description")) {m.description = metadata.get("description").toString();}
-                if (metadata.has("version")) {m.version = Integer.parseInt(metadata.get("version").toString());}
-                if (metadata.has("author")) {m.author = metadata.get("author").toString();}
-                if (metadata.has("loaderversion")) {m.loaderversion = Integer.parseInt(metadata.get("loaderversion").toString());}
-                if (metadata.has("game")) {m.game = metadata.get("game").toString();}
+                    if (metadata.has("friendlyName")) {m.friendlyName = metadata.get("friendlyName").toString();} else {m.friendlyName = m.path;}
+                    if (metadata.has("description")) {m.description = metadata.get("description").toString();}
+                    if (metadata.has("version")) {m.version = Integer.parseInt(metadata.get("version").toString());}
+                    if (metadata.has("author")) {m.author = metadata.get("author").toString();}
+                    if (metadata.has("loaderversion")) {m.loaderversion = Integer.parseInt(metadata.get("loaderversion").toString());}
+                    if (metadata.has("game")) {m.game = metadata.get("game").toString();}
 
-                //send to list
-                Main.Mods.add(m);
+                    //send to list
+                    Main.Mods.add(m);
+                } catch (Exception e) {
+                    System.out.println("WARNING: mod entry for " + s + " was found but does not contain valid JSON metadata. skipping");
+                }
+            } else {
+                if (!s.isEmpty()) {System.out.println("WARNING: mod entry for " + s + " doesn't actually exist. skipping");}
             }
         }
     }
@@ -255,9 +271,17 @@ public class MissPiggy implements ActionListener {
         if (actionEvent.getSource() == fileMenu.getItem(5)) {System.exit(0);} else
         if (actionEvent.getSource() == fileMenu.getItem(0)) {deployModGUI();} else
         if (actionEvent.getSource() == deployButton) {deployModGUI();} else
+        if (actionEvent.getSource() == importButton) {importModGUI();} else
         if (actionEvent.getSource() == fileMenu.getItem(1)) {importModGUI();} else
         if (actionEvent.getSource() == fileMenu.getItem(2)) {removeAllGUI();} else
+        if (actionEvent.getSource() == optionsButton) {optionsGUI();} else
         if (actionEvent.getSource() == fileMenu.getItem(4)) {optionsGUI();} else
+
+        if (actionEvent.getSource() == moveUpButton) {throwUnimplemented();} else // todo
+        if (actionEvent.getSource() == moveDownButton) {throwUnimplemented();} else // todo
+        if (actionEvent.getSource() == toggleButton) {throwUnimplemented();} else // todo
+        if (actionEvent.getSource() == deleteButton1) {throwUnimplemented();} else // todo
+
         if (actionEvent.getSource() == helpMenu.getItem(0)) {new Rowlf().displayAboutScreen();}
     }
 
@@ -279,9 +303,12 @@ public class MissPiggy implements ActionListener {
     }
 
     public void importModGUI() {
-        // todo call system shell to request file picker
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+        //fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("All", "zip", "agr", "agrc", "agrf", "fstar"));
+        fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("ZIP Archive", "zip"));
+        fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("Firestar Mod Package", "agr", "agrc", "agrf", "fstar")); //what about fstar?
+
         int result = fileChooser.showOpenDialog(frame);
 
         if (result == JFileChooser.APPROVE_OPTION) {
@@ -290,31 +317,56 @@ public class MissPiggy implements ActionListener {
 
             ZipFile zipImporterHandler = new ZipFile(selectedFile.getPath());
             if (zipImporterHandler.isValidZipFile()) {
+                try {
+                    Path importDestination = Paths.get(System.getProperty("user.home") + "/.firestar/mods/"
+                            + selectedFile.getName() + "_" + Main.Mods.size() + ".zip");
+                    Files.copy(Paths.get(selectedFile.getPath()), importDestination, StandardCopyOption.REPLACE_EXISTING);
+                    String importDestinationName = importDestination.toFile().getName();
 
+                    BufferedWriter bw = new BufferedWriter(new FileWriter(System.getProperty("user.home") + "/.firestar/mods/index", true));
+                    bw.write(Main.Mods.size() + "=" + importDestinationName);
+                    bw.newLine();
+                    bw.close();
+
+                    InitializeModListStructure();
+                    InitializeModListInGUI();
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                    JOptionPane.showMessageDialog(frame, "An error has occured.\n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
             } else {
                 System.out.println("ERROR: File is not a valid ZIP archive. Aborting.");
-                JOptionPane.showMessageDialog(frame, "Whoops, that's not a valid ZIP archive.\nMod files should be in .zip, .agr, .agrc or .agrf.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(frame, "Whoops, that's not a valid ZIP archive.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
 
     public void removeAllGUI() {
         // todo warning dialog that nukes list when Yes is clicked
+        JOptionPane.showMessageDialog(frame, "Unimplemented.", "Unimplemented", JOptionPane.INFORMATION_MESSAGE);
     }
 
     public void optionsGUI() {
         // todo settings page w/ reset switch
+        JOptionPane.showMessageDialog(frame, "Unimplemented.", "Unimplemented", JOptionPane.INFORMATION_MESSAGE);
     }
 
     public void generatorGUI() {
         // todo mod packer
+        JOptionPane.showMessageDialog(frame, "Unimplemented.", "Unimplemented", JOptionPane.INFORMATION_MESSAGE);
     }
 
     public void metaEditorGUI() {
         // todo tag editor
+        JOptionPane.showMessageDialog(frame, "Unimplemented.", "Unimplemented", JOptionPane.INFORMATION_MESSAGE);
     }
 
     public void aboutGUI() {
         // todo about page
+        JOptionPane.showMessageDialog(frame, "Unimplemented.", "Unimplemented", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    public void throwUnimplemented() {
+        JOptionPane.showMessageDialog(frame, "Unimplemented.", "Unimplemented", JOptionPane.INFORMATION_MESSAGE);
     }
 }
