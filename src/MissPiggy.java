@@ -119,6 +119,7 @@ public class MissPiggy implements ActionListener {
         fileMenu.getItem(5).addActionListener(this);
         toolsMenu.getItem(0).addActionListener(this);
         toolsMenu.getItem(1).addActionListener(this);
+        toolsMenu.getItem(2).addActionListener(this);
         helpMenu.getItem(0).addActionListener(this);
 
         deployButton.addActionListener(this);
@@ -258,6 +259,10 @@ public class MissPiggy implements ActionListener {
         if (actionEvent.getSource() == toggleButton) {throwUnimplemented();} else // todo
         if (actionEvent.getSource() == deleteButton1) {deleteSelected();} else
 
+        if (actionEvent.getSource() == toolsMenu.getItem(0)) {throwUnimplemented();} else
+        if (actionEvent.getSource() == toolsMenu.getItem(1)) {throwUnimplemented();} else
+        if (actionEvent.getSource() == toolsMenu.getItem(2)) {throwUnimplemented();} else
+
         if (actionEvent.getSource() == helpMenu.getItem(0)) {new Rowlf().displayAboutScreen();}
     }
 
@@ -339,11 +344,15 @@ public class MissPiggy implements ActionListener {
     }
 
     public void deleteSelected() {
-        File file = new File(System.getProperty("user.home") + "/.firestar/mods/" + Main.Mods.get(modList.getSelectedIndex()).path);
-        file.delete();
-        System.out.println("Deleted " + Main.Mods.get(modList.getSelectedIndex()).friendlyName); //debug
-        Main.Mods.remove(modList.getSelectedIndex());
-        regenerateModIndex(true);
+        if (modList.getSelectedIndex() >= 0) {
+            File file = new File(System.getProperty("user.home") + "/.firestar/mods/" + Main.Mods.get(modList.getSelectedIndex()).path);
+            file.delete();
+            System.out.println("Deleted " + Main.Mods.get(modList.getSelectedIndex()).friendlyName); //debug
+            Main.Mods.remove(modList.getSelectedIndex());
+            regenerateModIndex(true);
+        } else {
+            JOptionPane.showMessageDialog(frame, "Please select a mod to delete first.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     public void generatorGUI() {
