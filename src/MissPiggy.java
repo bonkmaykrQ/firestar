@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.math.RoundingMode;
 import java.nio.file.*;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.regex.Pattern;
@@ -343,7 +344,18 @@ public class MissPiggy implements ActionListener {
 
     public void removeAllGUI() {
         // todo warning dialog that nukes list when Yes is clicked
-        throwUnimplemented();
+        int result = JOptionPane.showConfirmDialog(frame, "Do you really want to delete all mods?", "Remove All", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+
+        if (result == JOptionPane.YES_OPTION) {
+            for (Main.Mod entry : Main.Mods) {
+                new File(System.getProperty("user.home") + "/.firestar/mods/" + entry.path).delete();
+            }
+        }
+        new File(System.getProperty("user.home") + "/.firestar/mods/index").delete();
+        Main.Mods.clear();
+
+        InitializeModListStructure();
+        InitializeModListInGUI();
     }
 
     public void optionsGUI() {
@@ -358,11 +370,6 @@ public class MissPiggy implements ActionListener {
 
     public void metaEditorGUI() {
         // todo tag editor
-        throwUnimplemented();
-    }
-
-    public void aboutGUI() {
-        // todo about page
         throwUnimplemented();
     }
 
