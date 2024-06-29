@@ -1,5 +1,5 @@
 <component name="ArtifactManager">
-  <artifact type="jpackage" build-on-make="true" name="firestar">
+  <artifact type="jpackage" name="firestar">
     <output-path>$PROJECT_DIR$/out/artifacts/firestar</output-path>
     <properties id="jpackage-properties">
       <options>
