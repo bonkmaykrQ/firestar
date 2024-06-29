@@ -383,6 +383,9 @@ public class MissPiggy implements ActionListener {
         modList.addListSelectionListener(e -> {
             if (modList.getSelectedIndex() >= 0 && modList.getModel().getSize() >= 1) { // avoid race OOB when reinitializing mod list
             String authorDisplay;
+
+            try { //debug
+
             File pathReference = new File(System.getProperty("user.home") + "/.firestar/mods/" + Main.Mods.get(modList.getSelectedIndex()).path);
             DecimalFormat df = new DecimalFormat("##.##");
             df.setRoundingMode(RoundingMode.UP);
@@ -413,6 +416,17 @@ public class MissPiggy implements ActionListener {
                             modFileSizeStr + " " + modFileSizeUnits + " in size" +
                             "\n\n" + Main.Mods.get(modList.getSelectedIndex()).description
             );}
+
+            catch (IndexOutOfBoundsException ex) {
+                System.out.println(ex.getMessage());
+                System.out.println("mods " + Main.Mods.size());
+                System.out.println("mod display " + modList.getModel().getSize());
+                System.out.println("selection index " + modList.getSelectedIndex());
+
+                //System.exit(1); //user safety
+            }
+
+            }
         });
     }
 
@@ -434,10 +448,9 @@ public class MissPiggy implements ActionListener {
             }
             bw.close();
 
-            Main.Mods.clear(); //cleanup
-            priorityList = "";
-
             if(reload) {
+                Main.Mods.clear(); //cleanup
+                priorityList = "";
                 InitializeModListStructure();
                 InitializeModListInGUI();
             }
