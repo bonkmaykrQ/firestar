@@ -47,12 +47,13 @@ public class Rowlf {
         picLabel.setIcon(new ImageIcon(logo));picLabel.setText("");
 
         informationText.getDocument().putProperty("filterNewlines", Boolean.FALSE);
-        informationText.setText("Created by bonkmaykr\n" +
-                "a.k.a. \"Downforce Agent\"\n" +
+        informationText.setHorizontalAlignment(JTextField.CENTER);
+        informationText.setText("Created by bonkmaykr, a.k.a. \"Downforce Agent\"\n" +
                 "\n" +
                 "Special thanks to:\n" +
-                "ThatOneBonk, for almost beating me to it\n" +
-                "Wirlaburla, for web hosting and code help\n" +
+                "ThatOneBonk, for Thallium and for modding help\n" +
+                "Wirlaburla, for web hosting and being awesome\n" +
+                "Psygnosis, for making our favorite game ever\n" +
                 "and to all the PSVita hackers who made this possible");
         informationText.setHighlighter(null);
         informationText.getCaret().setVisible(false);
