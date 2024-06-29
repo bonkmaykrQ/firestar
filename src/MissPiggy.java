@@ -33,6 +33,8 @@ import java.nio.file.*;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 import java.util.regex.Pattern;
 import net.lingala.zip4j.*;
@@ -70,6 +72,8 @@ public class MissPiggy implements ActionListener {
     //private int selectedItem;
 
     public String priorityList;
+
+    public boolean listenersAlreadySet = false; // was written to troubleshoot a bug but this wasn't actually the cause
 
     // Initialize the main window
     public void Action(/*Main entryPoint*/) {
@@ -206,8 +210,9 @@ public class MissPiggy implements ActionListener {
         }
     }
 
-    public void InitializeModListInGUI() { // i really wanted this to be "lights, camera, action" but the code organizing kept getting stupider and stupider so i gave up
+    public void InitializeModListInGUI() {
         // cleanup
+        if (listenersAlreadySet) {modList.removeListSelectionListener(modList.getListSelectionListeners()[0]);} // was written to troubleshoot a bug but this wasn't actually the cause
         descriptionField.setText("Select a mod from the list on the right to view more details, or to make changes to your installation.");
         modList.clearSelection();
         modList.removeAll();
@@ -247,10 +252,11 @@ public class MissPiggy implements ActionListener {
         if (actionEvent.getSource() == optionsButton) {optionsGUI();} else
         if (actionEvent.getSource() == fileMenu.getItem(4)) {optionsGUI();} else
 
-        if (actionEvent.getSource() == moveUpButton) {throwUnimplemented();} else // todo
-        if (actionEvent.getSource() == moveDownButton) {throwUnimplemented();} else // todo
+        if (actionEvent.getSource() == moveUpButton) {moveUp(modList.getSelectedIndex());} else
+        if (actionEvent.getSource() == moveDownButton) {moveDown(modList.getSelectedIndex());} else
+
         if (actionEvent.getSource() == toggleButton) {throwUnimplemented();} else // todo
-        if (actionEvent.getSource() == deleteButton1) {deleteSelected();} else // todo
+        if (actionEvent.getSource() == deleteButton1) {deleteSelected();} else
 
         if (actionEvent.getSource() == helpMenu.getItem(0)) {new Rowlf().displayAboutScreen();}
     }
@@ -337,7 +343,7 @@ public class MissPiggy implements ActionListener {
         file.delete();
         System.out.println("Deleted " + Main.Mods.get(modList.getSelectedIndex()).friendlyName); //debug
         Main.Mods.remove(modList.getSelectedIndex());
-        regenerateModIndex();
+        regenerateModIndex(true);
     }
 
     public void generatorGUI() {
@@ -350,13 +356,32 @@ public class MissPiggy implements ActionListener {
         throwUnimplemented();
     }
 
+    private void moveUp(int index) {
+        if (index > 0) {
+            Collections.swap(Main.Mods, index, index - 1);
+            System.out.println("Items moved, redeploying list");
+            InitializeModListInGUI();
+            regenerateModIndex(false);
+        }
+    }
+
+    private void moveDown(int index) {
+        if (index < (Main.Mods.size() - 1)) {
+            Collections.swap(Main.Mods, index, index + 1);
+            System.out.println("Items moved, redeploying list");
+            InitializeModListInGUI();
+            regenerateModIndex(false);
+        }
+    }
+
     public void throwUnimplemented() {
         JOptionPane.showMessageDialog(frame, "Unimplemented.\nSee README at https://git.worlio.com/bonkmaykr/firestar", "Unimplemented", JOptionPane.INFORMATION_MESSAGE);
     }
 
     public void createSelectionEventListener() { // moved incase needs to be removed and re-added
+        listenersAlreadySet = true; // was written to troubleshoot a bug but this wasn't actually the cause
         modList.addListSelectionListener(e -> {
-            if (modList.getSelectedIndex() >= 0) { // avoid race OOB when reinitializing mod list
+            if (modList.getSelectedIndex() >= 0 && modList.getModel().getSize() >= 1) { // avoid race OOB when reinitializing mod list
             String authorDisplay;
             File pathReference = new File(System.getProperty("user.home") + "/.firestar/mods/" + Main.Mods.get(modList.getSelectedIndex()).path);
             DecimalFormat df = new DecimalFormat("##.##");
@@ -391,7 +416,7 @@ public class MissPiggy implements ActionListener {
         });
     }
 
-    public void regenerateModIndex() {
+    public void regenerateModIndex(boolean reload) {
         try {
             System.out.println("Regenerating index..."); //debug
 
@@ -404,16 +429,19 @@ public class MissPiggy implements ActionListener {
             int i = 0;
             for (Main.Mod m : Main.Mods) {
                 bw.write(i + "=" + m.path);
+                bw.newLine();
                 i++;
             }
-            bw.newLine();
             bw.close();
 
             Main.Mods.clear(); //cleanup
             priorityList = "";
 
-            InitializeModListStructure();
-            InitializeModListInGUI();
+            if(reload) {
+                InitializeModListStructure();
+                InitializeModListInGUI();
+            }
+            System.out.println("Mod index file regenerated.");
         } catch (Exception e) {
             System.out.println(e.getMessage());
             JOptionPane.showMessageDialog(frame, "An error has occured.\n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
