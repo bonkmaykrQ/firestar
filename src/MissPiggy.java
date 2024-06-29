@@ -67,7 +67,7 @@ public class MissPiggy implements ActionListener {
     private JButton deployButton;
     private JTextPane descriptionField;
 
-    private int selectedItem;
+    //private int selectedItem;
 
     public String priorityList;
 
@@ -281,7 +281,7 @@ public class MissPiggy implements ActionListener {
         if (actionEvent.getSource() == moveUpButton) {throwUnimplemented();} else // todo
         if (actionEvent.getSource() == moveDownButton) {throwUnimplemented();} else // todo
         if (actionEvent.getSource() == toggleButton) {throwUnimplemented();} else // todo
-        if (actionEvent.getSource() == deleteButton1) {throwUnimplemented();} else // todo
+        if (actionEvent.getSource() == deleteButton1) {deleteSelected();} else // todo
 
         if (actionEvent.getSource() == helpMenu.getItem(0)) {new Rowlf().displayAboutScreen();}
     }
@@ -361,6 +361,34 @@ public class MissPiggy implements ActionListener {
     public void optionsGUI() {
         // todo settings page w/ reset switch
         throwUnimplemented();
+    }
+
+    public void deleteSelected() {
+        File file = new File(System.getProperty("user.home") + "/.firestar/mods/" + Main.Mods.get(modList.getSelectedIndex()).path);    //new File(Main.Mods.get(modList.getSelectedIndex()).path);
+        //String filename = Paths.get(Main.Mods.get(modList.getSelectedIndex()).path).getFileName().toString();                                   //redundant since Mod path is relative to /.firestar/mods
+
+        //JOptionPane.showMessageDialog(frame, filename, "Unimplemented", JOptionPane.INFORMATION_MESSAGE); //debug
+
+        file.delete(); System.out.println("Deleted " + Main.Mods.get(modList.getSelectedIndex()).friendlyName); //debug
+        try {
+            priorityList = new String(Files.readAllBytes(Paths.get(System.getProperty("user.home") + "/.firestar/mods/index")));
+            String[] pListArray = priorityList.split("\n");
+            Arrays.sort(pListArray);
+            System.out.println("Searching modlist to remove " + Main.Mods.get(modList.getSelectedIndex()).friendlyName); //debug
+
+            int i = 0;
+            for (String s : pListArray) {
+                if (file.getName().equals(s.substring(s.indexOf("=") + 1))) {
+                    pListArray[i] = "";
+                }
+                i++;
+            }
+
+
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+            JOptionPane.showMessageDialog(frame, "An error has occured.\n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     public void generatorGUI() {
