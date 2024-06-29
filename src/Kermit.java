@@ -95,7 +95,7 @@ public class Kermit implements ActionListener {
                     button.setVisible(false);frame.remove(button);
                     button2.setVisible(false);frame.remove(button2);
                     dialogText.setVisible(false);frame.remove(dialogText);
-                    changePage(Pages.EXPORT_MODE);
+                    changePage(Pages.SDK_INSTALL); // EXPORT_MODE
                     break;
                 case EXPORT_MODE:
                     button.setVisible(false);frame.remove(button);
