@@ -423,7 +423,8 @@ public class MissPiggy implements ActionListener {
                 System.out.println("mod display " + modList.getModel().getSize());
                 System.out.println("selection index " + modList.getSelectedIndex());
 
-                //System.exit(1); //user safety
+                int result = JOptionPane.showConfirmDialog(frame, "Firestar encountered an internal error.\n" + ex.getMessage(), "Fatal Error", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
+                if (result == JOptionPane.OK_OPTION) {System.exit(1);} //user safety
             }
 
             }
