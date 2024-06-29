@@ -375,7 +375,7 @@ public class MissPiggy implements ActionListener {
     }
 
     public void throwUnimplemented() {
-        JOptionPane.showMessageDialog(frame, "Unimplemented.\nSee README at https://git.worlio.com/bonkmaykr/firestar", "Unimplemented", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(frame, "This feature is unimplemented and will be coming soon.\nSee README at https://git.worlio.com/bonkmaykr/firestar", "Unimplemented", JOptionPane.INFORMATION_MESSAGE);
     }
 
     public void createSelectionEventListener() { // moved incase needs to be removed and re-added
