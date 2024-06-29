@@ -343,30 +343,30 @@ public class MissPiggy implements ActionListener {
 
     public void removeAllGUI() {
         // todo warning dialog that nukes list when Yes is clicked
-        JOptionPane.showMessageDialog(frame, "Unimplemented.", "Unimplemented", JOptionPane.INFORMATION_MESSAGE);
+        throwUnimplemented();
     }
 
     public void optionsGUI() {
         // todo settings page w/ reset switch
-        JOptionPane.showMessageDialog(frame, "Unimplemented.", "Unimplemented", JOptionPane.INFORMATION_MESSAGE);
+        throwUnimplemented();
     }
 
     public void generatorGUI() {
         // todo mod packer
-        JOptionPane.showMessageDialog(frame, "Unimplemented.", "Unimplemented", JOptionPane.INFORMATION_MESSAGE);
+        throwUnimplemented();
     }
 
     public void metaEditorGUI() {
         // todo tag editor
-        JOptionPane.showMessageDialog(frame, "Unimplemented.", "Unimplemented", JOptionPane.INFORMATION_MESSAGE);
+        throwUnimplemented();
     }
 
     public void aboutGUI() {
         // todo about page
-        JOptionPane.showMessageDialog(frame, "Unimplemented.", "Unimplemented", JOptionPane.INFORMATION_MESSAGE);
+        throwUnimplemented();
     }
 
     public void throwUnimplemented() {
-        JOptionPane.showMessageDialog(frame, "Unimplemented.", "Unimplemented", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(frame, "Unimplemented.\nSee README at https://git.worlio.com/bonkmaykr/firestar", "Unimplemented", JOptionPane.INFORMATION_MESSAGE);
     }
 }
