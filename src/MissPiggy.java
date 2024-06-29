@@ -333,43 +333,11 @@ public class MissPiggy implements ActionListener {
     }
 
     public void deleteSelected() {
-        File file = new File(System.getProperty("user.home") + "/.firestar/mods/" + Main.Mods.get(modList.getSelectedIndex()).path);    //new File(Main.Mods.get(modList.getSelectedIndex()).path);
-        //String filename = Paths.get(Main.Mods.get(modList.getSelectedIndex()).path).getFileName().toString();                                   //redundant since Mod path is relative to /.firestar/mods
-
-        //JOptionPane.showMessageDialog(frame, filename, "Unimplemented", JOptionPane.INFORMATION_MESSAGE); //debug
-
+        File file = new File(System.getProperty("user.home") + "/.firestar/mods/" + Main.Mods.get(modList.getSelectedIndex()).path);
         file.delete();
         System.out.println("Deleted " + Main.Mods.get(modList.getSelectedIndex()).friendlyName); //debug
         Main.Mods.remove(modList.getSelectedIndex());
-        try {
-            priorityList = new String(Files.readAllBytes(Paths.get(System.getProperty("user.home") + "/.firestar/mods/index")));
-            String[] pListArray = priorityList.split("\n");
-            Arrays.sort(pListArray);
-            System.out.println("Regenerating index..."); //debug
-
-            new File(System.getProperty("user.home") + "/.firestar/mods/index").delete();
-            File priorityListFileHandle = new File(System.getProperty("user.home") + "/.firestar/mods/index");
-            priorityListFileHandle.createNewFile();
-
-
-            BufferedWriter bw = new BufferedWriter(new FileWriter(System.getProperty("user.home") + "/.firestar/mods/index", true));
-            int i = 0;
-            for (Main.Mod m : Main.Mods) {
-                bw.write(i + "=" + m.path);
-                i++;
-            }
-            bw.newLine();
-            bw.close();
-
-            Main.Mods.clear(); //cleanup
-            priorityList = "";
-
-            InitializeModListStructure();
-            InitializeModListInGUI();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            JOptionPane.showMessageDialog(frame, "An error has occured.\n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
+        regenerateModIndex();
     }
 
     public void generatorGUI() {
@@ -421,5 +389,34 @@ public class MissPiggy implements ActionListener {
                             "\n\n" + Main.Mods.get(modList.getSelectedIndex()).description
             );}
         });
+    }
+
+    public void regenerateModIndex() {
+        try {
+            System.out.println("Regenerating index..."); //debug
+
+            new File(System.getProperty("user.home") + "/.firestar/mods/index").delete();
+            File priorityListFileHandle = new File(System.getProperty("user.home") + "/.firestar/mods/index");
+            priorityListFileHandle.createNewFile();
+
+
+            BufferedWriter bw = new BufferedWriter(new FileWriter(System.getProperty("user.home") + "/.firestar/mods/index", true));
+            int i = 0;
+            for (Main.Mod m : Main.Mods) {
+                bw.write(i + "=" + m.path);
+                i++;
+            }
+            bw.newLine();
+            bw.close();
+
+            Main.Mods.clear(); //cleanup
+            priorityList = "";
+
+            InitializeModListStructure();
+            InitializeModListInGUI();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            JOptionPane.showMessageDialog(frame, "An error has occured.\n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 }
