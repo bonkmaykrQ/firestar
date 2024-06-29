@@ -89,6 +89,7 @@ public class MissPiggy implements ActionListener {
 
         fileMenu.add(new JMenuItem("Deploy Mods"));
         fileMenu.add(new JMenuItem("Import Mod from File"));
+        fileMenu.add(new JSeparator());
         fileMenu.add(new JMenuItem("Delete All"));
         fileMenu.add(new JSeparator());
         fileMenu.add(new JMenuItem("Options"));
@@ -114,9 +115,9 @@ public class MissPiggy implements ActionListener {
 
         fileMenu.getItem(0).addActionListener(this);
         fileMenu.getItem(1).addActionListener(this);
-        fileMenu.getItem(2).addActionListener(this);
-        fileMenu.getItem(4).addActionListener(this);
+        fileMenu.getItem(3).addActionListener(this);
         fileMenu.getItem(5).addActionListener(this);
+        fileMenu.getItem(6).addActionListener(this);
         toolsMenu.getItem(0).addActionListener(this);
         toolsMenu.getItem(1).addActionListener(this);
         toolsMenu.getItem(2).addActionListener(this);
@@ -244,14 +245,14 @@ public class MissPiggy implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        if (actionEvent.getSource() == fileMenu.getItem(5)) {System.exit(0);} else
+        if (actionEvent.getSource() == fileMenu.getItem(6)) {System.exit(0);} else
         if (actionEvent.getSource() == fileMenu.getItem(0)) {deployModGUI();} else
         if (actionEvent.getSource() == deployButton) {deployModGUI();} else
         if (actionEvent.getSource() == importButton) {importModGUI();} else
         if (actionEvent.getSource() == fileMenu.getItem(1)) {importModGUI();} else
-        if (actionEvent.getSource() == fileMenu.getItem(2)) {removeAllGUI();} else
+        if (actionEvent.getSource() == fileMenu.getItem(3)) {removeAllGUI();} else
         if (actionEvent.getSource() == optionsButton) {optionsGUI();} else
-        if (actionEvent.getSource() == fileMenu.getItem(4)) {optionsGUI();} else
+        if (actionEvent.getSource() == fileMenu.getItem(5)) {optionsGUI();} else
 
         if (actionEvent.getSource() == moveUpButton) {moveUp(modList.getSelectedIndex());} else
         if (actionEvent.getSource() == moveDownButton) {moveDown(modList.getSelectedIndex());} else
