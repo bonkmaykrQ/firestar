@@ -87,9 +87,9 @@ public class MissPiggy implements ActionListener {
         toolsMenu = new JMenu("Tools");
         helpMenu = new JMenu("Help");
 
-        fileMenu.add(new JMenuItem("Deploy All Mods"));
-        fileMenu.add(new JMenuItem("Import Mod..."));
-        fileMenu.add(new JMenuItem("Remove All"));
+        fileMenu.add(new JMenuItem("Deploy Mods"));
+        fileMenu.add(new JMenuItem("Import Mod from File"));
+        fileMenu.add(new JMenuItem("Delete All"));
         fileMenu.add(new JSeparator());
         fileMenu.add(new JMenuItem("Options"));
         fileMenu.add(new JMenuItem("Quit"));
@@ -269,12 +269,15 @@ public class MissPiggy implements ActionListener {
     // Will likely split the below functions into separate classes to work with intellij GUI designer.
 
     public void deployModGUI() {
-        // prevent interruptions
-        frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-        frame.setEnabled(false);
+        int result = JOptionPane.showConfirmDialog(frame, "A new PSARC will be generated. This can take several minutes.\nDuring this time, your computer may be very busy or slow.\n\nAre you sure you want to continue?", "Deploy Mods", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        if (result == JOptionPane.YES_OPTION) {
+            // prevent interruptions
+            frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+            frame.setEnabled(false);
 
-        // start
-        new Gonzo().DeployMods(this);
+            // start
+            new Gonzo().DeployMods(this);
+        }
     }
 
     public void wrapUpDeployment() {
@@ -330,12 +333,13 @@ public class MissPiggy implements ActionListener {
             for (Main.Mod entry : Main.Mods) {
                 new File(System.getProperty("user.home") + "/.firestar/mods/" + entry.path).delete();
             }
-        }
-        new File(System.getProperty("user.home") + "/.firestar/mods/index").delete();
-        Main.Mods.clear();
 
-        InitializeModListStructure();
-        InitializeModListInGUI();
+            new File(System.getProperty("user.home") + "/.firestar/mods/index").delete();
+            Main.Mods.clear();
+
+            InitializeModListStructure();
+            InitializeModListInGUI();
+        }
     }
 
     public void optionsGUI() {
