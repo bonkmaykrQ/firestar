@@ -366,7 +366,7 @@ public class MissPiggy implements ActionListener {
 
             InitializeModListStructure();
             InitializeModListInGUI();
-        } catch (IOException e) {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             JOptionPane.showMessageDialog(frame, "An error has occured.\n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }

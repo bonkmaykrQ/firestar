@@ -4,13 +4,13 @@ Firestar is a mod manager for WipEout 2048 which automatically handles sorting m
   
 # about 85% complete
 **What works:**
-- Importing mods
+- Importing & deleting mods
 - Repacking (installing) mods
 - config loading
 - Cross-platform support
 
 **What doesn't work yet:**
-- managing mods within the program (delete, change priority, toggle)
+- change load order, toggle
 - settings screen
 - misc. tools (pack creator, soundtrack mod generator...)
 
