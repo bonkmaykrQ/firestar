@@ -126,38 +126,6 @@ public class MissPiggy implements ActionListener {
         toggleButton.addActionListener(this);
 
         descriptionField.getDocument().putProperty("filterNewlines", Boolean.FALSE);
-        modList.addListSelectionListener(e -> {
-            String authorDisplay;
-            File pathReference = new File(System.getProperty("user.home") + "/.firestar/mods/" + Main.Mods.get(modList.getSelectedIndex()).path);
-            DecimalFormat df = new DecimalFormat("##.##");
-            df.setRoundingMode(RoundingMode.UP);
-            float modFileSize = pathReference.length(); //precise units
-            String modFileSizeStr = String.valueOf(modFileSize);
-            String modFileSizeUnits = "bytes"; //todo: don't show decimals for bytes
-            if (pathReference.length() >= 1024) {
-                modFileSizeStr = String.valueOf(df.format(modFileSize / 1024));
-                modFileSizeUnits = "Kilobytes";
-            }
-            if (pathReference.length() >= 1024 * 1024) {
-                modFileSizeStr = String.valueOf(df.format(modFileSize / (1024 * 1024)));
-                modFileSizeUnits = "Megabytes";
-            }
-            if (pathReference.length() >= 1024 * 1024 * 1024) {
-                modFileSizeStr = String.valueOf(df.format(modFileSize / (1024 * 1024 * 1024)));
-                modFileSizeUnits = "Gigabytes";
-            }
-            if (Main.Mods.get(modList.getSelectedIndex()).author == null) {
-                authorDisplay = "an Unknown Author";
-            } else {
-                authorDisplay = Main.Mods.get(modList.getSelectedIndex()).author;
-            }
-            descriptionField.setText(
-                "\"" + Main.Mods.get(modList.getSelectedIndex()).friendlyName + "\"\n" +
-                "by " + authorDisplay + "\n\n" +
-                "Version " + Main.Mods.get(modList.getSelectedIndex()).version + "\n" +
-                        modFileSizeStr + " " + modFileSizeUnits + " in size" +
-                "\n\n" + Main.Mods.get(modList.getSelectedIndex()).description
-        );});
 
         // display window
         try {
@@ -261,6 +229,7 @@ public class MissPiggy implements ActionListener {
             i++;
         }
         modList.setListData(contents);
+        createSelectionEventListener();
     }
 
     private ListSelectionListener whenItemSelected() {
@@ -369,22 +338,34 @@ public class MissPiggy implements ActionListener {
 
         //JOptionPane.showMessageDialog(frame, filename, "Unimplemented", JOptionPane.INFORMATION_MESSAGE); //debug
 
-        file.delete(); System.out.println("Deleted " + Main.Mods.get(modList.getSelectedIndex()).friendlyName); //debug
+        file.delete();
+        System.out.println("Deleted " + Main.Mods.get(modList.getSelectedIndex()).friendlyName); //debug
+        Main.Mods.remove(modList.getSelectedIndex());
         try {
             priorityList = new String(Files.readAllBytes(Paths.get(System.getProperty("user.home") + "/.firestar/mods/index")));
             String[] pListArray = priorityList.split("\n");
             Arrays.sort(pListArray);
-            System.out.println("Searching modlist to remove " + Main.Mods.get(modList.getSelectedIndex()).friendlyName); //debug
+            System.out.println("Regenerating index..."); //debug
 
+            new File(System.getProperty("user.home") + "/.firestar/mods/index").delete();
+            File priorityListFileHandle = new File(System.getProperty("user.home") + "/.firestar/mods/index");
+            priorityListFileHandle.createNewFile();
+
+
+            BufferedWriter bw = new BufferedWriter(new FileWriter(System.getProperty("user.home") + "/.firestar/mods/index", true));
             int i = 0;
-            for (String s : pListArray) {
-                if (file.getName().equals(s.substring(s.indexOf("=") + 1))) {
-                    pListArray[i] = "";
-                }
+            for (Main.Mod m : Main.Mods) {
+                bw.write(i + "=" + m.path);
                 i++;
             }
+            bw.newLine();
+            bw.close();
 
+            Main.Mods.clear(); //cleanup
+            priorityList = "";
 
+            InitializeModListStructure();
+            InitializeModListInGUI();
         } catch (IOException e) {
             System.out.println(e.getMessage());
             JOptionPane.showMessageDialog(frame, "An error has occured.\n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -403,5 +384,42 @@ public class MissPiggy implements ActionListener {
 
     public void throwUnimplemented() {
         JOptionPane.showMessageDialog(frame, "Unimplemented.\nSee README at https://git.worlio.com/bonkmaykr/firestar", "Unimplemented", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    public void createSelectionEventListener() { // moved incase needs to be removed and re-added
+        modList.addListSelectionListener(e -> {
+            if (modList.getSelectedIndex() >= 0) { // avoid race OOB when reinitializing mod list
+            String authorDisplay;
+            File pathReference = new File(System.getProperty("user.home") + "/.firestar/mods/" + Main.Mods.get(modList.getSelectedIndex()).path);
+            DecimalFormat df = new DecimalFormat("##.##");
+            df.setRoundingMode(RoundingMode.UP);
+            float modFileSize = pathReference.length(); //precise units
+            String modFileSizeStr = String.valueOf(modFileSize);
+            String modFileSizeUnits = "bytes"; //todo: don't show decimals for bytes
+            if (pathReference.length() >= 1024) {
+                modFileSizeStr = String.valueOf(df.format(modFileSize / 1024));
+                modFileSizeUnits = "Kilobytes";
+            }
+            if (pathReference.length() >= 1024 * 1024) {
+                modFileSizeStr = String.valueOf(df.format(modFileSize / (1024 * 1024)));
+                modFileSizeUnits = "Megabytes";
+            }
+            if (pathReference.length() >= 1024 * 1024 * 1024) {
+                modFileSizeStr = String.valueOf(df.format(modFileSize / (1024 * 1024 * 1024)));
+                modFileSizeUnits = "Gigabytes";
+            }
+            if (Main.Mods.get(modList.getSelectedIndex()).author == null) {
+                authorDisplay = "an Unknown Author";
+            } else {
+                authorDisplay = Main.Mods.get(modList.getSelectedIndex()).author;
+            }
+            descriptionField.setText(
+                    "\"" + Main.Mods.get(modList.getSelectedIndex()).friendlyName + "\"\n" +
+                            "by " + authorDisplay + "\n\n" +
+                            "Version " + Main.Mods.get(modList.getSelectedIndex()).version + "\n" +
+                            modFileSizeStr + " " + modFileSizeUnits + " in size" +
+                            "\n\n" + Main.Mods.get(modList.getSelectedIndex()).description
+            );}
+        });
     }
 }
