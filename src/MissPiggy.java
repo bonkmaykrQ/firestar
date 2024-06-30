@@ -41,6 +41,7 @@ import java.util.Random;
 import java.util.regex.Pattern;
 import net.lingala.zip4j.*;
 import net.lingala.zip4j.exception.ZipException;
+import org.json.JSONException;
 import org.json.JSONObject;
 import static java.nio.file.StandardCopyOption.*;
 
@@ -365,9 +366,10 @@ public class MissPiggy implements ActionListener {
             File selectedFile = fileChooser.getSelectedFile();
             System.out.println("Importing selected mod file \"" + selectedFile.getName() + "\"");
 
-            ZipFile zipImporterHandler = new ZipFile(selectedFile.getPath());
+            ZipFile zipImporterHandler = new ZipFile(selectedFile.getAbsolutePath());
             if (zipImporterHandler.isValidZipFile()) {
                 try {
+                    new JSONObject(new ZipFile(selectedFile.getAbsolutePath()).getComment()); // intentionally trigger exception if file is random BS
                     Path importDestination = Paths.get(System.getProperty("user.home") + "/.firestar/mods/"
                             + selectedFile.getName() + "_" + Main.Mods.size() + ".zip");
                     Files.copy(Paths.get(selectedFile.getPath()), importDestination, StandardCopyOption.REPLACE_EXISTING);
@@ -380,13 +382,16 @@ public class MissPiggy implements ActionListener {
 
                     InitializeModListStructure();
                     InitializeModListInGUI();
+                } catch (JSONException e) {
+                    System.out.println("ERROR: File is not a valid ZIP archive with mod data. Aborting.");
+                    JOptionPane.showMessageDialog(frame, "Whoops, that's not a valid mod file.", "Error", JOptionPane.ERROR_MESSAGE);
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
                     JOptionPane.showMessageDialog(frame, "An error has occured.\n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 }
             } else {
-                System.out.println("ERROR: File is not a valid ZIP archive. Aborting.");
-                JOptionPane.showMessageDialog(frame, "Whoops, that's not a valid ZIP archive.", "Error", JOptionPane.ERROR_MESSAGE);
+                System.out.println("ERROR: File is not a valid ZIP archive with mod data. Aborting.");
+                JOptionPane.showMessageDialog(frame, "Whoops, that's not a valid mod file.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
