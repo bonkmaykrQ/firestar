@@ -17,6 +17,7 @@
  */
 
 import net.lingala.zip4j.ZipFile;
+import net.lingala.zip4j.util.FileUtils;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -274,6 +275,7 @@ public class Gonzo {
         boolean one = new File(Main.outpath).mkdirs();
         boolean two;
         System.out.println("created export folder: " + one);
+        if (new File(Main.outpath + oArcTarget).exists()) {System.out.println("deleting existing file: " + Main.outpath + oArcTarget); new File(Main.outpath + oArcTarget).delete();} //hackjob
         if (!Main.windows) {two = new File(System.getProperty("user.home") + "/.firestar/temp/" + oArcTarget).renameTo(new File(Main.outpath + oArcTarget));}
         else {two = new File(System.getProperty("user.home") + "\\.firestar\\temp\\" + oArcTarget).renameTo(new File(Main.outpath + oArcTarget));}
         System.out.println("moved file to destination: " + two);
@@ -286,11 +288,9 @@ public class Gonzo {
             return;
         }
         try {
-            Process p;
-            if (!Main.windows) {p = Runtime.getRuntime().exec(new String[]{"bash","-c","rm -rf " + System.getProperty("user.home") + "/.firestar/temp/"});} // Scary!
-            else {p = Runtime.getRuntime().exec(new String[]{"rmdir", new String(System.getProperty("user.home") + "/.firestar/temp/").replace("/", "\\").replace("\\", "\\\\"), "/s", "/q"});}
-            //new File(System.getProperty("user.home") + "/.firestar/temp/").delete();
-        } catch (IOException e) {
+            File tmp = new File(System.getProperty("user.home") + "/.firestar/temp/");
+            deleteDir(tmp);
+        } catch (Exception e) {
             System.out.println("WARNING: Temporary files may not have been properly cleared.\n" + e.getMessage());
             consoleDisplay.append("WARNING: Temporary files may not have been properly cleared.\n" + e.getMessage());
         }
@@ -344,5 +344,17 @@ public class Gonzo {
                 }
             }
         }
+    }
+
+    private void deleteDir(File file) { // https://stackoverflow.com/a/29175213/9259829
+        File[] contents = file.listFiles();
+        if (contents != null) {
+            for (File f : contents) {
+                if (! Files.isSymbolicLink(f.toPath())) {
+                    deleteDir(f);
+                }
+            }
+        }
+        file.delete();
     }
 }
