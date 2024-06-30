@@ -128,4 +128,16 @@ public class Main {
             System.out.println(e.getMessage());
         }
     }
+
+    public static void deleteDir(File file) { // https://stackoverflow.com/a/29175213/9259829
+        File[] contents = file.listFiles();
+        if (contents != null) {
+            for (File f : contents) {
+                if (! Files.isSymbolicLink(f.toPath())) {
+                    deleteDir(f);
+                }
+            }
+        }
+        file.delete();
+    }
 }

@@ -289,7 +289,7 @@ public class Gonzo {
         }
         try {
             File tmp = new File(System.getProperty("user.home") + "/.firestar/temp/");
-            deleteDir(tmp);
+            Main.deleteDir(tmp);
         } catch (Exception e) {
             System.out.println("WARNING: Temporary files may not have been properly cleared.\n" + e.getMessage());
             consoleDisplay.append("WARNING: Temporary files may not have been properly cleared.\n" + e.getMessage());
@@ -344,17 +344,5 @@ public class Gonzo {
                 }
             }
         }
-    }
-
-    private void deleteDir(File file) { // https://stackoverflow.com/a/29175213/9259829
-        File[] contents = file.listFiles();
-        if (contents != null) {
-            for (File f : contents) {
-                if (! Files.isSymbolicLink(f.toPath())) {
-                    deleteDir(f);
-                }
-            }
-        }
-        file.delete();
     }
 }

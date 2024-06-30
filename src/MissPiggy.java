@@ -396,11 +396,7 @@ public class MissPiggy implements ActionListener {
         int result = JOptionPane.showConfirmDialog(frame, "Do you really want to delete all mods?", "Remove All", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 
         if (result == JOptionPane.YES_OPTION) {
-            for (Main.Mod entry : Main.Mods) {
-                new File(System.getProperty("user.home") + "/.firestar/mods/" + entry.path).delete();
-            }
-
-            new File(System.getProperty("user.home") + "/.firestar/mods/index").delete();
+            Main.deleteDir(new File(System.getProperty("user.home") + "/.firestar/mods/"));
             Main.Mods.clear();
 
             InitializeModListStructure();
