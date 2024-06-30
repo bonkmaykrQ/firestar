@@ -305,7 +305,7 @@ public class MissPiggy implements ActionListener {
         if (actionEvent.getSource() == deleteButton1) {deleteSelected();} else
 
         if (actionEvent.getSource() == toolsMenu.getItem(0)) {metaEditorGUI(modList.getSelectedIndex());} else
-        if (actionEvent.getSource() == toolsMenu.getItem(1)) {throwUnimplemented();} else
+        if (actionEvent.getSource() == toolsMenu.getItem(1)) {generatorGUI();} else
         if (actionEvent.getSource() == toolsMenu.getItem(2)) {throwUnimplemented();} else
 
         if (actionEvent.getSource() == helpMenu.getItem(0)) {
@@ -444,8 +444,19 @@ public class MissPiggy implements ActionListener {
     }
 
     public void generatorGUI() {
-        // todo mod packer
-        throwUnimplemented();
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        int result = fileChooser.showOpenDialog(frame);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            if (fileChooser.getSelectedFile().isDirectory()
+            && new File(fileChooser.getSelectedFile().getAbsolutePath() + "/data").isDirectory()) {
+                File file = fileChooser.getSelectedFile();
+                new Clifford().Action(this, file);
+                frame.setEnabled(false);
+            } else {
+                JOptionPane.showMessageDialog(frame, "You must select a folder containing a \"data\" directory with game assets.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }
 
     public void metaEditorGUI(int index) {

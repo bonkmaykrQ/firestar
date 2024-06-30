@@ -21,6 +21,8 @@ import net.lingala.zip4j.exception.ZipException;
 import org.json.JSONObject;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -28,7 +30,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 
-import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
+import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
 
 public class Clifford implements ActionListener {
     private JFrame frame = new JFrame();
@@ -43,18 +45,22 @@ public class Clifford implements ActionListener {
     MissPiggy invoker;
     Main.Mod mod;
     int index;
+    File directory;
 
-    public void Action(MissPiggy inv, int modindex) {
+    boolean creating;
+
+    public void Action(MissPiggy inv, int modindex) { // Editor
         invoker = inv;
         mod = Main.Mods.get(modindex);
         index = modindex;
+        creating = false;
 
         frame.add(frameContainer);
         frame.setSize(600, 200); // 1280 800
         frame.setMinimumSize(new Dimension(200,100));
         frame.setTitle("Options");
         frame.setResizable(false);
-        frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         frame.setLayout(new GridLayout());
         frame.setLocationRelativeTo(null);
         frame.setAlwaysOnTop(true);
@@ -78,8 +84,33 @@ public class Clifford implements ActionListener {
         });
     }
 
-    public void Action(MissPiggy inv, File dir) {
+    public void Action(MissPiggy inv, File dir) { // Generator
+        invoker = inv;
+        directory = dir;
+        creating = true;
 
+        frame.add(frameContainer);
+        frame.setSize(600, 200); // 1280 800
+        frame.setMinimumSize(new Dimension(200,100));
+        frame.setTitle("Options");
+        frame.setResizable(false);
+        frame.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        frame.setLayout(new GridLayout());
+        frame.setLocationRelativeTo(null);
+        frame.setAlwaysOnTop(true);
+
+        cancelbtn.addActionListener(this);
+        savebtn.addActionListener(this);
+
+        frame.setVisible(true);
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e)
+            {
+                invoker.frame.setEnabled(true);
+                e.getWindow().dispose();
+            }
+        });
     }
 
     @Override
@@ -87,8 +118,7 @@ public class Clifford implements ActionListener {
         if (actionEvent.getSource() == cancelbtn) {
             invoker.frame.setEnabled(true);
             frame.dispose();
-        } else
-        if (actionEvent.getSource() == savebtn) {
+        } else if (actionEvent.getSource() == savebtn && !creating) {
             try {
                 mod.version = Integer.parseInt(fVersion.getText());
             } catch (NumberFormatException e) {
@@ -118,6 +148,47 @@ public class Clifford implements ActionListener {
             invoker.frame.setEnabled(true);
             invoker.InitializeModListInGUI();
             frame.dispose();
+        } else if (actionEvent.getSource() == savebtn && creating) {
+            try {
+                Integer.parseInt(fVersion.getText());
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(frame, "Mod version must be a valid integer.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setFileFilter(new FileNameExtensionFilter("Firestar Mod Package", "fstar"));
+            if (fileChooser.showSaveDialog(frame) == JFileChooser.APPROVE_OPTION) {
+                ZipFile zip = new ZipFile(fileChooser.getSelectedFile());
+                try {
+                    zip.addFolder(new File(directory.getAbsolutePath() + "/data"));
+                    if (new File(directory.getAbsolutePath() + "/delete.txt").exists()) {
+                        zip.addFile(new File(directory.getAbsolutePath() + "/delete.txt"));
+                    }
+                    if (new File(directory.getAbsolutePath() + "/pack.png").exists()) {
+                        zip.addFile(new File(directory.getAbsolutePath() + "/pack.png"));
+                    }
+
+                    JSONObject container = new JSONObject();
+                    container.put("version", Integer.parseInt(fVersion.getText()));
+                    container.put("friendlyName", fName.getText());
+                    container.put("author", fAuthor.getText());
+                    container.put("description", fDescription.getText());
+                    container.put("loaderversion", 0); // TODO for later versions: Change depending on features inside of mod folder
+                    container.put("game", "2048");
+
+                    zip.setComment(container.toString());
+                    zip.close();
+                } catch (Exception e) {
+                    fileChooser.getSelectedFile().delete(); //cleanup
+                    System.out.println(e.getMessage());
+                    JOptionPane.showMessageDialog(frame, "An error has occured.\n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                JOptionPane.showMessageDialog(frame, "Mod file created", "Success", JOptionPane.INFORMATION_MESSAGE);
+                invoker.frame.setEnabled(true);
+                frame.dispose();
+            }
         }
     }
 }
