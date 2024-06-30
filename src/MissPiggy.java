@@ -380,19 +380,24 @@ public class MissPiggy implements ActionListener {
             ZipFile zipImporterHandler = new ZipFile(selectedFile.getAbsolutePath());
             if (zipImporterHandler.isValidZipFile()) {
                 try {
-                    new JSONObject(new ZipFile(selectedFile.getAbsolutePath()).getComment()); // intentionally trigger exception if file is random BS
-                    Path importDestination = Paths.get(System.getProperty("user.home") + "/.firestar/mods/"
+                    JSONObject json = new JSONObject(new ZipFile(selectedFile.getAbsolutePath()).getComment()); // intentionally trigger exception if file is random BS
+                    if ((int)json.get("loaderversion") <= Main.vint) {
+                        Path importDestination = Paths.get(System.getProperty("user.home") + "/.firestar/mods/"
                             + selectedFile.getName() + "_" + Main.Mods.size() + ".zip");
-                    Files.copy(Paths.get(selectedFile.getPath()), importDestination, StandardCopyOption.REPLACE_EXISTING);
-                    String importDestinationName = importDestination.toFile().getName();
+                        Files.copy(Paths.get(selectedFile.getPath()), importDestination, StandardCopyOption.REPLACE_EXISTING);
+                        String importDestinationName = importDestination.toFile().getName();
 
-                    BufferedWriter bw = new BufferedWriter(new FileWriter(System.getProperty("user.home") + "/.firestar/mods/index", true));
-                    bw.write(Main.Mods.size() + "=" + importDestinationName);
-                    bw.newLine();
-                    bw.close();
+                        BufferedWriter bw = new BufferedWriter(new FileWriter(System.getProperty("user.home") + "/.firestar/mods/index", true));
+                        bw.write(Main.Mods.size() + "=" + importDestinationName);
+                        bw.newLine();
+                        bw.close();
 
-                    InitializeModListStructure();
-                    InitializeModListInGUI();
+                        InitializeModListStructure();
+                        InitializeModListInGUI();
+                    } else {
+                        System.out.println("ERROR: This mod requires feature level " + json.get("loaderversion").toString() + ", but you have level " + Main.vint + ".");
+                        JOptionPane.showMessageDialog(frame, "This mod requires feature level " + json.get("loaderversion").toString() + ", but you have level " + Main.vint + ".\nPlease update Firestar to the latest version.", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 } catch (JSONException e) {
                     System.out.println("ERROR: File is not a valid ZIP archive with mod data. Aborting.");
                     JOptionPane.showMessageDialog(frame, "Whoops, that's not a valid mod file.", "Error", JOptionPane.ERROR_MESSAGE);
