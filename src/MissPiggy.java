@@ -304,7 +304,7 @@ public class MissPiggy implements ActionListener {
         if (actionEvent.getSource() == toggleButton) {toggleSelected(modList.getSelectedIndex());} else
         if (actionEvent.getSource() == deleteButton1) {deleteSelected();} else
 
-        if (actionEvent.getSource() == toolsMenu.getItem(0)) {throwUnimplemented();} else
+        if (actionEvent.getSource() == toolsMenu.getItem(0)) {metaEditorGUI(modList.getSelectedIndex());} else
         if (actionEvent.getSource() == toolsMenu.getItem(1)) {throwUnimplemented();} else
         if (actionEvent.getSource() == toolsMenu.getItem(2)) {throwUnimplemented();} else
 
@@ -447,9 +447,13 @@ public class MissPiggy implements ActionListener {
         throwUnimplemented();
     }
 
-    public void metaEditorGUI() {
-        // todo tag editor
-        throwUnimplemented();
+    public void metaEditorGUI(int index) {
+        if (index >= 0) {
+            new Clifford().Action(this, index);
+            frame.setEnabled(false);
+        } else {
+            JOptionPane.showMessageDialog(frame, "Please select a mod to edit first.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private void moveUp(int index) {
