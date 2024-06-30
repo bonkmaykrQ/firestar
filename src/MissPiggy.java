@@ -47,8 +47,6 @@ import static java.nio.file.StandardCopyOption.*;
 import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 
 public class MissPiggy implements ActionListener {
-    private final String sl = File.separator;
-
     BufferedImage windowIcon;
     JFrame frame = new JFrame();
     JPanel frameContainer;
@@ -194,7 +192,7 @@ public class MissPiggy implements ActionListener {
             06/29/24 - also skip files that were manually removed but remain in the list
             */
 
-            File mod = new File(System.getProperty("user.home") + sl + ".firestar" + sl + "mods" + sl + s.substring(s.indexOf("=") + 1).trim());
+            File mod = new File(System.getProperty("user.home") + "/.firestar/mods/" + s.substring(s.indexOf("=") + 1).trim());
 
             if (s.split("=")[0].matches("[0-9]+=*") &&
                     mod.exists()) {
@@ -206,7 +204,7 @@ public class MissPiggy implements ActionListener {
                 //get json metadata from zip comment
                 JSONObject metadata;
                 try {
-                    metadata = new JSONObject(new ZipFile(System.getProperty("user.home") + sl + ".firestar" + sl + "mods" + sl + m.path.trim()).getComment());
+                    metadata = new JSONObject(new ZipFile(System.getProperty("user.home") + "/.firestar/mods/" + m.path.trim()).getComment());
                     if (metadata.has("friendlyName")) {m.friendlyName = metadata.get("friendlyName").toString();} else {m.friendlyName = m.path;}
                     if (metadata.has("description")) {m.description = metadata.get("description").toString();}
                     if (metadata.has("version")) {m.version = Integer.parseInt(metadata.get("version").toString());}
