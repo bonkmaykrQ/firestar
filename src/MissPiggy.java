@@ -244,7 +244,7 @@ public class MissPiggy implements ActionListener {
         System.out.println("Initializing blacklist from file with length of " + bListArray.length + " units"); //debug
         for (String s : bListArray) {
             for (Main.Mod m : Main.Mods) {
-                if (s.equals(m.path)) {
+                if (s.trim().equals(m.path.trim())) {
                     m.enabled = false;
                 }
             }
@@ -474,7 +474,7 @@ public class MissPiggy implements ActionListener {
 
             try { //debug
 
-            File pathReference = new File(System.getProperty("user.home") + "/.firestar/mods/" + Main.Mods.get(modList.getSelectedIndex()).path);
+            File pathReference = new File(System.getProperty("user.home") + "/.firestar/mods/" + Main.Mods.get(modList.getSelectedIndex()).path.trim());
             DecimalFormat df = new DecimalFormat("##.##");
             df.setRoundingMode(RoundingMode.UP);
             float modFileSize = pathReference.length(); //precise units
