@@ -358,7 +358,7 @@ public class MissPiggy implements ActionListener {
         fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
         //fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("All", "zip", "agr", "agrc", "agrf", "fstar"));
         fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("ZIP Archive", "zip"));
-        fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("Firestar Mod Package", "agr", "agrc", "agrf", "fstar")); //what about fstar?
+        fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("Firestar Mod Package", "fstar"));
 
         int result = fileChooser.showOpenDialog(frame);
 
