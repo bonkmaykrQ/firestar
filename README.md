@@ -12,6 +12,7 @@ Firestar is a mod manager for WipEout 2048 which automatically handles sorting m
 - misc. tools (pack creator, soundtrack mod generator...)
 - initial setup screen can still be a bit arduous for vita newbies
 
+## Video Tutorial: [>> CLICK HERE <<](https://www.youtube.com/watch?v=Bi9fpqR2Ulw)
 ![](https://files.worlio.com/users/bonkmaykr/http/git/embed/firestar_window.png)
   
 # System Requirements
