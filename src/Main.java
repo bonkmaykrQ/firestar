@@ -25,8 +25,8 @@ import javax.swing.JOptionPane;
 
 public class Main {
     // Build Information
-    public static final String vstr = "Beta 4";
-    public static final String vcode = "Natasha";
+    public static final String vstr = "Release 1.0";
+    public static final String vcode = "Dekka";
     public static final int vint = 0;
 
     // User Settings
