@@ -410,8 +410,8 @@ public class MissPiggy implements ActionListener {
     }
 
     public void optionsGUI() {
-        // todo settings page w/ reset switch
-        throwUnimplemented();
+        new Waldorf().Action(this);
+        frame.setEnabled(false);
     }
 
     public void deleteSelected() {
