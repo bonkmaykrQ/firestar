@@ -104,6 +104,8 @@ public class MissPiggy implements ActionListener {
         toolsMenu.add(new JMenuItem("Create Soundtrack Mod..."));
         //toolsMenu.add(new JMenuItem("Download Mod from URL")); // TODO: implement. move option to File menu. should be ez
 
+        helpMenu.add(new JMenuItem("Manual"));
+        helpMenu.add(new JSeparator());
         helpMenu.add(new JMenuItem("Source Code")); //replace with Website 'screwgravity.net' and 'Issue Tracker' gitea later
         helpMenu.add(new JMenuItem("License"));
         helpMenu.add(new JSeparator());
@@ -129,8 +131,9 @@ public class MissPiggy implements ActionListener {
         toolsMenu.getItem(1).addActionListener(this);
         toolsMenu.getItem(2).addActionListener(this);
         helpMenu.getItem(0).addActionListener(this);
-        helpMenu.getItem(1).addActionListener(this);
+        helpMenu.getItem(2).addActionListener(this);
         helpMenu.getItem(3).addActionListener(this);
+        helpMenu.getItem(5).addActionListener(this);
 
         deployButton.addActionListener(this);
         importButton.addActionListener(this);
@@ -307,13 +310,21 @@ public class MissPiggy implements ActionListener {
 
         if (actionEvent.getSource() == helpMenu.getItem(0)) {
             try {
+                Desktop.getDesktop().browse(new URI("https://git.worlio.com/bonkmaykr/firestar/wiki/"));
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+                JOptionPane.showMessageDialog(frame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else
+        if (actionEvent.getSource() == helpMenu.getItem(2)) {
+            try {
                 Desktop.getDesktop().browse(new URI("https://git.worlio.com/bonkmaykr/firestar"));
             } catch (Exception e) {
                 System.out.println(e.getMessage());
                 JOptionPane.showMessageDialog(frame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         } else
-        if (actionEvent.getSource() == helpMenu.getItem(1)) {
+        if (actionEvent.getSource() == helpMenu.getItem(3)) {
             try {
                 Desktop.getDesktop().browse(new URI("https://www.gnu.org/licenses/gpl-3.0.en.html"));
             } catch (Exception e) {
@@ -321,7 +332,7 @@ public class MissPiggy implements ActionListener {
                 JOptionPane.showMessageDialog(frame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         } else
-        if (actionEvent.getSource() == helpMenu.getItem(3)) {new Rowlf().displayAboutScreen();}
+        if (actionEvent.getSource() == helpMenu.getItem(5)) {new Rowlf().displayAboutScreen();}
     }
 
     // Will likely split the below functions into separate classes to work with intellij GUI designer.
