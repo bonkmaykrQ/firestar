@@ -56,7 +56,7 @@ public class Main {
 
     public static void main(String[] args) {
         // license string
-        System.out.printf("FIRESTAR MOD MANAGER for WipEout 2048\nversion " + vstr + " (codename " + vcode + ")\n" +
+        System.out.printf("FIRESTAR MOD MANAGER for WipEout 2048\nversion " + vstr + " (codename " + vcode + ") major " + vint + "\n" +
                 "JVM host appears to be " + System.getProperty("os.name") +
                 "\nRunning from " + System.getProperty("user.dir") +
                 "\nCopyright (C) 2024  bonkmaykr\n\nThis program is free software: you can redistribute it and/or modify\n" +
