@@ -155,7 +155,7 @@ public class Gonzo {
                 try {
                     System.out.println("Firestar is extracting " + m.friendlyName + " by " + m.author);
                     consoleDisplay.append("Firestar is extracting " + m.friendlyName + " by " + m.author + "\n");
-                    new ZipFile(System.getProperty("user.home") + "/.firestar/mods/" + m.path.trim()).extractAll(System.getProperty("user.home") + "/.firestar/temp/");
+                    new ZipFile(System.getProperty("user.home") + "/.firestar/mods/" + m.path).extractAll(System.getProperty("user.home") + "/.firestar/temp/");
 
                     if (new File(System.getProperty("user.home") + "/.firestar/temp/delete.txt").isFile()) {
                         System.out.println("Firestar is deleting files that conflict with " + m.friendlyName + " by " + m.author);

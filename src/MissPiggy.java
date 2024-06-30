@@ -198,13 +198,13 @@ public class MissPiggy implements ActionListener {
                     mod.exists()) {
                 //append mod to list from substring
                 Main.Mod m = new Main().new Mod();
-                m.path = s.substring(s.indexOf("=") + 1);
+                m.path = s.substring(s.indexOf("=") + 1).trim();
                 System.out.println("found file " + m.path);
 
                 //get json metadata from zip comment
                 JSONObject metadata;
                 try {
-                    metadata = new JSONObject(new ZipFile(System.getProperty("user.home") + "/.firestar/mods/" + m.path.trim()).getComment());
+                    metadata = new JSONObject(new ZipFile(System.getProperty("user.home") + "/.firestar/mods/" + m.path).getComment());
                     if (metadata.has("friendlyName")) {m.friendlyName = metadata.get("friendlyName").toString();} else {m.friendlyName = m.path;}
                     if (metadata.has("description")) {m.description = metadata.get("description").toString();}
                     if (metadata.has("version")) {m.version = Integer.parseInt(metadata.get("version").toString());}
@@ -244,7 +244,7 @@ public class MissPiggy implements ActionListener {
         System.out.println("Initializing blacklist from file with length of " + bListArray.length + " units"); //debug
         for (String s : bListArray) {
             for (Main.Mod m : Main.Mods) {
-                if (s.trim().equals(m.path.trim())) {
+                if (s.trim().equals(m.path)) {
                     m.enabled = false;
                 }
             }
@@ -474,7 +474,7 @@ public class MissPiggy implements ActionListener {
 
             try { //debug
 
-            File pathReference = new File(System.getProperty("user.home") + "/.firestar/mods/" + Main.Mods.get(modList.getSelectedIndex()).path.trim());
+            File pathReference = new File(System.getProperty("user.home") + "/.firestar/mods/" + Main.Mods.get(modList.getSelectedIndex()).path);
             DecimalFormat df = new DecimalFormat("##.##");
             df.setRoundingMode(RoundingMode.UP);
             float modFileSize = pathReference.length(); //precise units
