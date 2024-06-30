@@ -436,6 +436,7 @@ public class MissPiggy implements ActionListener {
             file.delete();
             System.out.println("Deleted " + Main.Mods.get(modList.getSelectedIndex()).friendlyName); //debug
             Main.Mods.remove(modList.getSelectedIndex());
+            regenerateModBlacklist(false);
             regenerateModIndex(true);
         } else {
             JOptionPane.showMessageDialog(frame, "Please select a mod to delete first.", "Error", JOptionPane.ERROR_MESSAGE);
