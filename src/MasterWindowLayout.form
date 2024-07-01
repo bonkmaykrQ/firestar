@@ -5,7 +5,10 @@
     <constraints>
       <xy x="20" y="20" width="500" height="400"/>
     </constraints>
-    <properties/>
+    <properties>
+      <background color="-1"/>
+      <foreground color="-592129"/>
+    </properties>
     <border type="none"/>
     <children>
       <grid id="6cdb1" binding="descriptionContainer" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
@@ -17,7 +20,10 @@
             <maximum-size width="300" height="-1"/>
           </grid>
         </constraints>
-        <properties/>
+        <properties>
+          <background color="-526337"/>
+          <foreground color="-592129"/>
+        </properties>
         <border type="line" title="Description"/>
         <children>
           <component id="a9cee" class="javax.swing.JTextPane" binding="descriptionField">
@@ -38,7 +44,10 @@
         <constraints>
           <grid row="0" column="1" row-span="2" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
-        <properties/>
+        <properties>
+          <background color="-526337"/>
+          <foreground color="-526337"/>
+        </properties>
         <border type="line" title="Mods List" title-justification="1" title-position="2">
           <font/>
         </border>
@@ -64,7 +73,10 @@
             <maximum-size width="300" height="200"/>
           </grid>
         </constraints>
-        <properties/>
+        <properties>
+          <background color="-526337"/>
+          <foreground color="-657921"/>
+        </properties>
         <border type="line" title="Actions"/>
         <children>
           <component id="3cd60" class="javax.swing.JButton" binding="toggleButton" default-binding="true">
@@ -75,6 +87,10 @@
               </grid>
             </constraints>
             <properties>
+              <background color="-15128227"/>
+              <borderPainted value="false"/>
+              <font name="Exo 2" style="1"/>
+              <foreground color="-657921"/>
               <text value="Toggle"/>
             </properties>
           </component>
@@ -86,6 +102,10 @@
               </grid>
             </constraints>
             <properties>
+              <background color="-15128227"/>
+              <borderPainted value="false"/>
+              <font name="Exo 2" style="1"/>
+              <foreground color="-657921"/>
               <text value="Move Up"/>
             </properties>
           </component>
@@ -98,6 +118,11 @@
               </grid>
             </constraints>
             <properties>
+              <alignmentX value="0.0"/>
+              <background color="-15128227"/>
+              <borderPainted value="false"/>
+              <font name="Exo 2" style="1"/>
+              <foreground color="-657921"/>
               <text value="Delete"/>
             </properties>
           </component>
@@ -110,6 +135,10 @@
               </grid>
             </constraints>
             <properties>
+              <background color="-15128227"/>
+              <borderPainted value="false"/>
+              <font name="Exo 2" style="1"/>
+              <foreground color="-592129"/>
               <text value="Move Down"/>
             </properties>
           </component>
@@ -120,6 +149,10 @@
               </grid>
             </constraints>
             <properties>
+              <background color="-15128227"/>
+              <borderPainted value="false"/>
+              <font name="Exo 2" style="1"/>
+              <foreground color="-592129"/>
               <text value="Options"/>
             </properties>
           </component>
@@ -130,6 +163,10 @@
               </grid>
             </constraints>
             <properties>
+              <background color="-15128227"/>
+              <borderPainted value="false"/>
+              <font name="Exo 2" style="1"/>
+              <foreground color="-526337"/>
               <text value="Import"/>
             </properties>
           </component>
@@ -141,6 +178,10 @@
               </grid>
             </constraints>
             <properties>
+              <background color="-15128227"/>
+              <borderPainted value="false"/>
+              <font name="Exo 2" style="1"/>
+              <foreground color="-657921"/>
               <text value="Deploy"/>
             </properties>
           </component>

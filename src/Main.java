@@ -18,9 +18,11 @@
 
 import org.json.*;
 
+import java.awt.*;
 import java.io.*;
 import java.nio.file.*;
 import java.util.*;
+import java.util.List;
 import javax.swing.JOptionPane;
 
 public class Main {
@@ -54,6 +56,9 @@ public class Main {
     // Mods
     public static List<Mod> Mods = new ArrayList<Mod>();
 
+    // UI Global Assets
+    public static Font fExo2;
+
     public static void main(String[] args) {
         // license string
         System.out.printf("FIRESTAR MOD MANAGER for WipEout 2048\nversion " + vstr + " (codename " + vcode + ") major " + vint + "\n" +
@@ -73,6 +78,14 @@ public class Main {
                 "along with this program.  If not, see https://www.gnu.org/licenses/.\n\n\n\n");
 
         //begin
+        // load global assets
+        try {
+            fExo2 = Font.createFont(Font.TRUETYPE_FONT, new File(System.getProperty("user.dir") + "/resources/exo2.ttf"));
+        } catch (Exception e) {
+            System.out.println("Font \"Exo 2\" is missing!");
+            fExo2 = new Font("Arial", Font.PLAIN, 12);
+        }
+
         // check and load configs
         File fConf = new File(System.getProperty("user.home") + "/.firestar/firestar.conf");
         if (!fConf.isFile()) {

@@ -152,6 +152,23 @@ public class MissPiggy implements ActionListener {
         } catch (IOException e) {
             System.out.println("ERROR: Failed to find /resources/titleIcon.png. Window will not have an icon.");
         }
+
+        menuBar.setBackground(new Color(25, 41, 93));
+        fileMenu.setForeground(new Color(255, 255, 255));
+        fileMenu.setFont(Main.fExo2.deriveFont(Font.BOLD).deriveFont(12f));
+        toolsMenu.setForeground(new Color(255, 255, 255));
+        toolsMenu.setFont(Main.fExo2.deriveFont(Font.BOLD).deriveFont(12f));
+        helpMenu.setForeground(new Color(255, 255, 255));
+        helpMenu.setFont(Main.fExo2.deriveFont(Font.BOLD).deriveFont(12f));
+
+        toggleButton.setFont(Main.fExo2.deriveFont(Font.BOLD).deriveFont(12f));
+        deleteButton1.setFont(Main.fExo2.deriveFont(Font.BOLD).deriveFont(12f));
+        moveDownButton.setFont(Main.fExo2.deriveFont(Font.BOLD).deriveFont(12f));
+        moveUpButton.setFont(Main.fExo2.deriveFont(Font.BOLD).deriveFont(12f));
+        optionsButton.setFont(Main.fExo2.deriveFont(Font.BOLD).deriveFont(12f));
+        importButton.setFont(Main.fExo2.deriveFont(Font.BOLD).deriveFont(12f));
+        deployButton.setFont(Main.fExo2.deriveFont(Font.BOLD).deriveFont(12f));
+
         frame.setSize(800, 600); // 1280 800
         frame.setMinimumSize(new Dimension(640,480));
         frame.setTitle("Firestar Mod Manager");
