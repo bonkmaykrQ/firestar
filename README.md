@@ -9,8 +9,8 @@ Firestar is a mod manager for WipEout 2048 which automatically handles sorting m
 - **Windows & Mac:** Grab the Portable ZIP from the [Releases](https://git.worlio.com/bonkmaykr/firestar/releases) page and run the JAR file.
 - **Linux:** Install one of the packages from the [Releases](https://git.worlio.com/bonkmaykr/firestar/releases) page:
     - Ubuntu, Mint, PopOS: `sudo dpkg -i firestar_ver_arch.deb` or `gdebi firestar_ver_arch.deb`
-    - Fedora, Mageia, OpenSUSE, AlmaLinux: `sudo rpm -i firestar_ver_arch.deb`
-    - Arch, EndeavourOS, CachyOS, Steam Deck: `sudo pacman -U firestar_ver_arch.deb`
+    - Fedora, Mageia, OpenSUSE, AlmaLinux: `sudo rpm -i firestar-ver-arch.rpm`
+    - Arch, EndeavourOS, CachyOS, Steam Deck: `sudo pacman -U firestar-ver-arch.pkg.tar.zst`
 
 # System Requirements
 - You will need a computer running Microsoft Windows, or any POSIX-compliant desktop operating system such as Mac OS X, Linux, BSD, or MINIX (Firestar does not run directly on the PSVita). ***Wayland support has not been tested.***
