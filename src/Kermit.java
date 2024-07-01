@@ -210,9 +210,8 @@ public class Kermit implements ActionListener {
                 document.setParagraphAttributes(0, document.getLength(), align, false);
                 //dialogText.setText("Aww Fiddlesticks, what now?");
                 dialogText.setText("WELCOME TO FIRESTAR\n\n" +
-                        "This initial setup guide will help you prepare your Playstation Vita, Playstation TV, or Vita3K emulator to play WipEout mods. You will be asked a series of questions to help Firestar decide the most optimal installation method for you.\n\n" +
-                        "If you encounter any issues while using Firestar you may contact the author at bonkmaykr@screwgravity.net\n\n" +
-                        "DISCLAIMER: This program is free software licensed under the GNU General Public License version 3.0. You may share this program and it's source code so long as you extend the same rights to others. The developers of this software are never responsible for any damage to your game console and Firestar is provided to you without any warranty or legal guarantee. By using Firestar, you agree to these terms. For more information, visit https://www.gnu.org/licenses/gpl-3.0.en.html");
+                        "This initial setup guide will help you prepare your Playstation Vita, Playstation TV, or Vita3K emulator to play WipEout mods.\n\n Before continuing, please read the decryption guide at:\nhttps://git.worlio.com/bonkmaykr/firestar/wiki/Decrypting-Original-PSARC-Files\nsince you will need these files in order to use Firestar.\n\n" +
+                        "If you encounter any issues while using Firestar you may contact the author at bonkmaykr@screwgravity.net");
                 frame.add(dialogText);
 
                 frame.setSize(600, 400);
@@ -231,7 +230,7 @@ public class Kermit implements ActionListener {
                 button.setBounds(292, 343, 300, 30);
                 frame.add(button);
 
-                button3.setVisible(true);
+                button3.setVisible(false);
                 button3.setBounds(0, 343, 292, 30);
                 frame.add(button3);
 
@@ -351,7 +350,7 @@ public class Kermit implements ActionListener {
                 button.setBounds(292, 343, 300, 30);
                 frame.add(button);
 
-                button3.setVisible(true);
+                button3.setVisible(false);
                 button3.setBounds(0, 343, 292, 30);
                 frame.add(button3);
 
@@ -391,7 +390,7 @@ public class Kermit implements ActionListener {
                 button.setBounds(292, 343, 300, 30);
                 frame.add(button);
 
-                button3.setVisible(true);
+                button3.setVisible(false);
                 button3.setBounds(0, 343, 292, 30);
                 frame.add(button3);
 
@@ -405,7 +404,7 @@ public class Kermit implements ActionListener {
                 dialogText.setText("You're almost done!\n\n" +
                         "Please move all of your original PSARC files for WipEout (base game, patches, and HD Fury DLC) to the config folder and press Next when you are done.\n" +
                         "Firestar will use these to generate new PSARCs in place of the old ones.\n\n" +
-                        "If you play on a real console, you will need to use VitaShell (remember to \"Open Decrypted\"). Check /app, /patch, and /addcont. Getting all of them is important since WipEout always loads them in a specific order and which ones you have determines where Firestar can compress the modified files to.");
+                        "If you do not already have these files, please read:\nhttps://git.worlio.com/bonkmaykr/firestar/wiki/Decrypting-Original-PSARC-Files\nto acquire them.");
                 frame.add(dialogText);
 
                 //pathInput.setVisible(true);
@@ -449,7 +448,7 @@ public class Kermit implements ActionListener {
                 StyleConstants.setAlignment(align, StyleConstants.ALIGN_CENTER);
                 document.setParagraphAttributes(0, document.getLength(), align, false);
                 dialogText.setText("Firestar is ready!\n\n" +
-                        "For technical support, email\nbonkmaykr@screwgravity.net.");
+                        "For technical support, see Help > Manual.");
                 frame.add(dialogText);
 
                 button.setVisible(true);
