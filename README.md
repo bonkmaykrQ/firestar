@@ -20,6 +20,13 @@ Firestar is a mod manager for WipEout 2048 which automatically handles sorting m
 ## Can I use this on a Vita without enso/HEN?
 No. You need a modded Vita in order to use this. Hacking a Vita is super easy these days, but if you don't want to, you can always use Vita3K instead.
 
+## Where do I download mods?
+There's no #1 place for Firestar mods as of now, but we can give you a few sample mods to test out if you are interested in seeing the program in action:  
+- [Pepsi Mod](https://files.worlio.com/users/bonkmaykr/http/reddit/pepsi_agility.fstar): Gives the FEISAR Agility ship a Pepsi makeover.
+- [Continue?](https://files.worlio.com/users/bonkmaykr/patches/2048/continue.fstar): Allows you to exit the pause menu without taking your thumb off the throttle. By ThatOneBonk
+- XP Rebalance: As the name suggests. **This mod is on hiatus for a bit while I make a version that's safe for online use.**
+- [Custom Soundtrack](https://files.catbox.moe/pcvfxj.fstar): A custom playlist I put together. This music is copyrighted, don't play it on stream
+
 ## What do I need to make my own mods?
 For making your own mods, we recommend grabbing one of the many leaked PS Vita SDKs off of Archive.org since it has many of the tools you will need. I recommend using Photoshop CS5 for textures, since Sony officially provides a texture export plugin for CS5 in their SDK. There is also an included at9tool which can help with replacing sounds and music.  
   
