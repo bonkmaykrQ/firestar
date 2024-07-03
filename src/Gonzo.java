@@ -239,8 +239,8 @@ public class Gonzo {
             System.out.println("Firestar is compiling the final build");
             consoleDisplay.append("Firestar is compiling the final build" + "\n");
             Process p;
-            if (!Main.windows) {p = Runtime.getRuntime().exec(new String[]{"bash","-c","cd " + System.getProperty("user.home") + "/.firestar/temp" + ";wine ../psp2psarc.exe create --skip-missing-files -j12 -a -i --input-file=list.txt -o " + oArcTarget});}
-            else {p = Runtime.getRuntime().exec(new String[]{new String(System.getProperty("user.home") + "\\.firestar\\psp2psarc.exe"), "create", "--skip-missing-files", "-j12", "-a", "-i", "--input-file=list.txt", "-o" + oArcTarget}, null, new File(new String(System.getProperty("user.home") + "/.firestar/temp/").replace("/", "\\")));}
+            if (!Main.windows) {p = Runtime.getRuntime().exec(new String[]{"bash","-c","cd " + System.getProperty("user.home") + "/.firestar/temp" + ";wine ../psp2psarc.exe create --skip-missing-files -j12 -a -i -y --input-file=list.txt -o " + oArcTarget});}
+            else {p = Runtime.getRuntime().exec(new String[]{new String(System.getProperty("user.home") + "\\.firestar\\psp2psarc.exe"), "create", "--skip-missing-files", "-j12", "-a", "-i", "-y", "--input-file=list.txt", "-o" + oArcTarget}, null, new File(new String(System.getProperty("user.home") + "/.firestar/temp/").replace("/", "\\")));}
             final Thread ioThread = new Thread() {
                 @Override
                 public void run() {
