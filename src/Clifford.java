@@ -56,7 +56,7 @@ public class Clifford implements ActionListener {
         creating = false;
 
         frame.add(frameContainer);
-        frame.setSize(600, 200); // 1280 800
+        frame.setSize(600, 300); // 1280 800
         frame.setMinimumSize(new Dimension(200,100));
         frame.setTitle("Options");
         frame.setResizable(false);
