@@ -139,6 +139,10 @@ public class Clifford implements ActionListener {
             mod.description = fDescription.getText();
 
             JSONObject container = new JSONObject();
+            if (mod.friendlyName.isEmpty()) {
+                JOptionPane.showMessageDialog(frame, "Mod name cannot be empty.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
             container.put("version", mod.version);
             container.put("friendlyName", mod.friendlyName);
             container.put("author", mod.author);
@@ -158,6 +162,10 @@ public class Clifford implements ActionListener {
             invoker.InitializeModListInGUI();
             frame.dispose();
         } else if (actionEvent.getSource() == savebtn && creating) {
+            if (fName.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(frame, "Mod name cannot be empty.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
             try {
                 Integer.parseInt(fVersion.getText());
             } catch (NumberFormatException e) {

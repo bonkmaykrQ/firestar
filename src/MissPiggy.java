@@ -286,12 +286,14 @@ public class MissPiggy implements ActionListener {
         /*JLabel[]*/String[] contents = new String[Main.Mods.size()];
         System.out.println("Initializing modList to GUI with length of " + Main.Mods.size() + " units"); //debug
         while (i < Main.Mods.size()) {
+            if (Main.Mods.get(i).friendlyName == null || Main.Mods.get(i).friendlyName.isEmpty())
+            {Main.Mods.get(i).friendlyName = Main.Mods.get(i).path;}
             if (Main.Mods.get(i).enabled) {contents[i] = Main.Mods.get(i).friendlyName;}
             else {contents[i] = Main.Mods.get(i).friendlyName + " (Disabled)";}
 
             //debug
             String authorDisplay;
-            if (Main.Mods.get(i).author == null) {authorDisplay = "Anonymous";} else {authorDisplay = "\"" + Main.Mods.get(i).author + "\"";}
+            if (Main.Mods.get(i).author == null || Main.Mods.get(i).author.isEmpty()) {authorDisplay = "Anonymous";} else {authorDisplay = "\"" + Main.Mods.get(i).author + "\"";}
             System.out.println("Added " + Main.Mods.get(i).friendlyName + " by " + authorDisplay);
 
             i++;
@@ -546,7 +548,7 @@ public class MissPiggy implements ActionListener {
                 modFileSizeStr = String.valueOf(df.format(modFileSize / (1024 * 1024 * 1024)));
                 modFileSizeUnits = "Gigabytes";
             }
-            if (Main.Mods.get(modList.getSelectedIndex()).author == null) {
+            if (Main.Mods.get(modList.getSelectedIndex()).author == null || Main.Mods.get(modList.getSelectedIndex()).author.isEmpty()) {
                 authorDisplay = "an Unknown Author";
             } else {
                 authorDisplay = Main.Mods.get(modList.getSelectedIndex()).author;
