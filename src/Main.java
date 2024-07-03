@@ -27,7 +27,7 @@ import javax.swing.JOptionPane;
 
 public class Main {
     // Build Information
-    public static final String vstr = "Release 1.1";
+    public static final String vstr = "Release 1.2";
     public static final String vcode = "Dekka";
     public static final int vint = 0;
 

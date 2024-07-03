@@ -169,7 +169,7 @@ public class Gonzo {
                         System.out.println("The deletion queue is " + dQarray.length + " files long!"); //debug
 
                         for (String file : dQarray) {
-                            if(file.contains("..")) { //todo: find all possible hazardous paths and blacklist them with regex
+                            if(file.contains("..")) { //todo: is this safe enough?
                                 System.out.println("WARNING: Firestar skipped a potentially dangerous delete command. Please ensure the mod you're installing is from someone you trust!");
                                 consoleDisplay.append("WARNING: Firestar skipped a potentially dangerous delete command. Please ensure the mod you're installing is from someone you trust!\n");
                             } else {
