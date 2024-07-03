@@ -399,8 +399,12 @@ public class MissPiggy implements ActionListener {
                 try {
                     JSONObject json = new JSONObject(new ZipFile(selectedFile.getAbsolutePath()).getComment()); // intentionally trigger exception if file is random BS
                     if ((int)json.get("loaderversion") <= Main.vint) {
+                        int min=0, max=9;
+                        int rand_int = (int)(Math.random()*((max-min)+1))+min;
+                        int rand_int2 = (int)(Math.random()*((max-min)+1))+min;
+                        int rand_int3 = (int)(Math.random()*((max-min)+1))+min;
                         Path importDestination = Paths.get(System.getProperty("user.home") + "/.firestar/mods/"
-                            + selectedFile.getName() + "_" + Main.Mods.size() + ".zip");
+                            + selectedFile.getName() + "_" + rand_int + rand_int2 + rand_int3 + System.currentTimeMillis() + ".zip");
                         Files.copy(Paths.get(selectedFile.getPath()), importDestination, StandardCopyOption.REPLACE_EXISTING);
                         String importDestinationName = importDestination.toFile().getName();
 
