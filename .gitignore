@@ -27,6 +27,7 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
 /firestar.zip
 /run-linux.sh
 /run-win32.bat
