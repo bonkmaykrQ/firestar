@@ -25,11 +25,11 @@ No. You need a modded Vita in order to use this. Hacking a Vita is super easy th
 
 ## Where do I download mods?
 There's no #1 place for Firestar mods as of now, but we can give you a few sample mods to test out if you are interested in seeing the program in action:  
+- [XP Rebalance](https://files.worlio.com/users/bonkmaykr/patches/2048/XPhack2.fstar): Reduces the amount of grinding required to level up for players who can't access the online campaign. **Leaderboard safe version!**
 - [Pepsi Mod](https://files.worlio.com/users/bonkmaykr/http/reddit/pepsi_agility.fstar): Gives the FEISAR Agility ship a Pepsi makeover.
 - [Gold AG-SYS Speed](https://files.worlio.com/users/bonkmaykr/patches/2048/gold3.fstar): Better Than Chrome™
 - [Continue?](https://files.worlio.com/users/bonkmaykr/patches/2048/continue.fstar): Allows you to exit the pause menu without taking your thumb off the throttle. By ThatOneBonk
 - [HD Skin](https://files.worlio.com/users/bonkmaykr/patches/2048/hd_skin.fstar): Recolors the UI to look like WipEout HD. By ThatOneBonk 
-- XP Rebalance: As the name suggests. **This mod is on hiatus for a bit while I make a version that's safe for online use.**
 - [Custom Soundtrack](https://files.catbox.moe/pcvfxj.fstar): A custom playlist I put together. This music is copyrighted, don't play it on stream
 
 ## What do I need to make my own mods?
