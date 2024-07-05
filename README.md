@@ -35,7 +35,7 @@ There's no #1 place for Firestar mods as of now, but we can give you a few sampl
 ## What do I need to make my own mods?
 For making your own mods, we recommend grabbing one of the many leaked PS Vita SDKs off of Archive.org since it has many of the tools you will need. I recommend using Photoshop CS5 for textures, since Sony officially provides a texture export plugin for CS5 in their SDK. There is also an included at9tool which can help with replacing sounds and music.  
   
-Many things like HUDs, custom translations, and even some game variables are kept in XML format and can be edited in any normal text editor like Microsoft Notepad, GNU Nano, GEdit or KWrite. (And yes, you can cheat with these--be careful, and play nice when you're online.)  
+Many things like HUDs, custom translations, and even some game variables are kept in XML format and can be edited in any normal text editor like Microsoft Notepad, GNU Nano, GEdit or KWrite. (Play nice when you're online.)  
   
   As for models and custom tracks, we don't have a concrete way of modifying those just yet, but work is being done on that, so stay tuned.
 
