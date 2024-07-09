@@ -16,6 +16,8 @@
  *     along with this program.  If not, see https://www.gnu.org/licenses/.
  */
 
+import net.lingala.zip4j.ZipFile;
+import net.lingala.zip4j.exception.ZipException;
 import org.json.*;
 
 import java.awt.*;
@@ -23,12 +25,12 @@ import java.io.*;
 import java.nio.file.*;
 import java.util.*;
 import java.util.List;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
 public class Main {
     // Build Information
-    public static final String vstr = "Release 1.2";
-    public static final String vcode = "Dekka";
+    public static final String vstr = "Release 1.3";
+    public static final String vcode = "Tetsuo";
     public static final int vint = 0;
 
     // User Settings
@@ -84,6 +86,15 @@ public class Main {
         } catch (Exception e) {
             System.out.println("Font \"Exo 2\" is missing!");
             fExo2 = new Font("Arial", Font.PLAIN, 12);
+        }
+
+        // download dependencies if we know we haven't been here before
+        // will also need to call this if a needed file is missing before use
+        //
+        // mostly for testing. will move to onboarding screen later
+        if (!new File(System.getProperty("user.home") + "/.firestar/").isDirectory()) {
+            new File(System.getProperty("user.home") + "/.firestar/").mkdirs();
+            downloadDependencies();
         }
 
         // check and load configs
@@ -152,5 +163,22 @@ public class Main {
             }
         }
         file.delete();
+    }
+
+    public static boolean downloadDependencies () {
+        boolean downloader = new Fozzie().DownloadFile("https://bonkmaykr.worlio.com/http/firestar/firesdk.zip", System.getProperty("user.home") + "/.firestar/", "firesdk.zip");
+        if (!downloader) {return false;}
+
+        ZipFile sdk = new ZipFile(System.getProperty("user.home") + "/.firestar/firesdk.zip");
+        try {
+            sdk.extractAll(System.getProperty("user.home") + "/.firestar/");
+        } catch (ZipException e) {
+            JOptionPane.showMessageDialog(new JFrame(), e.getMessage(), "Critical Error", JOptionPane.ERROR_MESSAGE);
+            System.out.println(e.getMessage());
+            return false;
+        }
+        sdk.getFile().delete(); // cleanup
+
+        return true;
     }
 }
