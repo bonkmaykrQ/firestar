@@ -36,7 +36,7 @@ public class Rowlf {
 
     public void displayAboutScreen() {
         try {
-            logo = ImageIO.read(new File(System.getProperty("user.dir") + "/resources/logo_about.png"));
+            logo = ImageIO.read(Main.class.getResourceAsStream("/logo_about.png"));
         } catch (IOException e) {
             System.out.println("ERROR: Failed to open About screen because we couldn't find an image needed to display the page.");
             throw new RuntimeException(e);

@@ -60,10 +60,10 @@ public class Clifford implements ActionListener {
 
         frame.add(frameContainer);
         try {
-            BufferedImage windowIcon = ImageIO.read(new File(System.getProperty("user.dir") + "/resources/titleIcon.png"));
+            BufferedImage windowIcon = ImageIO.read(Main.class.getResourceAsStream("/titleIcon.png"));
             frame.setIconImage(windowIcon);
         } catch (IOException e) {
-            System.out.println("ERROR: Failed to find /resources/titleIcon.png. Window will not have an icon.");
+            System.out.println("ERROR: Failed to find resource titleIcon.png. Window will not have an icon.");
         }
         frame.setSize(600, 300); // 1280 800
         frame.setMinimumSize(new Dimension(200,100));

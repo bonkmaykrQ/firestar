@@ -1,0 +1,46 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'org.beryx.runtime' version '1.12.5'
+}
+
+repositories {
+    mavenCentral()
+    maven { url "https://www.jetbrains.com/intellij-repository/releases" }
+    maven { url "https://cache-redirector.jetbrains.com/intellij-dependencies" }
+}
+
+configurations {
+    antTask
+}
+
+dependencies {
+    implementation group: 'net.lingala.zip4j', name: 'zip4j', version: '2.11.5'
+    implementation group: 'org.json', name: 'json', version: '20240303'
+
+    implementation 'com.jetbrains.intellij.java:java-gui-forms-rt:203.7148.30'
+    antTask 'com.jetbrains.intellij.java:java-compiler-ant-tasks:203.7148.30'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+application {
+    mainClass = 'Main'
+}
+
+task compileJava(type: JavaCompile, overwrite: true, dependsOn: configurations.implementation.getTaskDependencyFromProjectDependency(true, 'jar')) {
+    doLast {
+        project.sourceSets.main.output.classesDirs.each { project.mkdir(it) }
+        ant.taskdef name: 'javac2', classname: 'com.intellij.ant.Javac2', classpath: configurations.antTask.asPath
+        ant.javac2 srcdir: project.sourceSets.main.java.srcDirs.join(':'),
+                classpath: project.sourceSets.main.compileClasspath.asPath,
+                destdir: project.sourceSets.main.output.classesDirs[0],
+                source: sourceCompatibility,
+                target: targetCompatibility,
+                includeAntRuntime: false
+    }
+}

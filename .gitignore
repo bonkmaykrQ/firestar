@@ -31,3 +31,9 @@ out/
 /firestar.zip
 /run-linux.sh
 /run-win32.bat
+
+### Gradle ###
+/firestar/build/
+/build/
+/.gradle/
+/gradle/
