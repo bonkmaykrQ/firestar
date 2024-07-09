@@ -82,7 +82,7 @@ public class Main {
         //begin
         // load global assets
         try {
-            fExo2 = Font.createFont(Font.TRUETYPE_FONT, new File(System.getProperty("user.dir") + "/resources/exo2.ttf"));
+            fExo2 = Font.createFont(Font.TRUETYPE_FONT, Main.class.getResourceAsStream("/exo2.ttf"));
         } catch (Exception e) {
             System.out.println("Font \"Exo 2\" is missing!");
             fExo2 = new Font("Arial", Font.PLAIN, 12);

@@ -147,7 +147,7 @@ public class MissPiggy implements ActionListener {
 
         // display window
         try {
-            windowIcon = ImageIO.read(new File(System.getProperty("user.dir") + "/resources/titleIcon.png"));
+            windowIcon = ImageIO.read(Main.class.getResourceAsStream("/titleIcon.png"));
             frame.setIconImage(windowIcon);
         } catch (IOException e) {
             System.out.println("ERROR: Failed to find /resources/titleIcon.png. Window will not have an icon.");
