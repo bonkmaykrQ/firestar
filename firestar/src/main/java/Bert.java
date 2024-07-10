@@ -151,16 +151,7 @@ public class Bert implements ActionListener {
                     Process p;
                     try {
                         if (!Main.windows) {p = Runtime.getRuntime().exec(new String[]{"bash","-c","cd " + Main.inpath + ";wine pkg2zip.exe -x asset.pkg " + key.toString()});}
-                        else {p = Runtime.getRuntime().exec(new String[]{Main.inpath + "pkg2zip.exe", "-x", "asset.pkg", key.toString()}, null, new File(Main.inpath));
-                        InputStream debugin = new BufferedInputStream(p.getInputStream());
-                        FileOutputStream debugout = new FileOutputStream(Main.inpath + "log1.txt");
-                        int c;
-                            while ((c = debugin.read()) != -1) {
-                                debugout.write(c);
-                            }
-                            debugin.close();
-                            debugout.close();
-                        } //inpath cannot change here
+                        else {p = Runtime.getRuntime().exec(new String[]{Main.inpath + "pkg2zip.exe", "-x", "asset.pkg", key.toString()}, null, new File(Main.inpath));} //inpath cannot change here
                         p.waitFor();
                     } catch (Exception e) {
                         System.out.println(e.getMessage());
