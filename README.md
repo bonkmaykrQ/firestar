@@ -1,6 +1,6 @@
 ![](https://files.worlio.com/users/bonkmaykr/http/git/embed/firestar.png)
 
-Firestar is a mod manager for WipEout 2048 which automatically handles sorting mods by priority and repacking game assets based on selected add-on packs. It runs on a desktop/laptop computer and aims to allow easy installation of mods for users who have only a surface level understanding of hacking the PSVita.  
+**Firestar is a cross-platform Java-based mod manager for WipEout 2048**, which runs on a desktop/laptop computer and aims to allow easy installation of mods for users with very little hassle. It is compatible with both real PSVita hardware, as well as emulators.  
 
 ## Get Started: [>> CLICK HERE <<](https://git.worlio.com/bonkmaykr/firestar/wiki)  
 
@@ -17,7 +17,7 @@ If you aren't sure which file to get:
 # System Requirements
 - You will need a computer running Microsoft Windows, or any POSIX-compliant desktop operating system such as Mac OS X, Linux, BSD, or MINIX (Firestar does not run directly on the PSVita). ***Wayland support has not been tested.***
 - You will also need the Java Runtime Environment installed, at least version 17 or newer. Non-Windows systems will require WINE to be installed for some functionality.
-- Please run Firestar on an EXT or NTFS partition as some of the larger file operations it performs may cause glitches in certain filesystems used on memory cards. Do NOT install Firestar directly to your PSVita's storage.
+- Do NOT install Firestar directly to your PSVita's storage. Some of it's file operations do not play nice with FAT filesystems.
 
 # FAQ
 ## Can I use this on a Vita without enso/HEN?
@@ -35,12 +35,12 @@ There's no #1 place for Firestar mods as of now, but we can give you a few sampl
 ## What do I need to make my own mods?
 For making your own mods, we recommend grabbing one of the many leaked PS Vita SDKs off of Archive.org since it has many of the tools you will need. I recommend using Photoshop CS5 for textures, since Sony officially provides a texture export plugin for CS5 in their SDK. There is also an included at9tool which can help with replacing sounds and music.  
   
-Many things like HUDs, custom translations, and even some game variables are kept in XML format and can be edited in any normal text editor like Microsoft Notepad, GNU Nano, GEdit or KWrite. (Play nice when you're online.)  
+Many things like HUDs, custom translations, and even some game variables are kept in XML format and can be edited in any normal text editor like Microsoft Notepad, GNU Nano, GEdit or KWrite. (Please play nice when you're online.)  
   
-  As for models and custom tracks, we don't have a concrete way of modifying those just yet, but work is being done on that, so stay tuned.
+As for models and custom tracks, we don't have a concrete way of modifying those just yet, but work is being done on that, so stay tuned.
 
 ## (Non-Windows) About WINE Compatibility
-Firestar itself can run natively on the system, but it needs WINE in order to handle the game assets because many of the utilities it runs in the background are for Windows only. If you're curious, a list of these tools is available in the "Third Party Code" section below.
+Firestar itself can run natively on the system, but it needs WINE in order to handle the game assets because many of the utilities it runs in the background are for Windows only. If you're curious, a list of these tools is available in the "[Third Party Code](#third-party-code)" section below.
 **If you are on Mac OS X you will need an older OS version that is still compatible with 32-bit applications.**
 
 # Developer Commentary
