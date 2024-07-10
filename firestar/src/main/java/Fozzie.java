@@ -96,6 +96,38 @@ public class Fozzie {
         }
     }
 
+    public void displayTextOnly(String text, String title) {
+        frame.add(frameContainer);
+        frame.setSize(300, 100);
+        frame.setTitle(title);
+        frame.setResizable(false);
+        frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        frame.setLayout(new GridLayout());
+        frame.setLocationRelativeTo(null);
+        frame.setAlwaysOnTop(true);
+        try {
+            windowIcon = ImageIO.read(Main.class.getResourceAsStream("/titleIcon.png"));
+            frame.setIconImage(windowIcon);
+        } catch (IOException e) {
+            System.out.println("ERROR: Failed to find /resources/titleIcon.png. Window will not have an icon.");
+        }
+        frame.setVisible(true);
+
+        label.setText(text);
+
+        progressBar.setVisible(false);
+    }
+
+    public void setText(String text, String title) {
+        label.setText(text);
+        frame.setTitle(title);
+    }
+
+    public void destroyDialog() {
+        frame.setVisible(false);
+        frame.dispose();
+    }
+
     public void disconnect() throws IOException {
         inputStream.close();
         httpConn.disconnect();

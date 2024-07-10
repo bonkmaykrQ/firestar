@@ -148,6 +148,8 @@ public class Bert implements ActionListener {
 
                     // dump contents
                     System.out.println("Extracting asset.pkg");
+                    Fozzie popup = new Fozzie();
+                    popup.displayTextOnly("Extracting PKG...", "Extracting");
                     Process p;
                     try {
                         if (!Main.windows) {p = Runtime.getRuntime().exec(new String[]{"bash","-c","cd " + Main.inpath + ";wine pkg2zip.exe -x asset.pkg " + key.toString()});}
@@ -202,6 +204,8 @@ public class Bert implements ActionListener {
                         return;
                     }
 
+                    popup.setText("<html>Decrypting protected PFS:<br/>" + extracted + "</html>", "Decrypting");
+
                     try {
                         if (!Main.windows) {p = Runtime.getRuntime().exec(new String[]{"bash","-c","cd " + Main.inpath + ";wine psvpfsparser.exe -i " + extracted + " -o ./temp/ -z " + key.toString() + " -f cma.henkaku.xyz"});}
                         else {p = Runtime.getRuntime().exec(new String[]{Main.inpath + "psvpfsparser.exe", "-i", extracted, "-o", "./temp/", "-z", key.toString(), "-f", "cma.henkaku.xyz"}, null, new File(Main.inpath));}
@@ -228,6 +232,8 @@ public class Bert implements ActionListener {
                         return;
                     }
 
+                    popup.setText("Deleting temporary files...", "Cleaning Up");
+
                     // stage & cleanup
                     System.out.println("Cleaning up");
                     new File(Main.inpath + "asset.pkg").delete();
@@ -236,6 +242,8 @@ public class Bert implements ActionListener {
                     Main.deleteDir(new File(Main.inpath + "patch/"));
                     Main.deleteDir(new File(Main.inpath + "addcont/"));
                     Main.deleteDir(new File(Main.inpath + "temp/"));
+
+                    popup.destroyDialog();
 
                     // restore controls
                     JOptionPane.showMessageDialog(frame, "Assets downloaded successfully.", "Download Complete", JOptionPane.INFORMATION_MESSAGE);
