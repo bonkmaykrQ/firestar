@@ -96,8 +96,8 @@ public class Bert implements ActionListener {
             if (result == JOptionPane.NO_OPTION) {return;}
             System.out.println("User requested download of assets. Deleting existing PSARCs");
             new File(Main.inpath + "data.psarc").delete();
-            new File(Main.inpath + "data01.psarc").delete();
-            new File(Main.inpath + "data02.psarc").delete();
+            new File(Main.inpath + "data1.psarc").delete();
+            new File(Main.inpath + "data2.psarc").delete();
             new File(Main.inpath + "dlc1.psarc").delete();
             new File(Main.inpath + "dlc2.psarc").delete();
 
@@ -111,7 +111,7 @@ public class Bert implements ActionListener {
             if (patchRad.isSelected()) {
                 type = Main.ArcTarget.LATEST;
                 key = Main.ArcKey.LATEST;
-                System.out.println("Begin download of data02 (Game version 1.04)");
+                System.out.println("Begin download of data2 (Game version 1.04)");
             } else
             if (hdRad.isSelected()) {
                 type = Main.ArcTarget.ADDON_HD;
@@ -152,6 +152,14 @@ public class Bert implements ActionListener {
                     try {
                         if (!Main.windows) {p = Runtime.getRuntime().exec(new String[]{"bash","-c","cd " + Main.inpath + ";wine pkg2zip.exe -x asset.pkg " + key.toString()});}
                         else {p = Runtime.getRuntime().exec(new String[]{Main.inpath + "pkg2zip.exe", "-x", "asset.pkg", key.toString()}, null, new File(Main.inpath));} //inpath cannot change here
+                        InputStream debugin = new BufferedInputStream(p.getInputStream());
+                        OutputStream debugout = new BufferedOutputStream(System.out);
+                        int c;
+                        while ((c = debugin.read()) != -1) {
+                            debugout.write(c);
+                        }
+                        debugin.close();
+                        debugout.close();
                         p.waitFor();
                     } catch (Exception e) {
                         System.out.println(e.getMessage());
@@ -173,7 +181,7 @@ public class Bert implements ActionListener {
                         name = "data.psarc";
                     } else if (type == Main.ArcTarget.LATEST) {
                         extracted = "patch/PCSA00015";
-                        name = "data02.psarc";
+                        name = "data2.psarc";
                     } else if (type == Main.ArcTarget.ADDON_HD) {
                         extracted = "addcont/PCSA00015/DLC1W2048PACKAGE";
                         name = "dlc1.psarc";
@@ -184,26 +192,35 @@ public class Bert implements ActionListener {
                         System.out.println("Internal Error: Bert got dementia. Get a programmer!");
                         JOptionPane.showMessageDialog(invoker, "Internal Error: Bert got dementia. Get a programmer!", "Fatal Error", JOptionPane.ERROR_MESSAGE);
                         new File(Main.inpath + "asset.pkg").delete();
-                        new File(Main.inpath + "app/").delete();
-                        new File(Main.inpath + "patch/").delete();
-                        new File(Main.inpath + "addcont/").delete();
+                        Main.deleteDir(new File(Main.inpath + "app/"));
+                        Main.deleteDir(new File(Main.inpath + "patch/"));
+                        Main.deleteDir(new File(Main.inpath + "addcont/"));
                         invoker.setEnabled(true);
                         invoker.setVisible(true);
                         invoker.toFront();
                         invoker.repaint();
                         return;
                     }
+
                     try {
                         if (!Main.windows) {p = Runtime.getRuntime().exec(new String[]{"bash","-c","cd " + Main.inpath + ";wine psvpfsparser.exe -i " + extracted + " -o ./temp/ -z " + key.toString() + " -f cma.henkaku.xyz"});}
                         else {p = Runtime.getRuntime().exec(new String[]{Main.inpath + "psvpfsparser.exe", "-i", extracted, "-o", "./temp/", "-z", key.toString(), "-f", "cma.henkaku.xyz"}, null, new File(Main.inpath));}
+                        InputStream debugin = new BufferedInputStream(p.getInputStream());
+                        OutputStream debugout = new BufferedOutputStream(System.out);
+                        int c;
+                        while ((c = debugin.read()) != -1) {
+                            debugout.write(c);
+                        }
+                        debugin.close();
+                        debugout.close();
                         p.waitFor();
                     } catch (Exception e) {
                         System.out.println(e.getMessage());
                         JOptionPane.showMessageDialog(invoker, "CRITICAL FAILURE: " + e.getMessage(), "Fatal Error", JOptionPane.ERROR_MESSAGE);
                         new File(Main.inpath + "asset.pkg").delete();
-                        new File(Main.inpath + "app/").delete();
-                        new File(Main.inpath + "patch/").delete();
-                        new File(Main.inpath + "addcont/").delete();
+                        Main.deleteDir(new File(Main.inpath + "app/"));
+                        Main.deleteDir(new File(Main.inpath + "patch/"));
+                        Main.deleteDir(new File(Main.inpath + "addcont/"));
                         invoker.setEnabled(true);
                         invoker.setVisible(true);
                         invoker.toFront();
@@ -215,9 +232,9 @@ public class Bert implements ActionListener {
                     System.out.println("Cleaning up");
                     new File(Main.inpath + "asset.pkg").delete();
                     new File(Main.inpath + "temp/PSP2/" + name).renameTo(new File(Main.inpath + name));
-                    Main.deleteDir(new File(Main.inpath + "addcont/"));
-                    Main.deleteDir(new File(Main.inpath + "patch/"));
                     Main.deleteDir(new File(Main.inpath + "app/"));
+                    Main.deleteDir(new File(Main.inpath + "patch/"));
+                    Main.deleteDir(new File(Main.inpath + "addcont/"));
                     Main.deleteDir(new File(Main.inpath + "temp/"));
 
                     // restore controls
