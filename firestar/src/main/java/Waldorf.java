@@ -16,8 +16,6 @@
  *     along with this program.  If not, see https://www.gnu.org/licenses/.
  */
 
-import org.json.JSONObject;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -39,6 +37,8 @@ public class Waldorf implements ActionListener {
     private JTextField fOutpath;
     private JButton resetbtn;
     private JButton bOpenFolder;
+    private JButton dwnSDKbtn;
+    private JButton dwnARCbtn;
     MissPiggy invoker;
 
     public void Action(MissPiggy inv) {
@@ -64,6 +64,9 @@ public class Waldorf implements ActionListener {
         okbtn.addActionListener(this);
         resetbtn.addActionListener(this);
         bOpenFolder.addActionListener(this);
+
+        dwnARCbtn.addActionListener(this);
+        dwnSDKbtn.addActionListener(this);
 
         fOutpath.setText(Main.outpath);
 
@@ -91,7 +94,7 @@ public class Waldorf implements ActionListener {
             invoker.frame.setEnabled(true);
             frame.dispose();
         } else
-        if (actionEvent.getSource() == resetbtn) {
+        if (actionEvent.getSource() == resetbtn) { // todo: delete firesdk
             int result = JOptionPane.showConfirmDialog(frame,"Are you sure you want to redo the initial setup?", "Restore Default Settings", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
             if (result == JOptionPane.YES_OPTION) {
                 new File(System.getProperty("user.home") + "/.firestar/firestar.conf").delete();
@@ -107,6 +110,21 @@ public class Waldorf implements ActionListener {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+        } else
+        if (actionEvent.getSource() == dwnARCbtn) {
+            new Bert(invoker.frame);
+            frame.dispose();
+        } else
+        if (actionEvent.getSource() == dwnSDKbtn) {
+            Thread downloaderPopupThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    Main.downloadDependenciesBeforeSetVisible(invoker.frame);
+                    invoker.frame.setEnabled(true);
+                }
+            });
+            downloaderPopupThread.start();
+            frame.dispose();
         }
     }
 }

@@ -176,7 +176,24 @@ public class MissPiggy implements ActionListener {
         frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
         frame.setLayout(new GridLayout());
         frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
+
+        if (Main.confvint == 0){ // nag
+            int result = JOptionPane.showConfirmDialog(frame, "Firestar needs to download additional software to function. Setup is automatic and will only take a few minutes.\nIf you select NO, you will have to download additional dependencies later on.\n\nContinue?", "Firestar Setup", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+            if (result == JOptionPane.YES_OPTION) {
+                Thread downloaderPopupThread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Main.downloadDependenciesBeforeSetVisible(frame);
+                    }
+                });
+                downloaderPopupThread.start();
+            } else {
+                Main.writeConf(); // don't warn again
+                frame.setVisible(true); // no fuck off
+            }
+        } else {
+            frame.setVisible(true); // don't nag
+        }
     }
 
     public void InitializeModListStructure() {
@@ -368,6 +385,22 @@ public class MissPiggy implements ActionListener {
                 // prevent interruptions
                 frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
                 frame.setEnabled(false);
+
+                if (!new File(Main.inpath + "psp2psarc.exe").exists()) {
+                    JOptionPane.showMessageDialog(frame, "psp2psarc is missing.\nPlease select \"Get Dependencies\" in the Options menu.", "Error", JOptionPane.ERROR_MESSAGE);
+                    wrapUpDeployment();
+                    return;
+                }
+
+                if (!new File(Main.inpath + "data.psarc").exists() &&
+                        !new File(Main.inpath + "data01.psarc").exists() &&
+                        !new File(Main.inpath + "data02.psarc").exists() &&
+                        !new File(Main.inpath + "dlc1.psarc").exists() &&
+                        !new File(Main.inpath + "dlc2.psarc").exists()) {
+                    JOptionPane.showMessageDialog(frame, "You have no PSARCs.\nPlease dump your copy of WipEout 2048 or download a PSARC from the Options menu.", "Error", JOptionPane.ERROR_MESSAGE);
+                    wrapUpDeployment();
+                    return;
+                }
 
                 // start
                 new Gonzo().DeployMods(this);

@@ -52,7 +52,7 @@ public class Rowlf {
                 "\n" +
                 "Special thanks to:\n" +
                 "ThatOneBonk, for Thallium and for modding help\n" +
-                "Wirlaburla, for web hosting and being awesome\n" +
+                "Wirlaburla, for web hosting and code assistance\n" +
                 "Psygnosis, for making our favorite game ever\n" +
                 "and to all the PSVita hackers who made this possible");
         informationText.setHighlighter(null);

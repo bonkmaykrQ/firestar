@@ -31,16 +31,47 @@ public class Main {
     // Build Information
     public static final String vstr = "Release 1.3";
     public static final String vcode = "Tetsuo";
-    public static final int vint = 0;
+    public static final int vint = 1;
 
     // User Settings
     // TODO: replace with user preference when config i/o is done
     // also please double check that outpath is actually valid
     public static String outpath = System.getProperty("user.home") + "/.firestar/out/"; //game assets location
-    public static String inpath = System.getProperty("user.home") + "/.firestar/"; //game assets location
+    public final static String inpath = System.getProperty("user.home") + "/.firestar/"; //firestar folder -- do not change this
     public static boolean repatch; //are we in compat mode?
     public static boolean windows; //True = windows
+    public static int confvint = vint;
     //public static String psarc; //sdk location
+
+    public enum ArcTarget { // install target for 2048, type used by downloader
+        BASE("http://zeus.dl.playstation.net/cdn/UP9000/PCSA00015_00/NYEoaBGfiWymSEVZKxoyrKyBFsZNoFqxdyAIpZayZYuLLbCAArYrYXjPNhKCfXcONmhIZzZEeArycSrjiJOuNMWuWsDONUxMIQtMk.pkg"),
+        LATEST("http://gs.ww.np.dl.playstation.net/ppkg/np/PCSA00015/PCSA00015_T5/a4b7d9e35ed56e86/UP9000-PCSA00015_00-WIPEOUT2048BASE0-A0104-V0100-059564fcab8ce66d19b5a563e92677e581313205-PE.pkg"),
+        ADDON_HD("http://zeus.dl.playstation.net/cdn/UP9000/PCSA00015_00/JYMqGNXUKqHEyNLjbOgrWcJdnQJUMzgadRFWekbWFBXAwMeGikOyiHkXKogKIfqGhtNwKgmNWwwcrJORmRUTDzylBPwjGVnVjyDfh.pkg"),
+        ADDON_HD_FURY("http://zeus.dl.playstation.net/cdn/UP9000/PCSA00015_00/IAoJQaDpySenBmQCKiqecEPMzSdPfPcdXupxZXLTYYTuRgtsdTaHxbeejwGKRQpjJOKBdMMFzSoeEhsHYxNUasQrEzkZPeBxUEqnp.pkg");
+
+        private final String value;
+        ArcTarget(final String value) {this.value = value;};
+
+        @Override
+        public String toString() {
+            return value;
+        }
+    }
+
+    public enum ArcKey { // install target for 2048, type used by downloader
+        BASE("KO5ifR1dQ+eHBlgi6TI0Bdkf7hng6h8aYmRgYuHkCLQNn/9ufV+01fmzjNSmwuVHnO4dEBuN8cENACqVFcgA"),
+        LATEST("KO5ifR1dQ+eHBlgi6TI0Bdkf7hng6h8aYmRgYuHkCLQNn/9ufV+01fmzjNSmwuVHnO4dEBuN8cENACqVFcgA"),
+        ADDON_HD("KO5ifR1dQ+eHBlgi6TI0Bdnv4uNsGG5kYGIR4Ojs7ejuis9/anXfuudVNvzgdu+9z1z+asJojA9uAACgRhTl"),
+        ADDON_HD_FURY("KO5ifR1dQ+eHBlgi6TI0Bdnv4uNsFG5kYGIR4Ojs7ejuis9/3fydBRm3eCJX7biz/vVTm/2jMT64AQCCYhVy");
+
+        private final String value;
+        ArcKey(final String value) {this.value = value;};
+
+        @Override
+        public String toString() {
+            return value;
+        }
+    }
 
     public class Mod {
         public String path; // file name
@@ -88,15 +119,6 @@ public class Main {
             fExo2 = new Font("Arial", Font.PLAIN, 12);
         }
 
-        // download dependencies if we know we haven't been here before
-        // will also need to call this if a needed file is missing before use
-        //
-        // mostly for testing. will move to onboarding screen later
-        if (!new File(System.getProperty("user.home") + "/.firestar/").isDirectory()) {
-            new File(System.getProperty("user.home") + "/.firestar/").mkdirs();
-            downloadDependencies();
-        }
-
         // check and load configs
         File fConf = new File(System.getProperty("user.home") + "/.firestar/firestar.conf");
         if (!fConf.isFile()) {
@@ -127,7 +149,7 @@ public class Main {
         try {
             JSONObject container = new JSONObject(new String(Files.readAllBytes(Paths.get(System.getProperty("user.home") + "/.firestar/firestar.conf"))));
             System.out.println(container.toString()); // debug
-            int confvint = (int) container.get("version"); // used for converting configs between program versions later down the line
+            confvint = (int) container.get("version"); // used for converting configs between program versions later down the line
             outpath = container.get("2048path").toString();
             repatch = (boolean) container.get("safemode");
             windows = (boolean) container.get("isWin32");
@@ -142,7 +164,7 @@ public class Main {
         try {
             JSONObject container = new JSONObject(new String(Files.readAllBytes(Paths.get(System.getProperty("user.home") + "/.firestar/firestar.conf"))));
             System.out.println(container.toString()); // debug
-            int confvint = (int) container.get("version"); // used for converting configs between program versions later down the line
+            confvint = (int) container.get("version"); // used for converting configs between program versions later down the line
             outpath = container.get("2048path").toString();
             repatch = (boolean) container.get("safemode");
             windows = (boolean) container.get("isWin32");
@@ -165,7 +187,15 @@ public class Main {
         file.delete();
     }
 
-    public static boolean downloadDependencies () {
+    public static void downloadDependenciesBeforeSetVisible(JFrame invoker) {
+        invoker.setVisible(false);
+        Main.downloadDependencies();
+        invoker.setVisible(true);
+        confvint = vint;
+        Main.writeConf();
+    }
+
+    public static boolean downloadDependencies () { // todo: CHECKSUM!!!! THESE ARE EXECUTABLES!!!!!!!!!!! DON'T ALLOW MALWARE!!!!
         boolean downloader = new Fozzie().DownloadFile("https://bonkmaykr.worlio.com/http/firestar/firesdk.zip", System.getProperty("user.home") + "/.firestar/", "firesdk.zip");
         if (!downloader) {return false;}
 
@@ -180,5 +210,9 @@ public class Main {
         sdk.getFile().delete(); // cleanup
 
         return true;
+    }
+
+    public static boolean callDownloaderStatically (String url, String folder, String name) {
+        return new Fozzie().DownloadFile(url, folder, name);
     }
 }

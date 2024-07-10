@@ -16,8 +16,10 @@
  *     along with this program.  If not, see https://www.gnu.org/licenses/.
  */
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -27,6 +29,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
 public class Fozzie {
+    BufferedImage windowIcon;
     private JFrame frame = new JFrame();
     public JProgressBar progressBar;
     private JPanel frameContainer;
@@ -36,21 +39,23 @@ public class Fozzie {
     private int contentLength;
     private InputStream inputStream;
 
-    //public File output;
-
     public boolean backgroundDone = false;
 
     boolean DownloadFile(String url, String odir, String oname) {
-        //output = o;
-
         frame.add(frameContainer);
         frame.setSize(300, 100);
-        frame.setTitle("Firestar Mod Manager");
+        frame.setTitle("Download in Progress");
         frame.setResizable(false);
         frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         frame.setLayout(new GridLayout());
         frame.setLocationRelativeTo(null);
         frame.setAlwaysOnTop(true);
+        try {
+            windowIcon = ImageIO.read(Main.class.getResourceAsStream("/titleIcon.png"));
+            frame.setIconImage(windowIcon);
+        } catch (IOException e) {
+            System.out.println("ERROR: Failed to find /resources/titleIcon.png. Window will not have an icon.");
+        }
         frame.setVisible(true);
 
         label.setText("Downloading \"" + oname + "\"");
