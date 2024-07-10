@@ -15,8 +15,11 @@ If you aren't sure which file to get:
 - **All Platforms:** Grab the [Portable ZIP](https://files.worlio.com/users/bonkmaykr/tools/firestar/latest/firestar_dekka-1.2_portable.zip), extract it, and run the JAR file.
   
 # System Requirements
-- You will need a computer running Microsoft Windows, or any POSIX-compliant desktop operating system such as Mac OS X, Linux, BSD, or MINIX (Firestar does not run directly on the PSVita). ***Wayland support has not been tested.***
-- You will also need the Java Runtime Environment installed, at least version 17 or newer. Non-Windows systems will require WINE to be installed for some functionality.
+- Windows 8 or newer, Mac OS X 10.14 or older, any modern version of Linux/BSD
+    - If you have a Mac running 10.15 Catalina or newer, you should use Crossover to run the Windows version of Firestar instead.
+- Java 17 or above.
+- **Non-Windows systems only**: WINE
+- **Version 1.3 and above only:** [Visual C++ 2012 libraries](http://www.microsoft.com/en-au/download/confirmation.aspx?id=30679)
 - Do NOT install Firestar directly to your PSVita's storage. Some of it's file operations do not play nice with FAT filesystems.
 
 # FAQ
