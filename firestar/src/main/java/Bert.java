@@ -177,7 +177,7 @@ public class Bert implements ActionListener {
                     } else if (type == Main.ArcTarget.ADDON_HD) {
                         extracted = "addcont/PCSA00015/DLC1W2048PACKAGE";
                         name = "dlc1.psarc";
-                    } else if (type == Main.ArcTarget.ADDON_HD_FURY) {
+                    } else if (type == Main.ArcTarget.ADDON_HD_FURY) { // this is not "always true" - intellij is actually very dumj
                         extracted = "addcont/PCSA00015/DLC2W2048PACKAGE";
                         name = "dlc2.psarc";
                     } else {

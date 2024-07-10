@@ -79,8 +79,12 @@ public class MissPiggy implements ActionListener {
 
     public boolean listenersAlreadySet = false; // was written to troubleshoot a bug but this wasn't actually the cause
 
+    public void Action() {
+        Action(false);
+    }
+
     // Initialize the main window
-    public void Action(/*Main entryPoint*/) {
+    public void Action(boolean forceNag) {
         System.out.println("Main window created");
         System.out.println("Loading program configuration");
         Main.loadConf(this);
@@ -177,7 +181,7 @@ public class MissPiggy implements ActionListener {
         frame.setLayout(new GridLayout());
         frame.setLocationRelativeTo(null);
 
-        if (Main.confvint == 0){ // nag
+        if (Main.confvint == 0 || forceNag){ // nag
             int result = JOptionPane.showConfirmDialog(frame, "Firestar needs to download additional software to function. Setup is automatic and will only take a few minutes.\nIf you select NO, you will have to download additional dependencies later on.\n\nContinue?", "Firestar Setup", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
             if (result == JOptionPane.YES_OPTION) {
                 Thread downloaderPopupThread = new Thread(new Runnable() {

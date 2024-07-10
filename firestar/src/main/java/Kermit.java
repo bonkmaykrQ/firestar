@@ -132,7 +132,11 @@ public class Kermit implements ActionListener {
                     changePage(Pages.DONE);
                     break;
                 case DONE:
-                    new MissPiggy().Action();
+                    if (new File(Main.inpath + "psp2psarc.exe").exists()) { // we may have been here before
+                        new MissPiggy().Action(false);
+                    } else {
+                        new MissPiggy().Action(true);
+                    }
 
                     page = Pages.AGREEMENT; //set it here since we're disposing of the entire thing
                     frame.dispose();
