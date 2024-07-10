@@ -397,8 +397,8 @@ public class MissPiggy implements ActionListener {
                 }
 
                 if (!new File(Main.inpath + "data.psarc").exists() &&
-                        !new File(Main.inpath + "data01.psarc").exists() &&
-                        !new File(Main.inpath + "data02.psarc").exists() &&
+                        !new File(Main.inpath + "data1.psarc").exists() &&
+                        !new File(Main.inpath + "data2.psarc").exists() &&
                         !new File(Main.inpath + "dlc1.psarc").exists() &&
                         !new File(Main.inpath + "dlc2.psarc").exists()) {
                     JOptionPane.showMessageDialog(frame, "You have no PSARCs.\nPlease dump your copy of WipEout 2048 or download a PSARC from the Options menu.", "Error", JOptionPane.ERROR_MESSAGE);
