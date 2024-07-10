@@ -1,13 +1,15 @@
 <component name="ArtifactManager">
-  <artifact type="jar" build-on-make="true" name="firestar:jar">
+  <artifact type="jar" build-on-make="true" name="firestar.jar">
     <output-path>$PROJECT_DIR$/out/artifacts/firestar_jar</output-path>
     <root id="archive" name="firestar.jar">
       <element id="directory" name="META-INF">
-        <element id="file-copy" path="$PROJECT_DIR$/bin/META-INF/MANIFEST.MF" />
+        <element id="file-copy" path="$PROJECT_DIR$/META-INF/MANIFEST.MF" />
       </element>
-      <element id="module-output" name="firestar" />
-      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/net/lingala/zip4j/zip4j/2.11.5/zip4j-2.11.5.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/json/json/20240303/json-20240303.jar" path-in-jar="/" />
+      <element id="module-output" name="firestar.firestar.main" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.json/json/20240303/ebb88e8fb5122b7506d5cf1d69f1ccdb790d22a/json-20240303.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/net.lingala.zip4j/zip4j/2.11.5/4214e396e3891cb19eded3ce5e584cba9032fdc3/zip4j-2.11.5.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.java/java-gui-forms-rt/203.7148.30/f0dbca371a2592689e541be912de6005939f9c7c/java-gui-forms-rt-203.7148.30.jar" path-in-jar="/" />
+      <element id="dir-copy" path="$PROJECT_DIR$/firestar/src/main/resources" />
     </root>
   </artifact>
 </component>
