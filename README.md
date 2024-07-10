@@ -45,14 +45,17 @@ Firestar itself can run natively on the system, but it needs WINE in order to ha
 
 # Developer Commentary
 ## Third Party Code
-Firestar is built on top of the following additional software which is downloaded separately during runtime:
-- [ffmpeg](https://ffmpeg.org/), for audio conversion in the OST generator
+Firestar is built on top of the following additional software:
+- *[WINE](https://www.winehq.org/), for running the below applications across platforms.
+- *[ffmpeg](https://ffmpeg.org/), for audio conversion in the OST generator
 - [pkg2zip](https://github.com/mmozeiko/pkg2zip) & [psvpfsparser](https://github.com/motoharu-gosuto/psvpfstools), for (legal) asset decryption from Playstation Network.
 - [FART](https://fart-it.sourceforge.net/), for find-and-replace patches. Yes, seriously, that's what it's called.
 - [libcurl](https://curl.se/libcurl/), allows psvpfsparser to communicate with Henkaku's F00D server.
 - psp2psarc, Sony's proprietary PSARC compression/decompression utility.
 - at9tool, Sony's proprietary ATRAC9 codec.  
   
+*_WINE, ffmpeg, and the Java Runtime are pulled as package dependencies on Linux systems._  
+
 All of these, save for psp2psarc, appear in Tetsuo (1.3) and onwards. The licenses for Sony's psp2psarc and at9tool are polar opposite from Firestar's own GPL, so you should not expect Firestar to be a completely "libre" application (but then again, you're a WipEout player, the free software movement clearly isn't a huge concern). The open source nature of Firestar is provided with the hopes of allowing others to critique, audit, and improve upon the software, not necessarily for idealogical reasons.  
   
 Ideally, in the future, all of this functionality can be built into Firestar natively without any fancy tricks.
