@@ -60,7 +60,8 @@ public class WilkinsCoffee implements ActionListener {
         }
     }
 
-    private String outPathTemp = System.getProperty("user.home") + "/Documents/";
+    private String outPathTemp = System.getProperty("user.home") + "/Documents";
+    private boolean sdkInstalled = false;
 
     public void setup() {
         page = Pages.INTRO;
@@ -157,9 +158,34 @@ public class WilkinsCoffee implements ActionListener {
             switch (page) {
                 case INTRO:
                     page = Pages.PSARC;
-                    //contBtn.setEnabled(false);
+
+                    if (!new File(Main.inpath + "psp2psarc.exe").exists()) { // we may have been here before // nag
+                        frame.setEnabled(false);
+                        int result = JOptionPane.showConfirmDialog(frame, "Firestar needs to download additional software to function. Setup is automatic and will only take a few minutes.\nIf you select NO, you will have to download additional dependencies later on.\n\nContinue?", "Firestar Setup", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                        if (result == JOptionPane.YES_OPTION) {
+                            Thread downloaderPopupThread = new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Main.downloadDependenciesBeforeSetVisible(frame);
+                                    frame.setEnabled(true);
+                                    sdkInstalled = true;
+                                }
+                            });
+                            downloaderPopupThread.start();
+                        } else {
+                            frame.setEnabled(true);
+                        }
+                    } else {
+                        sdkInstalled = true;
+                    }
+
+                    contBtn.setEnabled(false);
                     contBtn.setBackground(new Color(102, 74, 58)); //brown
                     inputContainer.setVisible(true);
+                    if (!sdkInstalled) {
+                        PSARC_downBtn.setEnabled(false);
+                        PSARC_downBtn.setBackground(new Color(102, 74, 58)); //brown
+                    }
 
                     instructions.setText("<html>\n" +
                             "  <head>\n" +

@@ -95,10 +95,17 @@ public class Waldorf implements ActionListener {
             invoker.frame.setEnabled(true);
             frame.dispose();
         } else
-        if (actionEvent.getSource() == resetbtn) { // todo: delete firesdk // you sure?
+        if (actionEvent.getSource() == resetbtn) {
             int result = JOptionPane.showConfirmDialog(frame,"Are you sure you want to redo the initial setup?", "Restore Default Settings", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
             if (result == JOptionPane.YES_OPTION) {
+                System.out.println("Restoring default settings");
                 new File(System.getProperty("user.home") + "/.firestar/firestar.conf").delete();
+                System.out.println("Deleting existing PSARCs");
+                new File(Main.inpath + "data.psarc").delete();
+                new File(Main.inpath + "data1.psarc").delete();
+                new File(Main.inpath + "data2.psarc").delete();
+                new File(Main.inpath + "dlc1.psarc").delete();
+                new File(Main.inpath + "dlc2.psarc").delete();
                 int result2 = JOptionPane.showConfirmDialog(frame,"Firestar will now close.", "Restore Default Settings", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE);
                 if (result2 == JOptionPane.OK_OPTION) {
                     System.exit(0);

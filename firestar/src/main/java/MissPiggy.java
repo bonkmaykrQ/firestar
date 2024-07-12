@@ -181,23 +181,7 @@ public class MissPiggy implements ActionListener {
         frame.setLayout(new GridLayout());
         frame.setLocationRelativeTo(null);
 
-        if (Main.confvint == 0 || forceNag){ // nag
-            int result = JOptionPane.showConfirmDialog(frame, "Firestar needs to download additional software to function. Setup is automatic and will only take a few minutes.\nIf you select NO, you will have to download additional dependencies later on.\n\nContinue?", "Firestar Setup", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-            if (result == JOptionPane.YES_OPTION) {
-                Thread downloaderPopupThread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Main.downloadDependenciesBeforeSetVisible(frame);
-                    }
-                });
-                downloaderPopupThread.start();
-            } else {
-                Main.writeConf(); // don't warn again
-                frame.setVisible(true); // no fuck off
-            }
-        } else {
-            frame.setVisible(true); // don't nag
-        }
+        frame.setVisible(true);
     }
 
     public void InitializeModListStructure() {
