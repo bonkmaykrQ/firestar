@@ -157,25 +157,16 @@ public class WilkinsCoffee implements ActionListener {
         if (actionEvent.getSource() == contBtn) {
             switch (page) {
                 case INTRO:
-                    page = Pages.PSARC;
-                    try {
-                        logo = ImageIO.read(Main.class.getResourceAsStream("/setupIconPSARC.png")).getScaledInstance(96, 96, Image.SCALE_SMOOTH);
-                        picLabel.setIcon(new ImageIcon(logo));picLabel.setText("");
-                    } catch (IOException e) {
-                        System.out.println("ERROR: Missing resource in Wilkins. Page will be without images.");
-                        picLabel.setText("");
-                    }
-
                     if (!new File(Main.inpath + "psp2psarc.exe").exists()) { // we may have been here before // nag
                         frame.setEnabled(false);
                         int result = JOptionPane.showConfirmDialog(frame, "Firestar needs to download additional software to function. Setup is automatic and will only take a few minutes.\nIf you select NO, you will have to download additional dependencies later on.\n\nContinue?", "Firestar Setup", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
                         if (result == JOptionPane.YES_OPTION) {
+                            sdkInstalled = true;
                             Thread downloaderPopupThread = new Thread(new Runnable() {
                                 @Override
                                 public void run() {
                                     Main.downloadDependenciesBeforeSetVisible(frame);
                                     frame.setEnabled(true);
-                                    sdkInstalled = true;
                                 }
                             });
                             downloaderPopupThread.start();
@@ -184,6 +175,15 @@ public class WilkinsCoffee implements ActionListener {
                         }
                     } else {
                         sdkInstalled = true;
+                    }
+
+                    page = Pages.PSARC;
+                    try {
+                        logo = ImageIO.read(Main.class.getResourceAsStream("/setupIconPSARC.png")).getScaledInstance(96, 96, Image.SCALE_SMOOTH);
+                        picLabel.setIcon(new ImageIcon(logo));picLabel.setText("");
+                    } catch (IOException e) {
+                        System.out.println("ERROR: Missing resource in Wilkins. Page will be without images.");
+                        picLabel.setText("");
                     }
 
                     contBtn.setEnabled(false);

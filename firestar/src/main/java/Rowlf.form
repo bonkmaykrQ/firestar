@@ -32,11 +32,11 @@
           </grid>
         </constraints>
         <properties>
-          <background color="-16777216"/>
+          <background color="-2271221"/>
           <editable value="false"/>
           <focusable value="false"/>
-          <font name="Luxi Mono" size="10"/>
-          <foreground color="-5180417"/>
+          <font name="Exo 2"/>
+          <foreground color="-1"/>
           <horizontalAlignment value="0"/>
           <text value="Do you think we should appeal to the alien authorities?"/>
         </properties>
