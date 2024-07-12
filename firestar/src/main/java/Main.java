@@ -119,6 +119,8 @@ public class Main {
             fExo2 = new Font("Arial", Font.PLAIN, 12);
         }
 
+        new WilkinsCoffee().setup(); // move to below if statement after completion
+
         // check and load configs
         File fConf = new File(System.getProperty("user.home") + "/.firestar/firestar.conf");
         if (!fConf.isFile()) {

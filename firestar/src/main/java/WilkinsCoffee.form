@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="WilkinsCoffee">
+  <grid id="27dc6" binding="frameContainer" layout-manager="GridLayoutManager" row-count="2" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+    <margin top="10" left="10" bottom="10" right="10"/>
+    <constraints>
+      <xy x="20" y="20" width="416" height="455"/>
+    </constraints>
+    <properties>
+      <background color="-15128227"/>
+    </properties>
+    <border type="none"/>
+    <children>
+      <component id="a7e40" class="javax.swing.JLabel" binding="picLabel">
+        <constraints>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="9" fill="0" indent="0" use-parent-layout="false">
+            <preferred-size width="76" height="76"/>
+            <maximum-size width="76" height="76"/>
+          </grid>
+        </constraints>
+        <properties>
+          <text value="Image"/>
+        </properties>
+      </component>
+      <component id="29913" class="javax.swing.JEditorPane" binding="instructions">
+        <constraints>
+          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="1" use-parent-layout="false">
+            <preferred-size width="150" height="50"/>
+          </grid>
+        </constraints>
+        <properties>
+          <background color="-15128227"/>
+          <contentType value="text/html"/>
+          <disabledTextColor color="-592129"/>
+          <editable value="false"/>
+          <enabled value="false"/>
+          <focusCycleRoot value="false"/>
+          <focusable value="false"/>
+          <font name="Exo 2" size="14"/>
+          <foreground color="-592129"/>
+          <margin top="0" left="5" bottom="0" right="0"/>
+          <text value="&lt;html&gt;&#10;  &lt;head&gt;&#10;    &#10;  &lt;/head&gt;&#10;  &lt;body&gt;&#10;    &lt;p id=&quot;first-p&quot;&gt;&#10;      Welcome to the Firestar Setup.&#10;    &lt;/p&gt;&#10;    &lt;p&gt;&#10;      Please read the manual before continuing, and make sure your Vita is &#10;      configured correctly first. You will need enso custom firmware and &#10;      Repatch Reloaded for Firestar to work.&lt;br&gt;&lt;br&gt;Emulator players can skip &#10;      these preparations.&#10;    &lt;/p&gt;&#10;    &lt;p&gt;&#10;      Press &amp;quot;Continue&amp;quot; when you are ready.&#10;    &lt;/p&gt;&#10;  &lt;/body&gt;&#10;&lt;/html&gt;&#10;"/>
+        </properties>
+      </component>
+      <component id="c3ec3" class="javax.swing.JButton" binding="contBtn">
+        <constraints>
+          <grid row="1" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <background color="-2271221"/>
+          <borderPainted value="false"/>
+          <focusPainted value="false"/>
+          <foreground color="-5180417"/>
+          <text value="Continue"/>
+        </properties>
+      </component>
+    </children>
+  </grid>
+</form>
