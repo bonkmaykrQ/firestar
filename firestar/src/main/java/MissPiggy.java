@@ -366,7 +366,7 @@ public class MissPiggy implements ActionListener {
             }
         } else
         if (actionEvent.getSource() == helpMenu.getItem(5)) {StartErnie();} else
-        if (actionEvent.getSource() == helpMenu.getItem(6)) {new Rowlf().displayAboutScreen();}
+        if (actionEvent.getSource() == helpMenu.getItem(6)) {new Rowlf();}
     }
 
     // Will likely split the below functions into separate classes to work with intellij GUI designer.

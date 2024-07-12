@@ -26,20 +26,27 @@ import java.io.IOException;
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 
 public class Rowlf {
+    private BufferedImage windowIcon;
     JFrame frame = new JFrame();
     JPanel frameContainer;
-    BufferedImage logo;
+    Image logo;
     JLabel picLabel;
     private JTextField informationText;
     private JLabel versionLabel;
     private JLabel environmentLabel;
 
-    public void displayAboutScreen() {
+    public Rowlf() {
         try {
-            logo = ImageIO.read(Main.class.getResourceAsStream("/logo_about.png"));
+            logo = ImageIO.read(Main.class.getResourceAsStream("/logo.png")).getScaledInstance(333, 100, Image.SCALE_SMOOTH);
         } catch (IOException e) {
             System.out.println("ERROR: Failed to open About screen because we couldn't find an image needed to display the page.");
             throw new RuntimeException(e);
+        }
+        try {
+            windowIcon = ImageIO.read(Main.class.getResourceAsStream("/titleIcon.png"));
+            frame.setIconImage(windowIcon);
+        } catch (IOException e) {
+            System.out.println("ERROR: Failed to find /resources/titleIcon.png. Window will not have an icon.");
         }
 
         //frame.add(picLabel);
