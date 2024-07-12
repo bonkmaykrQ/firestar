@@ -18,8 +18,6 @@
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.filechooser.FileFilter;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -28,7 +26,6 @@ import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 
 import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
 
@@ -43,6 +40,7 @@ public class Waldorf implements ActionListener {
     private JButton dwnSDKbtn;
     private JButton dwnARCbtn;
     private JButton fOutpathChangebtn;
+    private JCheckBox checkUpdatesToggle;
 
     MissPiggy invoker;
     private String tOutPath = Main.outpath;
@@ -57,7 +55,7 @@ public class Waldorf implements ActionListener {
         } catch (IOException e) {
             System.out.println("ERROR: Failed to find /resources/titleIcon.png. Window will not have an icon.");
         }
-        frame.setSize(600, 200); // 1280 800
+        frame.setSize(600, 300); // 1280 800
         frame.setMinimumSize(new Dimension(200,100));
         frame.setTitle("Options");
         frame.setResizable(false);
@@ -70,13 +68,12 @@ public class Waldorf implements ActionListener {
         okbtn.addActionListener(this);
         resetbtn.addActionListener(this);
         bOpenFolder.addActionListener(this);
-
         dwnARCbtn.addActionListener(this);
         dwnSDKbtn.addActionListener(this);
-
         fOutpathChangebtn.addActionListener(this);
 
         fOutpath.setText(Main.outpath);
+        checkUpdatesToggle.setSelected(Main.checkUpdates);
 
         frame.setVisible(true);
         frame.addWindowListener(new WindowAdapter() {
@@ -97,6 +94,7 @@ public class Waldorf implements ActionListener {
         } else
         if (actionEvent.getSource() == okbtn) {
             Main.outpath = tOutPath;
+            Main.checkUpdates = checkUpdatesToggle.isSelected();
             Main.writeConf();
             Main.loadConf();
 
