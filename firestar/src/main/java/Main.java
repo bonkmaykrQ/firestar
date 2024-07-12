@@ -119,13 +119,11 @@ public class Main {
             fExo2 = new Font("Arial", Font.PLAIN, 12);
         }
 
-        new WilkinsCoffee().setup(); // move to below if statement after completion
-
         // check and load configs
         File fConf = new File(System.getProperty("user.home") + "/.firestar/firestar.conf");
         if (!fConf.isFile()) {
             System.out.println("No configuration was found. Starting the initial setup");
-            new Kermit().setup(fConf); // this is a fresh install, run the OOBE.
+            new WilkinsCoffee().setup();
         } else {
             new MissPiggy().Action(); // Quick! Start singing Firework by Katy Perry! (or open the main window i guess...)
         }
@@ -159,7 +157,6 @@ public class Main {
             System.out.println("ERROR: Failed to load firestar.conf");
             System.out.println(e.getMessage());
         }
-        return;
     }
 
     public static void loadConf(MissPiggy w){

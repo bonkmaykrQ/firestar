@@ -40,6 +40,8 @@ public class Bert implements ActionListener {
 
     private JFrame invoker;
 
+    private boolean wilkinsDownloadFinished = false;
+
     public Bert(JFrame parent) {
         parent.setEnabled(false);
         this.invoker = parent;
@@ -83,6 +85,15 @@ public class Bert implements ActionListener {
             JOptionPane.showMessageDialog(frame, "The decryption tool is missing.\nPlease select \"Get Dependencies\" in the Options menu.", "Error", JOptionPane.ERROR_MESSAGE);
             invoker.setEnabled(true);
             frame.dispose();
+        }
+    }
+
+    public boolean reportWhenDownloaded(WilkinsCoffee setup) {
+        while (frame.isActive() || !wilkinsDownloadFinished) {}
+        if (wilkinsDownloadFinished) { // intellij please shut the everloving FUCK up DON'T do this again or i will skin you alive
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -251,6 +262,7 @@ public class Bert implements ActionListener {
                     invoker.setVisible(true);
                     invoker.toFront();
                     invoker.repaint();
+                    wilkinsDownloadFinished = true;
                 }
             });
             downloaderPopupThread.start();

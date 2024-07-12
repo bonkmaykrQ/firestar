@@ -18,24 +18,62 @@
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.html.HTMLDocument;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 
 import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 
-public class WilkinsCoffee {
+public class WilkinsCoffee implements ActionListener {
     BufferedImage windowIcon;
+    Image logo;
+    public Pages page;
     public JFrame frame = new JFrame();
     private JPanel frameContainer;
     private JLabel picLabel;
     private JEditorPane instructions;
     private JButton contBtn;
+    private JPanel inputContainer;
+    private JButton PSARC_downBtn;
+    private JButton PSARC_impBtn;
+    private JPanel inputContainer2;
+    private JButton EXPORT_openFolderBtn;
+    private JLabel pathDisplay;
 
-    Image logo;
+    public enum Pages {
+        INTRO(0),
+        PSARC(1),
+        EXPORT_LOCATION(2),
+        DONE(3);
+
+        public final int value;
+
+        private Pages(int i) {
+            this.value = i;
+        }
+    }
+
+    private String outPathTemp = System.getProperty("user.home") + "/Documents/";
 
     public void setup() {
+        page = Pages.INTRO;
+        inputContainer.setVisible(false);
+        inputContainer2.setVisible(false);
+
+        // check if this is windows or not
+        if(System.getProperty("os.name").contains("Windows")) {Main.windows = true;System.out.println("Assuming we should NOT use WINE based on known system variables.");}
+        else {Main.windows = false;System.out.println("Assuming we should use WINE based on known system variables.");}
+
+        // reformat path slightly for windows
+        if (Main.windows) {outPathTemp.replace("/", "\\");}
+
         try {
             windowIcon = ImageIO.read(Main.class.getResourceAsStream("/titleIcon.png"));
             frame.setIconImage(windowIcon);
@@ -54,8 +92,16 @@ public class WilkinsCoffee {
         ((HTMLDocument)instructions.getDocument()).getStyleSheet().addRule(bodyRule);
         instructions.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE); // makes text smaller than joe biden's windmill if font set manually. wtf??
         contBtn.setFont(Main.fExo2.deriveFont(Font.BOLD).deriveFont(12f));
+        PSARC_downBtn.setFont(Main.fExo2.deriveFont(Font.BOLD).deriveFont(12f));
+        PSARC_impBtn.setFont(Main.fExo2.deriveFont(Font.BOLD).deriveFont(12f));
+        EXPORT_openFolderBtn.setFont(Main.fExo2.deriveFont(Font.BOLD).deriveFont(12f));
 
         frame.add(frameContainer); // initialize window contents -- will be handled by IntelliJ IDEA
+
+        contBtn.addActionListener(this);
+        PSARC_downBtn.addActionListener(this);
+        PSARC_impBtn.addActionListener(this);
+        EXPORT_openFolderBtn.addActionListener(this);
 
         frame.setSize(400, 400);
         frame.setTitle("Firestar Setup");
@@ -64,5 +110,122 @@ public class WilkinsCoffee {
         frame.setLayout(new GridLayout());
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent actionEvent) {
+        WilkinsCoffee threadParent = this;
+        if (actionEvent.getSource() == PSARC_downBtn) {
+            Thread waiterThread = new Thread(new Runnable() {@Override
+            public void run() {
+                if (new Bert(frame).reportWhenDownloaded(threadParent)) {
+                    contBtn.setEnabled(true);
+                    contBtn.setBackground(new Color(221, 88, 11)); //orange
+                }
+            }});
+        waiterThread.start();
+        } else
+        if (actionEvent.getSource() == PSARC_impBtn) {
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+            FileFilter fileChooserFilter = new FileNameExtensionFilter("Sony Playstation Archive File", "psarc");
+            fileChooser.setFileFilter(fileChooserFilter);
+            int result = fileChooser.showOpenDialog(frame);
+            if (result == JFileChooser.APPROVE_OPTION) {
+                try {
+                    Files.copy(fileChooser.getSelectedFile().toPath(), new File(Main.inpath + fileChooser.getSelectedFile().getName()).toPath());
+                    contBtn.setEnabled(true);
+                    contBtn.setBackground(new Color(221, 88, 11)); //orange
+                } catch (IOException e) {
+                    System.out.println(e.getMessage());
+                    JOptionPane.showMessageDialog(frame, "An error has occured.\n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        } else
+        if (actionEvent.getSource() == EXPORT_openFolderBtn) {
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            int result = fileChooser.showOpenDialog(frame);
+            if (result == JFileChooser.APPROVE_OPTION) {
+                if (fileChooser.getSelectedFile().isDirectory()) {
+                    outPathTemp = fileChooser.getSelectedFile().getAbsolutePath();
+                    pathDisplay.setText("Export path: " + outPathTemp);
+                }
+            }
+        } else
+        if (actionEvent.getSource() == contBtn) {
+            switch (page) {
+                case INTRO:
+                    page = Pages.PSARC;
+                    //contBtn.setEnabled(false);
+                    contBtn.setBackground(new Color(102, 74, 58)); //brown
+                    inputContainer.setVisible(true);
+
+                    instructions.setText("<html>\n" +
+                            "  <head>\n" +
+                            "    \n" +
+                            "  </head>\n" +
+                            "  <body>\n" +
+                            "    <p id=\"first-p\">\n" +
+                            "      You must dump the original assets from WipEout 2048 so that Firestar can patch them.<br><br>If you would like, you can choose to have these downloaded and extracted for you, or you can provide your own decrypted dumps.</p><p>To decrypt your own dumps, please see \"Decrypting Original PSARC Files\" in the manual.\n" +
+                            "    </p>\n" +
+                            "    <p>\n" +
+                            "      Press &quot;Continue&quot; when you are done.\n" +
+                            "    </p>\n" +
+                            "  </body>\n" +
+                            "</html>\n");
+
+                    break;
+                case PSARC:
+                    page = Pages.EXPORT_LOCATION;
+                    contBtn.setEnabled(true);
+                    contBtn.setBackground(new Color(221, 88, 11)); //orange
+                    inputContainer.setVisible(false);
+                    inputContainer2.setVisible(true);
+
+                    instructions.setText("<html>\n" +
+                            "  <head>\n" +
+                            "    \n" +
+                            "  </head>\n" +
+                            "  <body>\n" +
+                            "    <p id=\"first-p\">\n" +
+                            "      Almost done!<br><br>Select the folder you would like to export your compiled mods to.<br><br>When you select \"Deploy\" in the mod list, Firestar will place a PSARC file into this folder which you can install onto your Vita.\n" +
+                            "    </p>\n" +
+                            "    <p>\n" +
+                            "      Press &quot;Continue&quot; when you are done.\n" +
+                            "    </p>\n" +
+                            "  </body>\n" +
+                            "</html>\n");
+
+                    pathDisplay.setText("Export path: " + outPathTemp);
+
+                    break;
+                case EXPORT_LOCATION:
+                    page = Pages.DONE;
+                    inputContainer2.setVisible(false);
+                    Main.outpath = outPathTemp + "/";
+                    Main.repatch = true;
+                    Main.writeConf();
+
+                    instructions.setText("<html>\n" +
+                            "  <head>\n" +
+                            "    \n" +
+                            "  </head>\n" +
+                            "  <body>\n" +
+                            "    <p id=\"first-p\">\n" +
+                            "      Setup complete!\n" +
+                            "    </p>\n" +
+                            "  </body>\n" +
+                            "</html>\n");
+
+                    break;
+                case DONE:
+                    frame.dispose();
+                    new MissPiggy().Action();
+                    break;
+                default:
+                    throw new UnsupportedOperationException("ERROR: Setup page-flip event listener didn't drink any Wilkins Coffee. Get a programmer!");
+            }
+        }
     }
 }
