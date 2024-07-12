@@ -19,6 +19,8 @@
 import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -43,7 +45,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Ernie implements ActionListener, Runnable {
+public class Ernie implements ActionListener {
     // Base URL for Gitea API
     public static final String gitapi = "https://git.worlio.com/api/v1/repos/bonkmaykr/firestar";
     public static final String changelog = "https://bonkmaykr.worlio.com/http/firestar/changelog.htm";
@@ -61,14 +63,17 @@ public class Ernie implements ActionListener, Runnable {
     public boolean backgroundDone = false;
     private BufferedImage windowIcon;
 
-    public void run() {
+    private JFrame parent;
+
+    public Ernie(JFrame parent) {
+        this.parent = parent;
         try {
             windowIcon = ImageIO.read(Main.class.getResourceAsStream("/titleIcon.png"));
             frame.setIconImage(windowIcon);
         } catch (IOException e) {
             System.out.println("ERROR: Failed to find /resources/titleIcon.png. Window will not have an icon.");
         }
-	byte[] urlraw = new Ernie().getFile(gitapi+"/releases?draft=false&pre-release=false");
+	byte[] urlraw = getFile(gitapi+"/releases?draft=false&pre-release=false");
 	if (urlraw.length <= 0) {
 	   JOptionPane.showMessageDialog(frame, "Internal Error: Couldn't check for updates.", "Fatal Error", JOptionPane.ERROR_MESSAGE);
 	} else {
@@ -89,6 +94,16 @@ public class Ernie implements ActionListener, Runnable {
 		    frame.setResizable(false);
 		    frame.setLocationRelativeTo(null);
 		    frame.setAlwaysOnTop(true);
+            frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+            parent.setEnabled(false);
+            frame.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosing(WindowEvent e)
+                {
+                    parent.setEnabled(true);
+                    e.getWindow().dispose();
+                }
+            });
 		    frame.setVisible(true);
 		} else { System.out.println("Updater: No updates."); }
 	    } catch (IOException ex) {
@@ -101,12 +116,16 @@ public class Ernie implements ActionListener, Runnable {
     
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        if (actionEvent.getSource() == notnowbtn) {frame.dispose();} else
+        if (actionEvent.getSource() == notnowbtn) {
+            parent.setEnabled(true);
+            frame.dispose();
+        } else
         if (actionEvent.getSource() == surebtn) {
 	    if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
 		String releasepage = "https://git.worlio.com/bonkmaykr/firestar/releases";
 		try {
 		    Desktop.getDesktop().browse(new URI(releasepage));
+            parent.setEnabled(true);
             frame.dispose();
 		} catch (Exception ex) {
 		    JOptionPane.showMessageDialog(frame, "Couldn't open your web browser!\nYou can check out the latest release at the URL below:\n"+releasepage, "Error", JOptionPane.ERROR_MESSAGE);

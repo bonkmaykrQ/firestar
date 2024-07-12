@@ -42,7 +42,7 @@ public class Main {
     public static boolean repatch; //are we in compat mode?
     public static boolean windows; //True = windows
     public static int confvint = vint;
-    public static boolean checkUpdates;
+    public static boolean checkUpdates = true;
     //public static String psarc; //sdk location
 
     public enum ArcTarget { // install target for 2048, type used by downloader
@@ -138,7 +138,7 @@ public class Main {
         container.put("HDpath", "TODO"); // proposed hd/fury support for ps3, will use very simplified Fast Mode due to less difficulty installing
         container.put("safemode", repatch);
         container.put("isWin32", windows);
-	container.put("checkUpdates", checkUpdates);
+	    container.put("checkUpdates", checkUpdates);
         container.put("currentPlaylist", "TODO"); // proposed feature: store separate mod lists in lists/ to load/save later?
 
         try {

@@ -312,8 +312,12 @@ public class MissPiggy implements ActionListener {
     }
     
     private void StartErnie() {
-	Ernie e = new Ernie();
-	new Thread(e).start();
+	    new Thread(new Runnable() {
+            @Override
+            public void run() {
+                new Ernie(frame); // changed away from runnable in order to pass params to constructor -bonk
+            }
+        }).start();
     }
 
     private ListSelectionListener whenItemSelected() {
