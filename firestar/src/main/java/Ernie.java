@@ -71,6 +71,7 @@ public class Ernie implements ActionListener, Runnable {
 		    surebtn.addActionListener(this);
 		    changelogDisplay.setEditable(false);
 		    changelogDisplay.setPage(changelog);
+            changelogDisplay.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE); // makes text smaller than joe biden's windmill if font set manually. wtf??
 		    
 		    frame.setTitle("An update is available!");
 		    frame.setSize(450, 400);
@@ -95,6 +96,7 @@ public class Ernie implements ActionListener, Runnable {
 		String releasepage = "https://git.worlio.com/bonkmaykr/firestar/releases";
 		try {
 		    Desktop.getDesktop().browse(new URI(releasepage));
+            frame.dispose();
 		} catch (Exception ex) {
 		    JOptionPane.showMessageDialog(frame, "Couldn't open your web browser!\nYou can check out the latest release at the URL below:\n"+releasepage, "Error", JOptionPane.ERROR_MESSAGE);
 		}

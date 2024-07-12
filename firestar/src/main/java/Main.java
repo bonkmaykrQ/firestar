@@ -31,7 +31,7 @@ public class Main {
     // Build Information
     public static final String vstr = "Release 1.3";
     public static final String vcode = "Tetsuo";
-    public static final String vtag = "tetsuo-1.3";
+    public static final String vtag = "dekka-1.1"; //tetsuo-1.3
     public static final int vint = 1;
 
     // User Settings
