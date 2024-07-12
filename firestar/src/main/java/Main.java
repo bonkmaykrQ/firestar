@@ -52,7 +52,7 @@ public class Main {
         ADDON_HD_FURY("http://zeus.dl.playstation.net/cdn/UP9000/PCSA00015_00/IAoJQaDpySenBmQCKiqecEPMzSdPfPcdXupxZXLTYYTuRgtsdTaHxbeejwGKRQpjJOKBdMMFzSoeEhsHYxNUasQrEzkZPeBxUEqnp.pkg");
 
         private final String value;
-        ArcTarget(final String value) {this.value = value;};
+        ArcTarget(final String value) {this.value = value;}
 
         @Override
         public String toString() {
@@ -67,7 +67,7 @@ public class Main {
         ADDON_HD_FURY("KO5ifR1dQ+eHBlgi6TI0Bdnv4uNsFG5kYGIR4Ojs7ejuis9/3fydBRm3eCJX7biz/vVTm/2jMT64AQCCYhVy");
 
         private final String value;
-        ArcKey(final String value) {this.value = value;};
+        ArcKey(final String value) {this.value = value;}
 
         @Override
         public String toString() {
