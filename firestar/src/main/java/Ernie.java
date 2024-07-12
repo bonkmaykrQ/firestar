@@ -19,6 +19,7 @@
 import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -30,6 +31,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
@@ -57,15 +59,24 @@ public class Ernie implements ActionListener, Runnable {
     private JButton surebtn;
     
     public boolean backgroundDone = false;
-    
+    private BufferedImage windowIcon;
+
     public void run() {
+        try {
+            windowIcon = ImageIO.read(Main.class.getResourceAsStream("/titleIcon.png"));
+            frame.setIconImage(windowIcon);
+        } catch (IOException e) {
+            System.out.println("ERROR: Failed to find /resources/titleIcon.png. Window will not have an icon.");
+        }
 	byte[] urlraw = new Ernie().getFile(gitapi+"/releases?draft=false&pre-release=false");
 	if (urlraw.length <= 0) {
 	   JOptionPane.showMessageDialog(frame, "Internal Error: Couldn't check for updates.", "Fatal Error", JOptionPane.ERROR_MESSAGE);
 	} else {
 	    try {
 		JSONArray releases = new JSONArray(new String(urlraw, Charset.forName("utf-8")));
-		if (releases.length() >= 1 && ((JSONObject)releases.get(0)).get("tag_name") != Main.vtag) {
+        System.out.println("Updater: latest release is " + ((JSONObject)releases.get(0)).get("tag_name"));
+		if (releases.length() >= 1 && !((JSONObject)releases.get(0)).get("tag_name").equals(Main.vtag)) {
+            System.out.println("Updater: Your version is out of date.");
 		    frame.add(frameContainer);
 		    notnowbtn.addActionListener(this);
 		    surebtn.addActionListener(this);
@@ -79,7 +90,7 @@ public class Ernie implements ActionListener, Runnable {
 		    frame.setLocationRelativeTo(null);
 		    frame.setAlwaysOnTop(true);
 		    frame.setVisible(true);
-		} else { System.out.println("Problem??"); }
+		} else { System.out.println("Updater: No updates."); }
 	    } catch (IOException ex) {
 		Logger.getLogger(Ernie.class.getName()).log(Level.SEVERE, null, ex);
 	    } catch (JSONException ex) {
