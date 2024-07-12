@@ -90,6 +90,7 @@ public class Waldorf implements ActionListener {
         if (actionEvent.getSource() == okbtn) {
             Main.outpath = fOutpath.getText();
             Main.writeConf();
+            Main.loadConf();
 
             invoker.frame.setEnabled(true);
             frame.dispose();
