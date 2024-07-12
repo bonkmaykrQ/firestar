@@ -31,6 +31,7 @@ public class Main {
     // Build Information
     public static final String vstr = "Release 1.3";
     public static final String vcode = "Tetsuo";
+    public static final String vtag = "tetsuo-1.3";
     public static final int vint = 1;
 
     // User Settings
@@ -41,6 +42,7 @@ public class Main {
     public static boolean repatch; //are we in compat mode?
     public static boolean windows; //True = windows
     public static int confvint = vint;
+    public static boolean checkUpdates;
     //public static String psarc; //sdk location
 
     public enum ArcTarget { // install target for 2048, type used by downloader
@@ -136,6 +138,7 @@ public class Main {
         container.put("HDpath", "TODO"); // proposed hd/fury support for ps3, will use very simplified Fast Mode due to less difficulty installing
         container.put("safemode", repatch);
         container.put("isWin32", windows);
+	container.put("checkUpdates", checkUpdates);
         container.put("currentPlaylist", "TODO"); // proposed feature: store separate mod lists in lists/ to load/save later?
 
         try {
@@ -153,6 +156,11 @@ public class Main {
             outpath = container.get("2048path").toString();
             repatch = (boolean) container.get("safemode");
             windows = (boolean) container.get("isWin32");
+	    try {
+		checkUpdates = (boolean) container.get("checkUpdates");
+	    } catch (JSONException e) {
+		checkUpdates = true;
+	    }
         } catch (IOException e) {
             System.out.println("ERROR: Failed to load firestar.conf");
             System.out.println(e.getMessage());
@@ -167,6 +175,11 @@ public class Main {
             outpath = container.get("2048path").toString();
             repatch = (boolean) container.get("safemode");
             windows = (boolean) container.get("isWin32");
+	    try {
+		checkUpdates = (boolean) container.get("checkUpdates");
+	    } catch (JSONException e) {
+		checkUpdates = true;
+	    }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(w.frame, "Firestar couldn't load your config file. Tread lightly.\n\n" + e.getMessage(), "Critical Error", JOptionPane.ERROR_MESSAGE);
             System.out.println("ERROR: Failed to load firestar.conf");

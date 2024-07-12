@@ -113,6 +113,7 @@ public class MissPiggy implements ActionListener {
         helpMenu.add(new JMenuItem("Source Code")); //replace with Website 'screwgravity.net' and 'Issue Tracker' gitea later
         helpMenu.add(new JMenuItem("License"));
         helpMenu.add(new JSeparator());
+	helpMenu.add(new JMenuItem("Check for Updates"));
         helpMenu.add(new JMenuItem("About Firestar"));
 
         menuBar.add(fileMenu);
@@ -138,6 +139,7 @@ public class MissPiggy implements ActionListener {
         helpMenu.getItem(2).addActionListener(this);
         helpMenu.getItem(3).addActionListener(this);
         helpMenu.getItem(5).addActionListener(this);
+	helpMenu.getItem(6).addActionListener(this);
 
         deployButton.addActionListener(this);
         importButton.addActionListener(this);
@@ -180,6 +182,8 @@ public class MissPiggy implements ActionListener {
         frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
         frame.setLayout(new GridLayout());
         frame.setLocationRelativeTo(null);
+	
+	if (Main.checkUpdates) { StartErnie(); }
 
         frame.setVisible(true);
     }
@@ -306,6 +310,11 @@ public class MissPiggy implements ActionListener {
         modList.setListData(contents);
         createSelectionEventListener();
     }
+    
+    private void StartErnie() {
+	Ernie e = new Ernie();
+	new Thread(e).start();
+    }
 
     private ListSelectionListener whenItemSelected() {
         return null;
@@ -356,7 +365,8 @@ public class MissPiggy implements ActionListener {
                 JOptionPane.showMessageDialog(frame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         } else
-        if (actionEvent.getSource() == helpMenu.getItem(5)) {new Rowlf().displayAboutScreen();}
+        if (actionEvent.getSource() == helpMenu.getItem(5)) {StartErnie();} else
+        if (actionEvent.getSource() == helpMenu.getItem(6)) {new Rowlf().displayAboutScreen();}
     }
 
     // Will likely split the below functions into separate classes to work with intellij GUI designer.
