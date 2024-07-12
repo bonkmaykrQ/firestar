@@ -18,6 +18,8 @@
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -26,6 +28,7 @@ import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 
 import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
 
@@ -34,12 +37,15 @@ public class Waldorf implements ActionListener {
     private JPanel frameContainer;
     private JButton okbtn;
     private JButton cancelbtn;
-    private JTextField fOutpath;
+    private JLabel fOutpath;
     private JButton resetbtn;
     private JButton bOpenFolder;
     private JButton dwnSDKbtn;
     private JButton dwnARCbtn;
+    private JButton fOutpathChangebtn;
+
     MissPiggy invoker;
+    private String tOutPath = Main.outpath;
 
     public void Action(MissPiggy inv) {
         invoker = inv;
@@ -68,6 +74,8 @@ public class Waldorf implements ActionListener {
         dwnARCbtn.addActionListener(this);
         dwnSDKbtn.addActionListener(this);
 
+        fOutpathChangebtn.addActionListener(this);
+
         fOutpath.setText(Main.outpath);
 
         frame.setVisible(true);
@@ -88,7 +96,7 @@ public class Waldorf implements ActionListener {
             frame.dispose();
         } else
         if (actionEvent.getSource() == okbtn) {
-            Main.outpath = fOutpath.getText();
+            Main.outpath = tOutPath;
             Main.writeConf();
             Main.loadConf();
 
@@ -133,6 +141,17 @@ public class Waldorf implements ActionListener {
             });
             downloaderPopupThread.start();
             frame.dispose();
-        }
+        } else
+            if (actionEvent.getSource() == fOutpathChangebtn) {
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                int result = fileChooser.showOpenDialog(frame);
+                if (result == JFileChooser.APPROVE_OPTION) {
+                    if (fileChooser.getSelectedFile().isDirectory()) {
+                        tOutPath = fileChooser.getSelectedFile().getAbsolutePath();
+                        fOutpath.setText(tOutPath);
+                    }
+                }
+            }
     }
 }
