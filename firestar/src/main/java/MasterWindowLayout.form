@@ -30,21 +30,29 @@
           <color color="-1"/>
         </border>
         <children>
-          <component id="a9cee" class="javax.swing.JTextPane" binding="descriptionField">
+          <scrollpane id="6e7e5">
             <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="50"/>
-              </grid>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <background color="-15128227"/>
-              <editable value="false"/>
-              <focusable value="false"/>
-              <font name="Exo 2"/>
               <foreground color="-1"/>
-              <text value="Select a mod from the list on the right to view more details, or to make changes to your installation."/>
+              <opaque value="false"/>
             </properties>
-          </component>
+            <border type="empty"/>
+            <children>
+              <component id="d55bf" class="javax.swing.JTextPane" binding="descriptionField">
+                <constraints/>
+                <properties>
+                  <background color="-15128227"/>
+                  <editable value="false"/>
+                  <focusable value="false"/>
+                  <font name="Exo 2"/>
+                  <foreground color="-1"/>
+                  <text value="Select a mod from the list on the right to view more details, or to make changes to your installation."/>
+                </properties>
+              </component>
+            </children>
+          </scrollpane>
         </children>
       </grid>
       <scrollpane id="ecc63" binding="modListScrollContainer">
