@@ -82,7 +82,7 @@ public class WilkinsCoffee implements ActionListener {
             System.out.println("ERROR: Failed to find /resources/titleIcon.png. Window will not have an icon.");
         }
         try {
-            logo = ImageIO.read(Main.class.getResourceAsStream("/programIcon.png")).getScaledInstance(76, 76, Image.SCALE_SMOOTH);
+            logo = ImageIO.read(Main.class.getResourceAsStream("/programIcon.png")).getScaledInstance(96, 96, Image.SCALE_SMOOTH);
             picLabel.setIcon(new ImageIcon(logo));picLabel.setText("");
         } catch (IOException e) {
             System.out.println("ERROR: Missing resource in Wilkins. Page will be without images.");
@@ -158,6 +158,13 @@ public class WilkinsCoffee implements ActionListener {
             switch (page) {
                 case INTRO:
                     page = Pages.PSARC;
+                    try {
+                        logo = ImageIO.read(Main.class.getResourceAsStream("/setupIconPSARC.png")).getScaledInstance(96, 96, Image.SCALE_SMOOTH);
+                        picLabel.setIcon(new ImageIcon(logo));picLabel.setText("");
+                    } catch (IOException e) {
+                        System.out.println("ERROR: Missing resource in Wilkins. Page will be without images.");
+                        picLabel.setText("");
+                    }
 
                     if (!new File(Main.inpath + "psp2psarc.exe").exists()) { // we may have been here before // nag
                         frame.setEnabled(false);
@@ -204,6 +211,13 @@ public class WilkinsCoffee implements ActionListener {
                     break;
                 case PSARC:
                     page = Pages.EXPORT_LOCATION;
+                    try {
+                        logo = ImageIO.read(Main.class.getResourceAsStream("/setupIconEXPORT.png")).getScaledInstance(96, 96, Image.SCALE_SMOOTH);
+                        picLabel.setIcon(new ImageIcon(logo));picLabel.setText("");
+                    } catch (IOException e) {
+                        System.out.println("ERROR: Missing resource in Wilkins. Page will be without images.");
+                        picLabel.setText("");
+                    }
                     contBtn.setEnabled(true);
                     contBtn.setBackground(new Color(221, 88, 11)); //orange
                     inputContainer.setVisible(false);
@@ -228,6 +242,13 @@ public class WilkinsCoffee implements ActionListener {
                     break;
                 case EXPORT_LOCATION:
                     page = Pages.DONE;
+                    try {
+                        logo = ImageIO.read(Main.class.getResourceAsStream("/setupIconDONE.png")).getScaledInstance(96, 96, Image.SCALE_SMOOTH);
+                        picLabel.setIcon(new ImageIcon(logo));picLabel.setText("");
+                    } catch (IOException e) {
+                        System.out.println("ERROR: Missing resource in Wilkins. Page will be without images.");
+                        picLabel.setText("");
+                    }
                     inputContainer2.setVisible(false);
                     Main.outpath = outPathTemp + "/";
                     Main.repatch = true;
