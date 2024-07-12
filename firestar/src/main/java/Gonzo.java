@@ -302,10 +302,7 @@ public class Gonzo {
             //ignore
         }
 
-        TitledBorder titledBorder = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.BLACK), "DONE! Close this pop-up to continue.");
-        titledBorder.setTitlePosition(TitledBorder.BOTTOM);
-        titledBorder.setTitleJustification(TitledBorder.CENTER);
-        scrollPane.setBorder(titledBorder);
+        ((TitledBorder)scrollPane.getBorder()).setTitle("DONE! Close this pop-up to continue.");
         scrollPane.repaint();
 
         frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);

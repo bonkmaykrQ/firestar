@@ -7,6 +7,7 @@
     </constraints>
     <properties>
       <background color="-15128227"/>
+      <foreground color="-1"/>
     </properties>
     <border type="none"/>
     <children>
@@ -18,6 +19,7 @@
           </grid>
         </constraints>
         <properties>
+          <foreground color="-1"/>
           <text value="Image"/>
         </properties>
       </component>
@@ -36,7 +38,7 @@
           <focusCycleRoot value="false"/>
           <focusable value="false"/>
           <font name="Exo 2" size="14"/>
-          <foreground color="-592129"/>
+          <foreground color="-1"/>
           <margin top="0" left="5" bottom="0" right="0"/>
           <text value="&lt;html&gt;&#10;  &lt;head&gt;&#10;    &#10;  &lt;/head&gt;&#10;  &lt;body&gt;&#10;    &lt;p id=&quot;first-p&quot;&gt;&#10;      Welcome to the Firestar Setup.&#10;    &lt;/p&gt;&#10;    &lt;p&gt;&#10;      Please read the manual before continuing, and make sure your Vita is &#10;      configured correctly first. You will need enso custom firmware and &#10;      Repatch Reloaded for Firestar to work.&lt;br&gt;&lt;br&gt;Emulator players can skip &#10;      these preparations.&#10;    &lt;/p&gt;&#10;    &lt;p&gt;&#10;      Press &amp;quot;Continue&amp;quot; when you are ready.&#10;    &lt;/p&gt;&#10;  &lt;/body&gt;&#10;&lt;/html&gt;&#10;"/>
         </properties>
@@ -49,7 +51,7 @@
           <background color="-2271221"/>
           <borderPainted value="false"/>
           <focusPainted value="false"/>
-          <foreground color="-526337"/>
+          <foreground color="-1"/>
           <text value="Continue"/>
         </properties>
       </component>
@@ -72,7 +74,7 @@
               <background color="-2271221"/>
               <borderPainted value="false"/>
               <focusPainted value="false"/>
-              <foreground color="-592129"/>
+              <foreground color="-1"/>
               <text value="Auto-Download"/>
             </properties>
           </component>
@@ -84,7 +86,7 @@
               <background color="-2271221"/>
               <borderPainted value="false"/>
               <focusPainted value="false"/>
-              <foreground color="-592129"/>
+              <foreground color="-1"/>
               <text value="Import My Own"/>
             </properties>
           </component>
@@ -108,7 +110,7 @@
               <background color="-2271221"/>
               <borderPainted value="false"/>
               <focusPainted value="false"/>
-              <foreground color="-592129"/>
+              <foreground color="-1"/>
               <text value="Select Folder"/>
             </properties>
           </component>
@@ -118,7 +120,7 @@
             </constraints>
             <properties>
               <font name="Exo 2" size="12"/>
-              <foreground color="-592129"/>
+              <foreground color="-1"/>
               <text value="Your Documents folder is selected by default."/>
             </properties>
           </component>

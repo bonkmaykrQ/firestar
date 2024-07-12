@@ -1,23 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="Gonzo">
   <grid id="27dc6" binding="frameContainer" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-    <margin top="0" left="0" bottom="0" right="0"/>
+    <margin top="3" left="3" bottom="3" right="3"/>
     <constraints>
       <xy x="20" y="20" width="500" height="400"/>
     </constraints>
-    <properties/>
+    <properties>
+      <background color="-15128227"/>
+      <font name="Exo 2"/>
+      <foreground color="-1"/>
+    </properties>
     <border type="none"/>
     <children>
       <scrollpane id="6830c" binding="scrollPane">
         <constraints>
           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
-        <properties/>
-        <border type="line" title="Please wait a few minutes. Progress is shown above." title-justification="2" title-position="5"/>
+        <properties>
+          <background color="-15128227"/>
+          <foreground color="-1"/>
+        </properties>
+        <border type="line" title="Please wait a few minutes. Progress is shown above." title-justification="2" title-position="5">
+          <font name="Exo 2"/>
+          <title-color color="-1"/>
+          <color color="-1"/>
+        </border>
         <children>
           <component id="491c1" class="javax.swing.JTextArea" binding="consoleDisplay">
             <constraints/>
             <properties>
+              <background color="-2271221"/>
+              <font name="Luxi Mono"/>
+              <foreground color="-1"/>
               <text value=""/>
             </properties>
           </component>

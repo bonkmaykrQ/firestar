@@ -8,7 +8,7 @@
     <properties>
       <background color="-15128227"/>
       <font name="Exo 2"/>
-      <foreground color="-526337"/>
+      <foreground color="-1"/>
     </properties>
     <border type="none"/>
     <children>
@@ -20,7 +20,7 @@
         </constraints>
         <properties>
           <font name="Exo 2"/>
-          <foreground color="-592129"/>
+          <foreground color="-1"/>
           <text value="Aww fiddlesticks, what now?"/>
         </properties>
       </component>
@@ -50,7 +50,7 @@
         </constraints>
         <properties>
           <font name="Exo 2"/>
-          <foreground color="-592129"/>
+          <foreground color="-1"/>
           <text value="Version Unknown"/>
         </properties>
       </component>
@@ -63,7 +63,7 @@
         </constraints>
         <properties>
           <font name="Exo 2"/>
-          <foreground color="-592129"/>
+          <foreground color="-1"/>
           <text value="Platform Unknown"/>
         </properties>
       </component>
