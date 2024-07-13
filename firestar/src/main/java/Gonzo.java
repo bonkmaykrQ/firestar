@@ -16,8 +16,10 @@
  *     along with this program.  If not, see https://www.gnu.org/licenses/.
  */
 
+import com.github.difflib.DiffUtils;
+import com.github.difflib.UnifiedDiffUtils;
+import com.github.difflib.patch.Patch;
 import net.lingala.zip4j.ZipFile;
-import net.lingala.zip4j.util.FileUtils;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -35,6 +37,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 public class Gonzo {
     JFrame frame = new JFrame();
@@ -158,10 +163,39 @@ public class Gonzo {
                     consoleDisplay.append("Firestar is extracting " + m.friendlyName + " by " + m.author + "\n");
                     new ZipFile(System.getProperty("user.home") + "/.firestar/mods/" + m.path).extractAll(System.getProperty("user.home") + "/.firestar/temp/");
 
+		    try (Stream<Path> walkStream = Files.walk(Paths.get(System.getProperty("user.home") + "/.firestar/temp/"))) {
+			walkStream.filter(p -> p.toFile().isFile()).forEach(f -> {
+			    if (f.toString().endsWith(".patch")) {
+				System.out.println("Patching " + f.toString() + "...");
+				consoleDisplay.append("Patching " + f.toString() + "...\n");
+				String mainFile = f.toString().substring(0, f.toString().length() - 6);
+				
+				try {
+				    List<String> original = Files.readAllLines(new File(mainFile).toPath());
+				    List<String> patched = Files.readAllLines(f);
+				    
+				    Patch<String> patch = UnifiedDiffUtils.parseUnifiedDiff(patched);
+				    List<String> result = DiffUtils.patch(original, patch);
+				    
+				    try (FileWriter fileWriter = new FileWriter(mainFile)) {
+					for (String str : result) {
+					    fileWriter.write(str + "\r\n");
+					}
+				    }
+				    new File(f.toString()).delete();
+				} catch (Exception ex) {
+				    Logger.getLogger(Gonzo.class.getName()).log(Level.SEVERE, null, ex);
+				    System.out.println(ex.getMessage());
+				    consoleDisplay.append("CRITICAL FAILURE: " + ex.getMessage());
+				}
+			    }
+			});
+		    }
+		    
                     if (new File(System.getProperty("user.home") + "/.firestar/temp/delete.txt").isFile()) {
                         System.out.println("Firestar is deleting files that conflict with " + m.friendlyName + " by " + m.author);
                         consoleDisplay.append("Firestar is deleting files that conflict with " + m.friendlyName + " by " + m.author + "\n");
-
+			
                         String deleteQueue = new String(Files.readAllBytes(Paths.get(System.getProperty("user.home") + "/.firestar/temp/delete.txt")));
                         if (Main.windows) {deleteQueue = new String(Files.readAllBytes(Paths.get(System.getProperty("user.home") + "\\.firestar\\temp\\delete.txt")));} // might be unnecessary
                         String[] dQarray = deleteQueue.split("\n");

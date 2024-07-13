@@ -17,6 +17,7 @@ configurations {
 dependencies {
     implementation group: 'net.lingala.zip4j', name: 'zip4j', version: '2.11.5'
     implementation group: 'org.json', name: 'json', version: '20240303'
+    implementation "io.github.java-diff-utils:java-diff-utils:4.12"
 
     implementation 'com.jetbrains.intellij.java:java-gui-forms-rt:203.7148.30'
     antTask 'com.jetbrains.intellij.java:java-compiler-ant-tasks:203.7148.30'
