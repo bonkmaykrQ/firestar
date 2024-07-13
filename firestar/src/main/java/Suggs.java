@@ -58,10 +58,10 @@ public class Suggs implements ActionListener, ListSelectionListener {
 
         frame.add(frameContainer); // initialize window contents -- will be handled by IntelliJ IDEA
 
-        frame.setSize(600, 600);
-        frame.setMinimumSize(new Dimension(600,600));
+        frame.setSize(700, 400);
+        frame.setMinimumSize(new Dimension(650,280));
         frame.setTitle("Soundtrack Mod Generator");
-        frame.setResizable(false);
+        frame.setResizable(true);
         frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         frame.setLayout(new GridLayout());
         frame.setLocationRelativeTo(parent);
@@ -82,7 +82,7 @@ public class Suggs implements ActionListener, ListSelectionListener {
         frame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e)
-            {
+            {// TODO: put warning dialog "Are you sure? All unsaved changes will be lost."
                 parent.setEnabled(true);
                 e.getWindow().dispose();
             }
