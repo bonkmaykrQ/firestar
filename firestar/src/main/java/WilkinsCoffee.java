@@ -46,6 +46,12 @@ public class WilkinsCoffee implements ActionListener {
     private JPanel inputContainer2;
     private JButton EXPORT_openFolderBtn;
     private JLabel pathDisplay;
+    private JPanel checklistContainer;
+    private JLabel checklistFury;
+    private JLabel checklistHD;
+    private JLabel checklistPatch2;
+    private JLabel checklistPatch1;
+    private JLabel checklistBase;
 
     public enum Pages {
         INTRO(0),
@@ -66,6 +72,7 @@ public class WilkinsCoffee implements ActionListener {
     public void setup() {
         page = Pages.INTRO;
         inputContainer.setVisible(false);
+        checklistContainer.setVisible(false);
         inputContainer2.setVisible(false);
 
         // check if this is windows or not
@@ -110,6 +117,7 @@ public class WilkinsCoffee implements ActionListener {
         frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
         frame.setLayout(new GridLayout());
         frame.setLocationRelativeTo(null);
+        refreshChecklist();
         frame.setVisible(true);
     }
 
@@ -122,6 +130,8 @@ public class WilkinsCoffee implements ActionListener {
                 if (new Bert(frame).reportWhenDownloaded(threadParent)) {
                     contBtn.setEnabled(true);
                     contBtn.setBackground(new Color(221, 88, 11)); //orange
+
+                    refreshChecklist();
                 }
             }});
         waiterThread.start();
@@ -189,6 +199,7 @@ public class WilkinsCoffee implements ActionListener {
                     contBtn.setEnabled(false);
                     contBtn.setBackground(new Color(102, 74, 58)); //brown
                     inputContainer.setVisible(true);
+                    checklistContainer.setVisible(true);
                     if (!sdkInstalled) {
                         PSARC_downBtn.setEnabled(false);
                         PSARC_downBtn.setBackground(new Color(102, 74, 58)); //brown
@@ -221,6 +232,7 @@ public class WilkinsCoffee implements ActionListener {
                     contBtn.setEnabled(true);
                     contBtn.setBackground(new Color(221, 88, 11)); //orange
                     inputContainer.setVisible(false);
+                    checklistContainer.setVisible(false);
                     inputContainer2.setVisible(true);
 
                     instructions.setText("<html>\n" +
@@ -274,5 +286,26 @@ public class WilkinsCoffee implements ActionListener {
                     throw new UnsupportedOperationException("ERROR: Setup page-flip event listener didn't drink any Wilkins Coffee. Get a programmer!");
             }
         }
+    }
+
+    private void refreshChecklist() {
+        ImageIcon positive = new ImageIcon(Main.class.getResource("/lightPositive.png"));
+        ImageIcon negative = new ImageIcon(Main.class.getResource("/lightNegative.png"));
+        
+        if(new File(Main.inpath + "data.psarc").exists()) {
+            checklistBase.setIcon(positive);
+        } else {checklistBase.setIcon(negative);}
+        if(new File(Main.inpath + "data1.psarc").exists()) {
+            checklistPatch1.setIcon(positive);
+        } else {checklistPatch1.setIcon(negative);}
+        if(new File(Main.inpath + "data2.psarc").exists()) {
+            checklistPatch2.setIcon(positive);
+        } else {checklistPatch2.setIcon(negative);}
+        if(new File(Main.inpath + "dlc1.psarc").exists()) {
+            checklistHD.setIcon(positive);
+        } else {checklistHD.setIcon(negative);}
+        if(new File(Main.inpath + "dlc2.psarc").exists()) {
+            checklistFury.setIcon(positive);
+        } else {checklistFury.setIcon(negative);}
     }
 }

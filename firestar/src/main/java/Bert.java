@@ -25,6 +25,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.util.ArrayList;
 
 public class Bert implements ActionListener {
     BufferedImage windowIcon;
@@ -32,10 +33,10 @@ public class Bert implements ActionListener {
     private JPanel frameContainer;
     private JButton cancelbtn;
     private JButton downloadbtn;
-    private JRadioButton baseRad;
-    private JRadioButton patchRad;
-    private JRadioButton hdRad;
-    private JRadioButton furyRad;
+    private JCheckBox patchCheck;
+    private JCheckBox baseCheck;
+    private JCheckBox hdCheck;
+    private JCheckBox furyCheck;
     private ButtonGroup radios = new ButtonGroup();
 
     private JFrame invoker;
@@ -55,11 +56,6 @@ public class Bert implements ActionListener {
         frame.setLayout(new GridLayout());
         frame.setLocationRelativeTo(parent);
         frame.setAlwaysOnTop(true);
-
-        radios.add(baseRad);
-        radios.add(patchRad);
-        radios.add(hdRad);
-        radios.add(furyRad);
 
         cancelbtn.addActionListener(this);
         downloadbtn.addActionListener(this);
@@ -112,29 +108,31 @@ public class Bert implements ActionListener {
             new File(Main.inpath + "dlc1.psarc").delete();
             new File(Main.inpath + "dlc2.psarc").delete();
 
-            Main.ArcTarget type;
-            Main.ArcKey key;
-            if (baseRad.isSelected()) {
-                type = Main.ArcTarget.BASE;
-                key = Main.ArcKey.BASE;
+            ArrayList<Main.ArcTarget> arcs = new ArrayList<Main.ArcTarget>();
+            ArrayList<Main.ArcKey> keys = new ArrayList<Main.ArcKey>();
+            if (baseCheck.isSelected()) {
+                arcs.add(Main.ArcTarget.BASE);
+                keys.add(Main.ArcKey.BASE);
                 System.out.println("Begin download of data (Game version 1.0)");
-            } else
-            if (patchRad.isSelected()) {
-                type = Main.ArcTarget.LATEST;
-                key = Main.ArcKey.LATEST;
+            }
+            if (patchCheck.isSelected()) {
+                arcs.add(Main.ArcTarget.LATEST);
+                keys.add(Main.ArcKey.LATEST);
                 System.out.println("Begin download of data2 (Game version 1.04)");
-            } else
-            if (hdRad.isSelected()) {
-                type = Main.ArcTarget.ADDON_HD;
-                key = Main.ArcKey.ADDON_HD;
+            }
+            if (hdCheck.isSelected()) {
+                arcs.add(Main.ArcTarget.ADDON_HD);
+                keys.add(Main.ArcKey.ADDON_HD);
                 System.out.println("Begin download of dlc1 (HD DLC)");
-            } else
-            if (furyRad.isSelected()) {
-                type = Main.ArcTarget.ADDON_HD_FURY;
-                key = Main.ArcKey.ADDON_HD_FURY;
+            }
+            if (furyCheck.isSelected()) {
+                arcs.add(Main.ArcTarget.ADDON_HD_FURY);
+                keys.add(Main.ArcKey.ADDON_HD_FURY);
                 System.out.println("Begin download of dlc2 (Fury DLC)");
-            } else {
-                return; // fire hydrant
+            }
+            if (arcs.isEmpty()) {
+                JOptionPane.showMessageDialog(invoker, "Select one or more asset packs.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
             }
 
             frame.dispose();
@@ -143,118 +141,139 @@ public class Bert implements ActionListener {
             Thread downloaderPopupThread = new Thread(new Runnable() { // run on separate thread to prevent GUI freezing
                 @Override
                 public void run() {
-                    // download file
-                    boolean downloader = new Fozzie().DownloadFile(type.toString(), Main.inpath, "asset.pkg");
-                    if (!downloader) {
-                        // cleanup
-                        new File(Main.inpath + "asset.pkg").delete();
-
-                        // restore controls
-                        invoker.setEnabled(true);
-                        invoker.setVisible(true);
-                        invoker.toFront();
-                        invoker.repaint();
-                        return;
-                    }
-
-                    // dump contents
-                    System.out.println("Extracting asset.pkg");
-                    Fozzie popup = new Fozzie();
-                    popup.displayTextOnly("Extracting PKG...", "Extracting");
-                    Process p;
-                    try {
-                        if (!Main.windows) {p = Runtime.getRuntime().exec(new String[]{"bash","-c","cd " + Main.inpath + ";wine pkg2zip.exe -x asset.pkg " + key.toString()});}
-                        else {p = Runtime.getRuntime().exec(new String[]{Main.inpath + "pkg2zip.exe", "-x", "asset.pkg", key.toString()}, null, new File(Main.inpath));} //inpath cannot change here
-                        InputStream debugin = new BufferedInputStream(p.getInputStream());
-                        OutputStream debugout = new BufferedOutputStream(System.out);
-                        int c;
-                        while ((c = debugin.read()) != -1) {
-                            debugout.write(c);
+                    for (Main.ArcTarget type : arcs) {
+                        String key = "";
+                        switch (type) {
+                            case BASE -> key = Main.ArcKey.BASE.toString();
+                            case LATEST -> key = Main.ArcKey.LATEST.toString();
+                            case ADDON_HD -> key = Main.ArcKey.ADDON_HD.toString();
+                            case ADDON_HD_FURY -> key = Main.ArcKey.ADDON_HD_FURY.toString();
                         }
-                        debugin.close();
-                        debugout.close();
-                        p.waitFor();
-                    } catch (Exception e) {
-                        System.out.println(e.getMessage());
-                        JOptionPane.showMessageDialog(invoker, "CRITICAL FAILURE: " + e.getMessage(), "Fatal Error", JOptionPane.ERROR_MESSAGE);
-                        new File(Main.inpath + "asset.pkg").delete();
-                        invoker.setEnabled(true);
-                        invoker.setVisible(true);
-                        invoker.toFront();
-                        invoker.repaint();
-                        return;
-                    }
+                        if (key.isEmpty()) {
+                            System.out.println("Internal Error: Bert got dementia. Get a programmer!");
+                            JOptionPane.showMessageDialog(invoker, "Internal Error: Bert got dementia. Get a programmer!", "Fatal Error", JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
 
-                    // decrypt
-                    System.out.println("Decrypting asset.pkg");
-                    String extracted;
-                    String name;
-                    if (type == Main.ArcTarget.BASE) {
-                        extracted = "app/PCSA00015";
-                        name = "data.psarc";
-                    } else if (type == Main.ArcTarget.LATEST) {
-                        extracted = "patch/PCSA00015";
-                        name = "data2.psarc";
-                    } else if (type == Main.ArcTarget.ADDON_HD) {
-                        extracted = "addcont/PCSA00015/DLC1W2048PACKAGE";
-                        name = "dlc1.psarc";
-                    } else if (type == Main.ArcTarget.ADDON_HD_FURY) { // this is not "always true" - intellij is actually very dumj
-                        extracted = "addcont/PCSA00015/DLC2W2048PACKAGE";
-                        name = "dlc2.psarc";
-                    } else {
-                        System.out.println("Internal Error: Bert got dementia. Get a programmer!");
-                        JOptionPane.showMessageDialog(invoker, "Internal Error: Bert got dementia. Get a programmer!", "Fatal Error", JOptionPane.ERROR_MESSAGE);
+                        // download file
+                        boolean downloader = new Fozzie().DownloadFile(type.toString(), Main.inpath, "asset.pkg");
+                        if (!downloader) {
+                            // cleanup
+                            new File(Main.inpath + "asset.pkg").delete();
+
+                            // restore controls
+                            invoker.setEnabled(true);
+                            invoker.setVisible(true);
+                            invoker.toFront();
+                            invoker.repaint();
+                            return;
+                        }
+
+                        // dump contents
+                        System.out.println("Extracting asset.pkg");
+                        Fozzie popup = new Fozzie();
+                        popup.displayTextOnly("Extracting PKG...", "Extracting");
+                        Process p;
+                        try {
+                            if (!Main.windows) {
+                                p = Runtime.getRuntime().exec(new String[]{"bash", "-c", "cd " + Main.inpath + ";wine pkg2zip.exe -x asset.pkg " + key.toString()});
+                            } else {
+                                p = Runtime.getRuntime().exec(new String[]{Main.inpath + "pkg2zip.exe", "-x", "asset.pkg", key.toString()}, null, new File(Main.inpath));
+                            } //inpath cannot change here
+                            InputStream debugin = new BufferedInputStream(p.getInputStream());
+                            OutputStream debugout = new BufferedOutputStream(System.out);
+                            int c;
+                            while ((c = debugin.read()) != -1) {
+                                debugout.write(c);
+                            }
+                            debugin.close();
+                            debugout.close();
+                            p.waitFor();
+                        } catch (Exception e) {
+                            System.out.println(e.getMessage());
+                            JOptionPane.showMessageDialog(invoker, "CRITICAL FAILURE: " + e.getMessage(), "Fatal Error", JOptionPane.ERROR_MESSAGE);
+                            new File(Main.inpath + "asset.pkg").delete();
+                            invoker.setEnabled(true);
+                            invoker.setVisible(true);
+                            invoker.toFront();
+                            invoker.repaint();
+                            return;
+                        }
+
+                        // decrypt
+                        System.out.println("Decrypting asset.pkg");
+                        String extracted;
+                        String name;
+                        if (type == Main.ArcTarget.BASE) {
+                            extracted = "app/PCSA00015";
+                            name = "data.psarc";
+                        } else if (type == Main.ArcTarget.LATEST) {
+                            extracted = "patch/PCSA00015";
+                            name = "data2.psarc";
+                        } else if (type == Main.ArcTarget.ADDON_HD) {
+                            extracted = "addcont/PCSA00015/DLC1W2048PACKAGE";
+                            name = "dlc1.psarc";
+                        } else if (type == Main.ArcTarget.ADDON_HD_FURY) { // this is not "always true" - intellij is actually very dumj
+                            extracted = "addcont/PCSA00015/DLC2W2048PACKAGE";
+                            name = "dlc2.psarc";
+                        } else {
+                            System.out.println("Internal Error: Bert got dementia. Get a programmer!");
+                            JOptionPane.showMessageDialog(invoker, "Internal Error: Bert got dementia. Get a programmer!", "Fatal Error", JOptionPane.ERROR_MESSAGE);
+                            new File(Main.inpath + "asset.pkg").delete();
+                            Main.deleteDir(new File(Main.inpath + "app/"));
+                            Main.deleteDir(new File(Main.inpath + "patch/"));
+                            Main.deleteDir(new File(Main.inpath + "addcont/"));
+                            invoker.setEnabled(true);
+                            invoker.setVisible(true);
+                            invoker.toFront();
+                            invoker.repaint();
+                            return;
+                        }
+
+                        popup.setText("<html>Decrypting protected PFS:<br/>" + extracted + "</html>", "Decrypting");
+
+                        try {
+                            if (!Main.windows) {
+                                p = Runtime.getRuntime().exec(new String[]{"bash", "-c", "cd " + Main.inpath + ";wine psvpfsparser.exe -i " + extracted + " -o ./temp/ -z " + key.toString() + " -f cma.henkaku.xyz"});
+                            } else {
+                                p = Runtime.getRuntime().exec(new String[]{Main.inpath + "psvpfsparser.exe", "-i", extracted, "-o", "./temp/", "-z", key.toString(), "-f", "cma.henkaku.xyz"}, null, new File(Main.inpath));
+                            }
+                            InputStream debugin = new BufferedInputStream(p.getInputStream());
+                            OutputStream debugout = new BufferedOutputStream(System.out);
+                            int c;
+                            while ((c = debugin.read()) != -1) {
+                                debugout.write(c);
+                            }
+                            debugin.close();
+                            debugout.close();
+                            p.waitFor();
+                        } catch (Exception e) {
+                            System.out.println(e.getMessage());
+                            JOptionPane.showMessageDialog(invoker, "CRITICAL FAILURE: " + e.getMessage(), "Fatal Error", JOptionPane.ERROR_MESSAGE);
+                            new File(Main.inpath + "asset.pkg").delete();
+                            Main.deleteDir(new File(Main.inpath + "app/"));
+                            Main.deleteDir(new File(Main.inpath + "patch/"));
+                            Main.deleteDir(new File(Main.inpath + "addcont/"));
+                            invoker.setEnabled(true);
+                            invoker.setVisible(true);
+                            invoker.toFront();
+                            invoker.repaint();
+                            return;
+                        }
+
+                        popup.setText("Deleting temporary files...", "Cleaning Up");
+
+                        // stage & cleanup
+                        System.out.println("Cleaning up");
                         new File(Main.inpath + "asset.pkg").delete();
+                        new File(Main.inpath + "temp/PSP2/" + name).renameTo(new File(Main.inpath + name));
                         Main.deleteDir(new File(Main.inpath + "app/"));
                         Main.deleteDir(new File(Main.inpath + "patch/"));
                         Main.deleteDir(new File(Main.inpath + "addcont/"));
-                        invoker.setEnabled(true);
-                        invoker.setVisible(true);
-                        invoker.toFront();
-                        invoker.repaint();
-                        return;
+                        Main.deleteDir(new File(Main.inpath + "temp/"));
+
+                        popup.destroyDialog();
                     }
-
-                    popup.setText("<html>Decrypting protected PFS:<br/>" + extracted + "</html>", "Decrypting");
-
-                    try {
-                        if (!Main.windows) {p = Runtime.getRuntime().exec(new String[]{"bash","-c","cd " + Main.inpath + ";wine psvpfsparser.exe -i " + extracted + " -o ./temp/ -z " + key.toString() + " -f cma.henkaku.xyz"});}
-                        else {p = Runtime.getRuntime().exec(new String[]{Main.inpath + "psvpfsparser.exe", "-i", extracted, "-o", "./temp/", "-z", key.toString(), "-f", "cma.henkaku.xyz"}, null, new File(Main.inpath));}
-                        InputStream debugin = new BufferedInputStream(p.getInputStream());
-                        OutputStream debugout = new BufferedOutputStream(System.out);
-                        int c;
-                        while ((c = debugin.read()) != -1) {
-                            debugout.write(c);
-                        }
-                        debugin.close();
-                        debugout.close();
-                        p.waitFor();
-                    } catch (Exception e) {
-                        System.out.println(e.getMessage());
-                        JOptionPane.showMessageDialog(invoker, "CRITICAL FAILURE: " + e.getMessage(), "Fatal Error", JOptionPane.ERROR_MESSAGE);
-                        new File(Main.inpath + "asset.pkg").delete();
-                        Main.deleteDir(new File(Main.inpath + "app/"));
-                        Main.deleteDir(new File(Main.inpath + "patch/"));
-                        Main.deleteDir(new File(Main.inpath + "addcont/"));
-                        invoker.setEnabled(true);
-                        invoker.setVisible(true);
-                        invoker.toFront();
-                        invoker.repaint();
-                        return;
-                    }
-
-                    popup.setText("Deleting temporary files...", "Cleaning Up");
-
-                    // stage & cleanup
-                    System.out.println("Cleaning up");
-                    new File(Main.inpath + "asset.pkg").delete();
-                    new File(Main.inpath + "temp/PSP2/" + name).renameTo(new File(Main.inpath + name));
-                    Main.deleteDir(new File(Main.inpath + "app/"));
-                    Main.deleteDir(new File(Main.inpath + "patch/"));
-                    Main.deleteDir(new File(Main.inpath + "addcont/"));
-                    Main.deleteDir(new File(Main.inpath + "temp/"));
-
-                    popup.destroyDialog();
 
                     // restore controls
                     JOptionPane.showMessageDialog(frame, "Assets downloaded successfully.", "Download Complete", JOptionPane.INFORMATION_MESSAGE);
