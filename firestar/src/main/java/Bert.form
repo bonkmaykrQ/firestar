@@ -43,7 +43,7 @@
                 <properties>
                   <font name="Exo 2"/>
                   <foreground color="-1"/>
-                  <text value="Select your game version below."/>
+                  <text value="Select the required asset packs below."/>
                 </properties>
               </component>
               <component id="e27cc" class="javax.swing.JLabel">
@@ -53,7 +53,7 @@
                 <properties>
                   <font name="Exo 2"/>
                   <foreground color="-1"/>
-                  <text value="This will determine what file your mods are deployed to."/>
+                  <text value="This will depend on what version of the game you have and what DLC you own."/>
                 </properties>
               </component>
               <component id="319fa" class="javax.swing.JLabel">

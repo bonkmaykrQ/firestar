@@ -117,7 +117,6 @@ public class WilkinsCoffee implements ActionListener {
         frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
         frame.setLayout(new GridLayout());
         frame.setLocationRelativeTo(null);
-        refreshChecklist();
         frame.setVisible(true);
     }
 
@@ -199,6 +198,7 @@ public class WilkinsCoffee implements ActionListener {
 
                     contBtn.setEnabled(false);
                     contBtn.setBackground(new Color(102, 74, 58)); //brown
+                    refreshChecklist();
                     inputContainer.setVisible(true);
                     checklistContainer.setVisible(true);
                     if (!sdkInstalled) {
@@ -292,21 +292,34 @@ public class WilkinsCoffee implements ActionListener {
     private void refreshChecklist() {
         ImageIcon positive = new ImageIcon(Main.class.getResource("/lightPositive.png"));
         ImageIcon negative = new ImageIcon(Main.class.getResource("/lightNegative.png"));
-        
+
+        // enabling the continue button here leaves the previous one redundant,
+        // but it's needed to ensure we don't force a redownload if the setup is interrupted
+
         if(new File(Main.inpath + "data.psarc").exists()) {
             checklistBase.setIcon(positive);
+            contBtn.setEnabled(true);
+            contBtn.setBackground(new Color(221, 88, 11)); //orange
         } else {checklistBase.setIcon(negative);}
         if(new File(Main.inpath + "data1.psarc").exists()) {
             checklistPatch1.setIcon(positive);
+            contBtn.setEnabled(true);
+            contBtn.setBackground(new Color(221, 88, 11)); //orange
         } else {checklistPatch1.setIcon(negative);}
         if(new File(Main.inpath + "data2.psarc").exists()) {
             checklistPatch2.setIcon(positive);
+            contBtn.setEnabled(true);
+            contBtn.setBackground(new Color(221, 88, 11)); //orange
         } else {checklistPatch2.setIcon(negative);}
         if(new File(Main.inpath + "dlc1.psarc").exists()) {
             checklistHD.setIcon(positive);
+            contBtn.setEnabled(true);
+            contBtn.setBackground(new Color(221, 88, 11)); //orange
         } else {checklistHD.setIcon(negative);}
         if(new File(Main.inpath + "dlc2.psarc").exists()) {
             checklistFury.setIcon(positive);
+            contBtn.setEnabled(true);
+            contBtn.setBackground(new Color(221, 88, 11)); //orange
         } else {checklistFury.setIcon(negative);}
     }
 }
