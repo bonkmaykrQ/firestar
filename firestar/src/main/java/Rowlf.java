@@ -35,7 +35,7 @@ public class Rowlf {
     private JLabel versionLabel;
     private JLabel environmentLabel;
 
-    public Rowlf() {
+    public Rowlf(JFrame parent) {
         try {
             logo = ImageIO.read(Main.class.getResourceAsStream("/logo.png")).getScaledInstance(333, 100, Image.SCALE_SMOOTH);
         } catch (IOException e) {
@@ -76,7 +76,7 @@ public class Rowlf {
         frame.setAlwaysOnTop(true);
         frame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         frame.setLayout(new GridLayout());
-        frame.setLocationRelativeTo(null);
+        frame.setLocationRelativeTo(parent);
         frame.setVisible(true);
     }
 }

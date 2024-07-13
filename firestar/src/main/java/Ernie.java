@@ -92,7 +92,7 @@ public class Ernie implements ActionListener {
 		    frame.setTitle("An update is available!");
 		    frame.setSize(450, 400);
 		    frame.setResizable(false);
-		    frame.setLocationRelativeTo(null);
+            frame.setLocationRelativeTo(parent);
 		    frame.setAlwaysOnTop(true);
             frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
             parent.setEnabled(false);

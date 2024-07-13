@@ -53,7 +53,7 @@ public class Bert implements ActionListener {
         frame.setResizable(false);
         frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         frame.setLayout(new GridLayout());
-        frame.setLocationRelativeTo(null);
+        frame.setLocationRelativeTo(parent);
         frame.setAlwaysOnTop(true);
 
         radios.add(baseRad);

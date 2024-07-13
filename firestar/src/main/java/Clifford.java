@@ -71,7 +71,7 @@ public class Clifford implements ActionListener {
         frame.setResizable(false);
         frame.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         frame.setLayout(new GridLayout());
-        frame.setLocationRelativeTo(null);
+        frame.setLocationRelativeTo(inv.frame);
         frame.setAlwaysOnTop(true);
 
         fName.setText(mod.friendlyName);

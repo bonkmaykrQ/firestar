@@ -67,7 +67,7 @@ public class Gonzo {
         frame.setResizable(false);
         frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         frame.setLayout(new GridLayout());
-        frame.setLocationRelativeTo(null);
+        frame.setLocationRelativeTo(inv.frame);
         frame.setAlwaysOnTop(true);
         frame.setVisible(true);
 

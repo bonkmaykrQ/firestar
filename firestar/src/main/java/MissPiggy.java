@@ -343,7 +343,7 @@ public class MissPiggy implements ActionListener {
 
         if (actionEvent.getSource() == toolsMenu.getItem(0)) {metaEditorGUI(modList.getSelectedIndex());} else
         if (actionEvent.getSource() == toolsMenu.getItem(1)) {generatorGUI();} else
-        if (actionEvent.getSource() == toolsMenu.getItem(2)) {throwUnimplemented();} else
+        if (actionEvent.getSource() == toolsMenu.getItem(2)) {new Suggs(frame);} else
 
         if (actionEvent.getSource() == helpMenu.getItem(0)) {
             try {
@@ -370,7 +370,7 @@ public class MissPiggy implements ActionListener {
             }
         } else
         if (actionEvent.getSource() == helpMenu.getItem(5)) {StartErnie();} else
-        if (actionEvent.getSource() == helpMenu.getItem(6)) {new Rowlf();}
+        if (actionEvent.getSource() == helpMenu.getItem(6)) {new Rowlf(frame);}
     }
 
     // Will likely split the below functions into separate classes to work with intellij GUI designer.
