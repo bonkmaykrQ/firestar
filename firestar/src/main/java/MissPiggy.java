@@ -139,7 +139,7 @@ public class MissPiggy implements ActionListener {
         helpMenu.getItem(2).addActionListener(this);
         helpMenu.getItem(3).addActionListener(this);
         helpMenu.getItem(5).addActionListener(this);
-	helpMenu.getItem(6).addActionListener(this);
+	    helpMenu.getItem(6).addActionListener(this);
 
         deployButton.addActionListener(this);
         importButton.addActionListener(this);
@@ -382,7 +382,7 @@ public class MissPiggy implements ActionListener {
         }
 
         if (i > 0) {
-            int result = JOptionPane.showConfirmDialog(frame, "A new PSARC will be generated. This can take several minutes.\nDuring this time, your computer may be very busy or slow.\n\nAre you sure you want to continue?", "Deploy Mods", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+            int result = JOptionPane.showConfirmDialog(frame, "A new PSARC will be generated. This can take several minutes.\nDuring this time, your computer may be very busy or slow.\n\nIt will be placed in: " + Main.outpath + "\n\nAre you sure you want to continue?", "Deploy Mods", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
             if (result == JOptionPane.YES_OPTION) {
                 // prevent interruptions
                 frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="Suggs">
-  <grid id="27dc6" binding="frameContainer" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-    <margin top="0" left="0" bottom="0" right="0"/>
+  <grid id="27dc6" binding="frameContainer" layout-manager="GridLayoutManager" row-count="5" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+    <margin top="10" left="10" bottom="10" right="10"/>
     <constraints>
-      <xy x="20" y="20" width="500" height="400"/>
+      <xy x="20" y="20" width="711" height="400"/>
     </constraints>
     <properties>
       <background color="-15128227"/>
@@ -11,6 +11,251 @@
       <foreground color="-1"/>
     </properties>
     <border type="none"/>
-    <children/>
+    <children>
+      <scrollpane id="bd8d3">
+        <constraints>
+          <grid row="3" column="0" row-span="1" col-span="2" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <background color="-15128227"/>
+          <foreground color="-1"/>
+          <opaque value="false"/>
+        </properties>
+        <border type="line" title="Song List">
+          <font name="Exo 2"/>
+          <title-color color="-1"/>
+          <color color="-1"/>
+        </border>
+        <children>
+          <component id="1b9e1" class="javax.swing.JList" binding="dSongList">
+            <constraints/>
+            <properties>
+              <background color="-15128227"/>
+              <foreground color="-1"/>
+              <opaque value="false"/>
+              <selectionBackground color="-2271221"/>
+              <selectionForeground color="-1"/>
+            </properties>
+          </component>
+        </children>
+      </scrollpane>
+      <grid id="eb54e" layout-manager="GridLayoutManager" row-count="1" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <margin top="0" left="0" bottom="0" right="0"/>
+        <constraints>
+          <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <background color="-15128227"/>
+          <foreground color="-1"/>
+          <opaque value="false"/>
+        </properties>
+        <border type="none"/>
+        <children>
+          <component id="a7b02" class="javax.swing.JButton" binding="saveBtn">
+            <constraints>
+              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="2" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <background color="-2271221"/>
+              <borderPainted value="false"/>
+              <focusPainted value="false"/>
+              <font name="Exo 2"/>
+              <foreground color="-1"/>
+              <text value="Save"/>
+            </properties>
+          </component>
+          <component id="adce7" class="javax.swing.JButton" binding="cancelBtn">
+            <constraints>
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="2" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <background color="-2271221"/>
+              <borderPainted value="false"/>
+              <focusPainted value="false"/>
+              <font name="Exo 2"/>
+              <foreground color="-1"/>
+              <text value="Cancel"/>
+            </properties>
+          </component>
+          <hspacer id="8ecbf">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+          </hspacer>
+        </children>
+      </grid>
+      <grid id="cc2" layout-manager="GridLayoutManager" row-count="3" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <margin top="0" left="0" bottom="0" right="0"/>
+        <constraints>
+          <grid row="0" column="0" row-span="3" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <background color="-15128227"/>
+          <foreground color="-1"/>
+        </properties>
+        <border type="none"/>
+        <children>
+          <component id="aa38f" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <background color="-15128227"/>
+              <foreground color="-1"/>
+              <text value="Title"/>
+            </properties>
+          </component>
+          <component id="9667" class="javax.swing.JTextField" binding="fTitle">
+            <constraints>
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+            </constraints>
+            <properties/>
+          </component>
+          <component id="f7802" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <background color="-15128227"/>
+              <foreground color="-1"/>
+              <text value="Artist"/>
+            </properties>
+          </component>
+          <component id="7fc56" class="javax.swing.JTextField" binding="fArtist">
+            <constraints>
+              <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+            </constraints>
+            <properties/>
+          </component>
+          <grid id="27515" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+            <margin top="0" left="0" bottom="0" right="0"/>
+            <constraints>
+              <grid row="2" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <background color="-15128227"/>
+              <foreground color="-1"/>
+            </properties>
+            <border type="none"/>
+            <children>
+              <component id="fbefd" class="javax.swing.JLabel" binding="dTrackNo">
+                <constraints>
+                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="6" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <background color="-15128227"/>
+                  <foreground color="-1"/>
+                  <text value="track # here (in MT_xx format)"/>
+                </properties>
+              </component>
+              <component id="a659e" class="javax.swing.JLabel" binding="dFileSize">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="10" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <background color="-15128227"/>
+                  <foreground color="-1"/>
+                  <text value="file size here"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+        </children>
+      </grid>
+      <grid id="568f5" layout-manager="GridLayoutManager" row-count="3" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <margin top="0" left="0" bottom="0" right="0"/>
+        <constraints>
+          <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <opaque value="false"/>
+        </properties>
+        <border type="none"/>
+        <children>
+          <component id="cc5fd" class="javax.swing.JButton" binding="frontendDemoChooseBtn">
+            <constraints>
+              <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <background color="-2271221"/>
+              <borderPainted value="false"/>
+              <focusPainted value="false"/>
+              <font name="Exo 2"/>
+              <foreground color="-1"/>
+              <text value="Select Multiplayer Menu Track"/>
+            </properties>
+          </component>
+          <component id="fb30a" class="javax.swing.JButton" binding="frontendMainChooseBtn">
+            <constraints>
+              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <background color="-2271221"/>
+              <borderPainted value="false"/>
+              <focusPainted value="false"/>
+              <font name="Exo 2"/>
+              <foreground color="-1"/>
+              <text value="Select Singleplayer Menu Track"/>
+            </properties>
+          </component>
+          <component id="e9b40" class="javax.swing.JButton" binding="deleteSongBtn">
+            <constraints>
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <background color="-2271221"/>
+              <borderPainted value="false"/>
+              <focusPainted value="false"/>
+              <font name="Exo 2"/>
+              <foreground color="-1"/>
+              <text value="Delete Song"/>
+            </properties>
+          </component>
+          <component id="f5254" class="javax.swing.JButton" binding="moveDownBtn">
+            <constraints>
+              <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <background color="-2271221"/>
+              <borderPainted value="false"/>
+              <focusPainted value="false"/>
+              <font name="Exo 2"/>
+              <foreground color="-1"/>
+              <text value="Move Down"/>
+            </properties>
+          </component>
+          <component id="6b3fa" class="javax.swing.JButton" binding="addSongBtn">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <background color="-2271221"/>
+              <borderPainted value="false"/>
+              <focusPainted value="false"/>
+              <font name="Exo 2"/>
+              <foreground color="-1"/>
+              <text value="Add Song"/>
+            </properties>
+          </component>
+          <component id="38ad" class="javax.swing.JButton" binding="moveUpBtn">
+            <constraints>
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <background color="-2271221"/>
+              <borderPainted value="false"/>
+              <focusPainted value="false"/>
+              <font name="Exo 2"/>
+              <foreground color="-1"/>
+              <text value="Move Up"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+    </children>
   </grid>
 </form>
