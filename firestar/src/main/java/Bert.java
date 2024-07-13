@@ -143,11 +143,24 @@ public class Bert implements ActionListener {
                 public void run() {
                     for (Main.ArcTarget type : arcs) {
                         String key = "";
+                        String arcname = "";
                         switch (type) {
-                            case BASE -> key = Main.ArcKey.BASE.toString();
-                            case LATEST -> key = Main.ArcKey.LATEST.toString();
-                            case ADDON_HD -> key = Main.ArcKey.ADDON_HD.toString();
-                            case ADDON_HD_FURY -> key = Main.ArcKey.ADDON_HD_FURY.toString();
+                            case BASE :
+                                key = Main.ArcKey.BASE.toString();
+                                arcname = "Base game";
+                                break;
+                            case LATEST :
+                                key = Main.ArcKey.LATEST.toString();
+                                arcname = "Updates";
+                                break;
+                            case ADDON_HD :
+                                key = Main.ArcKey.ADDON_HD.toString();
+                                arcname = "HD Add-On Pack";
+                                break;
+                            case ADDON_HD_FURY :
+                                key = Main.ArcKey.ADDON_HD_FURY.toString();
+                                arcname = "Fury Add-On Pack";
+                                break;
                         }
                         if (key.isEmpty()) {
                             System.out.println("Internal Error: Bert got dementia. Get a programmer!");
@@ -156,7 +169,9 @@ public class Bert implements ActionListener {
                         }
 
                         // download file
-                        boolean downloader = new Fozzie().DownloadFile(type.toString(), Main.inpath, "asset.pkg");
+                        Fozzie downloaderHandler = new Fozzie();
+                        boolean downloader = downloaderHandler.DownloadFile(type.toString(), Main.inpath, "asset.pkg", arcname);
+
                         if (!downloader) {
                             // cleanup
                             new File(Main.inpath + "asset.pkg").delete();
@@ -170,9 +185,9 @@ public class Bert implements ActionListener {
                         }
 
                         // dump contents
-                        System.out.println("Extracting asset.pkg");
+                        System.out.println("Extracting " + arcname);
                         Fozzie popup = new Fozzie();
-                        popup.displayTextOnly("Extracting PKG...", "Extracting");
+                        popup.displayTextOnly("Extracting" + arcname + "...", "Extracting");
                         Process p;
                         try {
                             if (!Main.windows) {

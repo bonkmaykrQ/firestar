@@ -27,6 +27,7 @@ import java.net.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Optional;
 
 public class Fozzie {
     BufferedImage windowIcon;
@@ -42,6 +43,10 @@ public class Fozzie {
     public boolean backgroundDone = false;
 
     boolean DownloadFile(String url, String odir, String oname) {
+        return DownloadFile(url, odir, oname, oname);
+    }
+
+    boolean DownloadFile(String url, String odir, String oname, String dname) {
         frame.add(frameContainer);
         frame.setSize(300, 100);
         frame.setTitle("Download in Progress");
@@ -58,7 +63,7 @@ public class Fozzie {
         }
         frame.setVisible(true);
 
-        label.setText("Downloading \"" + oname + "\"");
+        label.setText("Downloading \"" + dname + "\"");
 
         try {
             URL fileURL = new URL(url);
