@@ -83,6 +83,8 @@ public class Main {
         public int loaderversion = 0; //minimum required vint or feature level from Firestar
         public String author; // if null, "Author is unknown."
         public boolean enabled = true;
+        public boolean[] requires = new boolean[]{false, false, false, false};  // TODO: load optional "requires" array from mod meta if it exists. it will be base, patches, hd dlc, and fury dlc in that order.
+                                                                                // TODO: save 'true true false false' in ost gen if neccessary (patches change localization)
     }
 
     // Mods

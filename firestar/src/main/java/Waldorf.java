@@ -41,6 +41,7 @@ public class Waldorf implements ActionListener {
     private JButton dwnARCbtn;
     private JButton fOutpathChangebtn;
     private JCheckBox checkUpdatesToggle;
+    private JButton bDelArcs;
 
     MissPiggy invoker;
     private String tOutPath = Main.outpath;
@@ -68,6 +69,7 @@ public class Waldorf implements ActionListener {
         okbtn.addActionListener(this);
         resetbtn.addActionListener(this);
         bOpenFolder.addActionListener(this);
+        bDelArcs.addActionListener(this);
         dwnARCbtn.addActionListener(this);
         dwnSDKbtn.addActionListener(this);
         fOutpathChangebtn.addActionListener(this);
@@ -124,6 +126,17 @@ public class Waldorf implements ActionListener {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+        } else
+        if (actionEvent.getSource() == bDelArcs) {
+            int result = JOptionPane.showConfirmDialog(frame, "All existing PSARC dumps will be deleted.\nDo you want to continue?", "Delete PSARCs", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+            if (result == JOptionPane.NO_OPTION) {return;}
+            System.out.println("User requested arc wipe, deleting existing PSARCs");
+            new File(Main.inpath + "data.psarc").delete();
+            new File(Main.inpath + "data1.psarc").delete();
+            new File(Main.inpath + "data2.psarc").delete();
+            new File(Main.inpath + "dlc1.psarc").delete();
+            new File(Main.inpath + "dlc2.psarc").delete();
+            JOptionPane.showMessageDialog(frame, "PSARC files purged.", "Delete PSARCs", JOptionPane.INFORMATION_MESSAGE);
         } else
         if (actionEvent.getSource() == dwnARCbtn) {
             new Bert(invoker.frame);

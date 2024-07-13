@@ -99,15 +99,6 @@ public class Bert implements ActionListener {
             invoker.setEnabled(true);
             frame.dispose();
         } else if (actionEvent.getSource() == downloadbtn) {
-            int result = JOptionPane.showConfirmDialog(frame, "All existing PSARC dumps will be deleted and replaced by the new ones.\nThis download could take several minutes. Do you want to continue?", "Download Game Assets", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-            if (result == JOptionPane.NO_OPTION) {return;}
-            System.out.println("User requested download of assets. Deleting existing PSARCs");
-            new File(Main.inpath + "data.psarc").delete();
-            new File(Main.inpath + "data1.psarc").delete();
-            new File(Main.inpath + "data2.psarc").delete();
-            new File(Main.inpath + "dlc1.psarc").delete();
-            new File(Main.inpath + "dlc2.psarc").delete();
-
             ArrayList<Main.ArcTarget> arcs = new ArrayList<Main.ArcTarget>();
             ArrayList<Main.ArcKey> keys = new ArrayList<Main.ArcKey>();
             if (baseCheck.isSelected()) {
