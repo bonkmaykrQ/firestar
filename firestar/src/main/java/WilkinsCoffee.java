@@ -145,6 +145,7 @@ public class WilkinsCoffee implements ActionListener {
             if (result == JFileChooser.APPROVE_OPTION) {
                 try {
                     Files.copy(fileChooser.getSelectedFile().toPath(), new File(Main.inpath + fileChooser.getSelectedFile().getName()).toPath());
+                    refreshChecklist();
                     contBtn.setEnabled(true);
                     contBtn.setBackground(new Color(221, 88, 11)); //orange
                 } catch (IOException e) {
