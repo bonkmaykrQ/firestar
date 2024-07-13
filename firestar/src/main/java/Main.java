@@ -35,8 +35,6 @@ public class Main {
     public static final int vint = 1;
 
     // User Settings
-    // TODO: replace with user preference when config i/o is done
-    // also please double check that outpath is actually valid
     public static String outpath = System.getProperty("user.home") + "/.firestar/out/"; //game assets location
     public final static String inpath = System.getProperty("user.home") + "/.firestar/"; //firestar folder -- do not change this
     public static boolean repatch; //are we in compat mode?
@@ -78,7 +76,6 @@ public class Main {
     public class Mod {
         public String path; // file name
         public int version = 1;
-        //public int gameversion; //TODO detect a game version and compatibility? // no
         public int priority = 0; //unused
         public String friendlyName;
         public String description = "";

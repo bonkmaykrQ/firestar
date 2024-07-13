@@ -193,7 +193,6 @@ public class MissPiggy implements ActionListener {
         Main.Mods.clear();
 
         // get current list of mods from file
-        // todo: rewrite when modpacks/playlists are added
         try {
             priorityList = new String(Files.readAllBytes(Paths.get(System.getProperty("user.home") + "/.firestar/mods/index")));
         } catch (IOException e) {
