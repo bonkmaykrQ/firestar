@@ -14,19 +14,6 @@
     </properties>
     <border type="none"/>
     <children>
-      <component id="3d88f" class="javax.swing.JButton" binding="okbtn">
-        <constraints>
-          <grid row="6" column="2" row-span="1" col-span="1" vsize-policy="2" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <background color="-2271221"/>
-          <borderPainted value="false"/>
-          <focusPainted value="false"/>
-          <font name="Exo 2"/>
-          <foreground color="-1"/>
-          <text value="Save"/>
-        </properties>
-      </component>
       <component id="db731" class="javax.swing.JLabel">
         <constraints>
           <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
@@ -35,32 +22,6 @@
           <font name="Exo 2"/>
           <foreground color="-1"/>
           <text value="Mod Export Path"/>
-        </properties>
-      </component>
-      <component id="50d13" class="javax.swing.JButton" binding="cancelbtn">
-        <constraints>
-          <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="2" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <background color="-2271221"/>
-          <borderPainted value="false"/>
-          <focusPainted value="false"/>
-          <font name="Exo 2"/>
-          <foreground color="-1"/>
-          <text value="Cancel"/>
-        </properties>
-      </component>
-      <component id="252b3" class="javax.swing.JButton" binding="resetbtn">
-        <constraints>
-          <grid row="6" column="1" row-span="1" col-span="1" vsize-policy="2" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <background color="-2271221"/>
-          <borderPainted value="false"/>
-          <focusPainted value="false"/>
-          <font name="Exo 2"/>
-          <foreground color="-1"/>
-          <text value="Restore Defaults"/>
         </properties>
       </component>
       <component id="e2cd7" class="javax.swing.JLabel">
@@ -84,21 +45,23 @@
         </properties>
       </component>
       <grid id="1206c" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-        <margin top="0" left="0" bottom="0" right="0"/>
+        <margin top="3" left="5" bottom="3" right="5"/>
         <constraints>
-          <grid row="0" column="1" row-span="1" col-span="2" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="0" column="1" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <background color="-15128227"/>
           <foreground color="-1"/>
         </properties>
-        <border type="none">
-          <color color="-16777216"/>
+        <border type="line">
+          <font name="Exo 2"/>
+          <title-color color="-1"/>
+          <color color="-1"/>
         </border>
         <children>
           <component id="92a60" class="javax.swing.JButton" binding="dwnSDKbtn">
             <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="7" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <background color="-2271221"/>
@@ -111,7 +74,7 @@
           </component>
           <component id="87ead" class="javax.swing.JButton" binding="dwnARCbtn">
             <constraints>
-              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="7" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <background color="-2271221"/>
@@ -174,7 +137,7 @@
         </properties>
       </component>
       <grid id="6078c" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-        <margin top="0" left="0" bottom="0" right="0"/>
+        <margin top="3" left="5" bottom="3" right="5"/>
         <constraints>
           <grid row="1" column="1" row-span="3" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -183,7 +146,11 @@
           <foreground color="-1"/>
           <opaque value="false"/>
         </properties>
-        <border type="none"/>
+        <border type="line">
+          <font name="Exo 2"/>
+          <title-color color="-1"/>
+          <color color="-1"/>
+        </border>
         <children>
           <component id="8fec2" class="javax.swing.JButton" binding="bOpenFolder">
             <constraints>
@@ -211,6 +178,69 @@
               <foreground color="-1"/>
               <label value="Delete PSARCs"/>
               <text value="Delete PSARCs"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+      <grid id="d0121" layout-manager="GridLayoutManager" row-count="1" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <margin top="0" left="0" bottom="0" right="0"/>
+        <constraints>
+          <grid row="6" column="0" row-span="1" col-span="3" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <opaque value="false"/>
+        </properties>
+        <border type="none"/>
+        <children>
+          <component id="50d13" class="javax.swing.JButton" binding="cancelbtn">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="1" anchor="0" fill="0" indent="0" use-parent-layout="false">
+                <minimum-size width="100" height="-1"/>
+                <preferred-size width="200" height="-1"/>
+                <maximum-size width="200" height="-1"/>
+              </grid>
+            </constraints>
+            <properties>
+              <background color="-2271221"/>
+              <borderPainted value="false"/>
+              <focusPainted value="false"/>
+              <font name="Exo 2"/>
+              <foreground color="-1"/>
+              <text value="Cancel"/>
+            </properties>
+          </component>
+          <component id="252b3" class="javax.swing.JButton" binding="resetbtn">
+            <constraints>
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="1" anchor="0" fill="0" indent="0" use-parent-layout="false">
+                <minimum-size width="100" height="-1"/>
+                <preferred-size width="200" height="-1"/>
+                <maximum-size width="200" height="-1"/>
+              </grid>
+            </constraints>
+            <properties>
+              <background color="-2271221"/>
+              <borderPainted value="false"/>
+              <focusPainted value="false"/>
+              <font name="Exo 2"/>
+              <foreground color="-1"/>
+              <text value="Restore Defaults"/>
+            </properties>
+          </component>
+          <component id="3d88f" class="javax.swing.JButton" binding="okbtn">
+            <constraints>
+              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="1" anchor="0" fill="0" indent="0" use-parent-layout="false">
+                <minimum-size width="100" height="-1"/>
+                <preferred-size width="200" height="-1"/>
+                <maximum-size width="200" height="-1"/>
+              </grid>
+            </constraints>
+            <properties>
+              <background color="-2271221"/>
+              <borderPainted value="false"/>
+              <focusPainted value="false"/>
+              <font name="Exo 2"/>
+              <foreground color="-1"/>
+              <text value="Save"/>
             </properties>
           </component>
         </children>
