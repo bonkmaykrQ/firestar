@@ -178,7 +178,7 @@ public class Bert implements ActionListener {
                         // dump contents
                         System.out.println("Extracting " + arcname);
                         Fozzie popup = new Fozzie();
-                        popup.displayTextOnly("Extracting" + arcname + "...", "Extracting");
+                        popup.displayTextOnly("Extracting " + arcname + "...", "Extracting");
                         Process p;
                         try {
                             if (!Main.windows) {

@@ -20,6 +20,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.text.DefaultCaret;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -71,6 +72,7 @@ public class MissPiggy implements ActionListener {
     private JButton importButton;
     private JButton deployButton;
     private JTextPane descriptionField;
+    private JScrollPane descriptionScroller;
 
     //private int selectedItem;
 
@@ -174,6 +176,8 @@ public class MissPiggy implements ActionListener {
         optionsButton.setFont(Main.fExo2.deriveFont(Font.BOLD).deriveFont(12f));
         importButton.setFont(Main.fExo2.deriveFont(Font.BOLD).deriveFont(12f));
         deployButton.setFont(Main.fExo2.deriveFont(Font.BOLD).deriveFont(12f));
+
+        ((DefaultCaret)descriptionField.getCaret()).setUpdatePolicy(DefaultCaret.NEVER_UPDATE); // prevent automatically scrolling to the bottom when mod details exceed window size
 
         frame.setSize(800, 600); // 1280 800
         frame.setMinimumSize(new Dimension(640,480));
