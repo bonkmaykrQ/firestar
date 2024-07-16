@@ -48,7 +48,7 @@ import static java.nio.file.StandardCopyOption.*;
 
 import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 
-public class MissPiggy implements Robin, ActionListener {
+public class MissPiggy implements ActionListener {
     BufferedImage windowIcon;
     JFrame frame = new JFrame();
     JPanel frameContainer;
@@ -107,7 +107,7 @@ public class MissPiggy implements Robin, ActionListener {
 
         toolsMenu.add(new JMenuItem("Edit Metadata")); // disabled if a mod is not selected from the list
         toolsMenu.add(new JMenuItem("Generate New Mod from Folder..."));
-        //toolsMenu.add(new JMenuItem("Create Soundtrack Mod..."));
+        toolsMenu.add(new JMenuItem("Create Soundtrack Mod..."));
         //toolsMenu.add(new JMenuItem("Download Mod from URL")); // TODO: implement. move option to File menu. should be ez
 
         helpMenu.add(new JMenuItem("Manual"));
@@ -136,7 +136,7 @@ public class MissPiggy implements Robin, ActionListener {
         fileMenu.getItem(5).addActionListener(this);
         toolsMenu.getItem(0).addActionListener(this);
         toolsMenu.getItem(1).addActionListener(this);
-        //toolsMenu.getItem(2).addActionListener(this);
+        toolsMenu.getItem(2).addActionListener(this);
         helpMenu.getItem(0).addActionListener(this);
         helpMenu.getItem(2).addActionListener(this);
         helpMenu.getItem(3).addActionListener(this);

@@ -47,7 +47,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-public class Suggs implements Robin, ActionListener, ListSelectionListener {
+public class Suggs implements ActionListener, ListSelectionListener {
     public JFrame frame = new JFrame();
     private JPanel frameContainer;
     private JList dSongList;
@@ -331,7 +331,7 @@ public class Suggs implements Robin, ActionListener, ListSelectionListener {
 	    
 	    progressDialog.destroyDialog();
 	    frame.dispose();
-	    new Clifford().Action(this, new File(System.getProperty("user.home") + "/.firestar/temp/"));
+	    new Clifford().Action(frame, new File(System.getProperty("user.home") + "/.firestar/temp/"));
 	    System.out.println("Post Clifford");
 	    parent.setEnabled(true);
 	}).start();

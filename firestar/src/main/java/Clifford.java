@@ -45,14 +45,39 @@ public class Clifford implements ActionListener {
     private JButton savebtn;
     private JButton cancelbtn;
 
-    Robin invoker;
+    JFrame invoker;
+    MissPiggy invokerPig;
+    boolean isPig = false;
     Main.Mod mod;
     int index;
     File directory;
 
     boolean creating;
 
-    public void Action(Robin inv, int modindex) { // Editor
+    public void Action(MissPiggy inv, int modindex) {
+        invokerPig = inv;
+        invoker = invokerPig.frame;
+        mod = Main.Mods.get(modindex);
+        index = modindex;
+        creating = false;
+
+        isPig = true;
+
+        Action(invoker, modindex);
+    }
+
+    public void Action(MissPiggy inv, File dir) {
+        invokerPig = inv;
+        invoker = invokerPig.frame;
+        directory = dir;
+        creating = true;
+
+        isPig = true;
+
+        Action(invoker, dir);
+    }
+
+    public void Action(JFrame inv, int modindex) { // Editor
         invoker = inv;
         mod = Main.Mods.get(modindex);
         index = modindex;
@@ -71,7 +96,7 @@ public class Clifford implements ActionListener {
         frame.setResizable(false);
         frame.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         frame.setLayout(new GridLayout());
-        frame.setLocationRelativeTo(inv.frame);
+        frame.setLocationRelativeTo(inv);
         frame.setAlwaysOnTop(true);
 
         fName.setText(mod.friendlyName);
@@ -87,13 +112,13 @@ public class Clifford implements ActionListener {
             @Override
             public void windowClosing(WindowEvent e)
             {
-                invoker.frame.setEnabled(true);
+                invoker.setEnabled(true);
                 e.getWindow().dispose();
             }
         });
     }
 
-    public void Action(Robin inv, File dir) { // Generator
+    public void Action(JFrame inv, File dir) { // Generator
         invoker = inv;
         directory = dir;
         creating = true;
@@ -116,7 +141,7 @@ public class Clifford implements ActionListener {
             @Override
             public void windowClosing(WindowEvent e)
             {
-                invoker.frame.setEnabled(true);
+                invoker.setEnabled(true);
                 e.getWindow().dispose();
             }
         });
@@ -125,7 +150,7 @@ public class Clifford implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         if (actionEvent.getSource() == cancelbtn) {
-            invoker.frame.setEnabled(true);
+            invoker.setEnabled(true);
             frame.dispose();
         } else if (actionEvent.getSource() == savebtn && !creating) {
             try {
@@ -158,8 +183,8 @@ public class Clifford implements ActionListener {
             }
 
             Main.Mods.set(index, mod);
-            invoker.frame.setEnabled(true);
-            if (invoker instanceof MissPiggy) ((MissPiggy)invoker).InitializeModListInGUI();
+            invoker.setEnabled(true);
+            if (isPig) {invokerPig.InitializeModListInGUI();}
             frame.dispose();
         } else if (actionEvent.getSource() == savebtn && creating) {
             if (fName.getText().isEmpty()) {
@@ -203,7 +228,7 @@ public class Clifford implements ActionListener {
                     return;
                 }
                 JOptionPane.showMessageDialog(frame, "Mod file created", "Success", JOptionPane.INFORMATION_MESSAGE);
-                invoker.frame.setEnabled(true);
+                invoker.setEnabled(true);
                 frame.dispose();
             }
         }
