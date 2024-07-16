@@ -28,8 +28,6 @@ import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -54,7 +52,12 @@ public class Suggs implements ActionListener, ListSelectionListener {
     private JButton deleteSongBtn;
     private JButton addSongBtn;
     private JButton moveUpBtn;
-    
+    private JLabel dSTitleLabel;
+    private JLabel dMTitleLabel;
+    private JLabel dSTitle;
+    private JLabel dMTitle;
+    private JCheckBox checkAdditive;
+
     JFrame parent;
     int curIndex = -1;
     
@@ -83,7 +86,7 @@ public class Suggs implements ActionListener, ListSelectionListener {
         frame.add(frameContainer); // initialize window contents -- will be handled by IntelliJ IDEA
 
         frame.setSize(700, 400);
-        frame.setMinimumSize(new Dimension(650,280));
+        frame.setMinimumSize(new Dimension(700,400));
         frame.setTitle("Soundtrack Mod Generator");
         frame.setResizable(true);
         frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
