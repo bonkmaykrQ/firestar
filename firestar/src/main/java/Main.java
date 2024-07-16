@@ -21,10 +21,12 @@ import net.lingala.zip4j.exception.ZipException;
 import org.json.*;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.*;
 import java.util.*;
 import java.util.List;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 public class Main {
@@ -92,6 +94,7 @@ public class Main {
 
     // UI Global Assets
     public static Font fExo2;
+    public static BufferedImage windowIcon;
 
     public static void main(String[] args) {
         // license string
@@ -118,6 +121,13 @@ public class Main {
         } catch (Exception e) {
             System.out.println("Font \"Exo 2\" is missing!");
             fExo2 = new Font("Arial", Font.PLAIN, 12);
+        }
+	
+	// load global window icon
+	try {
+            windowIcon = ImageIO.read(Main.class.getResourceAsStream("/titleIcon.png"));
+        } catch (IOException e) {
+            System.out.println("ERROR: Failed to find titleIcon.png. Window will not have an icon.");
         }
 
         // check and load configs
@@ -225,5 +235,19 @@ public class Main {
 
     public static boolean callDownloaderStatically (String url, String folder, String name) {
         return new Fozzie().DownloadFile(url, folder, name);
+    }
+    
+    public static Process exec(String[] cmd, String cwd) throws IOException {
+	Process p;
+	String[] pcmd;
+	if (!Main.windows) {
+	    pcmd = new String[cmd.length + 1];
+	    pcmd[0] = "wine";
+	    System.arraycopy(cmd, 0, pcmd, 1, cmd.length);
+	    p = Runtime.getRuntime().exec(pcmd, null, new File(cwd));
+	} else {
+	    p = Runtime.getRuntime().exec(cmd, null, new File(cwd.replace("/", "\\")));
+	}
+	return p;
     }
 }

@@ -16,6 +16,12 @@
  *     along with this program.  If not, see https://www.gnu.org/licenses/.
  */
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -28,15 +34,20 @@ import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.xml.XMLConstants;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
-public class Suggs implements ActionListener, ListSelectionListener {
-    private BufferedImage windowIcon;
+public class Suggs implements Robin, ActionListener, ListSelectionListener {
     public JFrame frame = new JFrame();
     private JPanel frameContainer;
     private JList dSongList;
@@ -57,7 +68,8 @@ public class Suggs implements ActionListener, ListSelectionListener {
     private JLabel dSTitle;
     private JLabel dMTitle;
     private JCheckBox checkAdditive;
-
+    private Scooter progressDialog;
+    
     JFrame parent;
     int curIndex = -1;
     
@@ -77,16 +89,11 @@ public class Suggs implements ActionListener, ListSelectionListener {
 	this.parent = parent;
         parent.setEnabled(false);
 
-        try {
-            windowIcon = ImageIO.read(Main.class.getResourceAsStream("/titleIcon.png"));
-            frame.setIconImage(windowIcon);
-        } catch (IOException e) {
-            System.out.println("ERROR: Failed to find /resources/titleIcon.png. Window will not have an icon.");
-        }
+        frame.setIconImage(Main.windowIcon);
         frame.add(frameContainer); // initialize window contents -- will be handled by IntelliJ IDEA
 
         frame.setSize(700, 400);
-        frame.setMinimumSize(new Dimension(700,400));
+        frame.setMinimumSize(new Dimension(650,280));
         frame.setTitle("Soundtrack Mod Generator");
         frame.setResizable(true);
         frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -249,61 +256,84 @@ public class Suggs implements ActionListener, ListSelectionListener {
         }
     }
     
-    private JFrame progressFrame = new JFrame();
-    public JProgressBar progressBar;
-    private JPanel progressFrameContainer;
-    private JLabel progressLabel;
-    
     private void save() {
-	progressFrameContainer = new JPanel();
-	
-	progressLabel = new JLabel("Generating audio files...");
-	progressBar = new JProgressBar();
-	progressBar.setMaximum(tracklist.size());
-	
-	progressFrameContainer.add(progressLabel);
-	progressFrameContainer.add(progressBar);
-	
-	progressFrame.add(progressFrameContainer);
-        progressFrame.setSize(300, 100);
-        progressFrame.setTitle("Soundtrack Mod Generator");
-        progressFrame.setResizable(false);
-        progressFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-        progressFrame.setLayout(new GridLayout());
-        progressFrame.setLocationRelativeTo(null);
-        progressFrame.setAlwaysOnTop(true);
-        progressFrame.setIconImage(windowIcon);
-	
-	// Lord, forgive me for this style hell
-	progressFrameContainer.setBackground(new Color(-15128227));
-	progressFrameContainer.setForeground(new Color(-1));
-	progressBar.setBackground(new Color(-1));
-	progressBar.setForeground(new Color(-2271221));
-	progressLabel.setBackground(new Color(-15128227));
-	progressLabel.setForeground(new Color(-1));
-	
-        progressFrame.setVisible(true);
-	
-	frame.dispose();
-	
-	new File(System.getProperty("user.home") + "/.firestar/temp/audio/music").mkdirs();
-	
-	int i = 0;
-	for (AudioTrack at : tracklist) {
-	    Process p;
-	    try {
-		System.out.println("Encoding \"" + at.title + " - " + at.artist + "\"...");
-		new File(System.getProperty("user.home") + "/.firestar/temp/audio/music/" + String.format("%02d", i)).mkdirs();
-		if (!Main.windows) {p = Runtime.getRuntime().exec(new String[]{"bash","-c","cd " + System.getProperty("user.home") + "/.firestar/temp/" + ";wine ../at9tool.exe -e -br 144 \"" + at.path + "\" audio/music/" + String.format("%02d", i) + "/music_stereo.at9"});}
-		else {p = Runtime.getRuntime().exec(new String[]{(System.getProperty("user.home") + "\\.firestar\\at9tool.exe"), "-e", "-br", "144", at.path, "audio\\music\\" + String.format("%02d", i) + "\\music_stereo.at9"}, null, new File((System.getProperty("user.home") + "/.firestar/temp/").replace("/", "\\")));}
-		p.waitFor();
-	    } catch (IOException | InterruptedException ex) {
-		Logger.getLogger(Suggs.class.getName()).log(Level.SEVERE, null, ex);
+	frame.setEnabled(false);
+	frame.setAlwaysOnTop(false);
+	Main.deleteDir(new File(System.getProperty("user.home") + "/.firestar/temp/")); // starts with clean temp
+	new Thread(() -> {
+	    int progressSize = tracklist.size()+(sptrack != null?1:0)+(mptrack != null?1:0)+2; // Accounting for processes
+
+	    progressDialog = new Scooter();
+	    progressDialog.showDialog("Soundtrack Mod Generator");
+	    progressDialog.setText("Generating audio files...");
+	    progressDialog.setProgressMax(progressSize);
+	    
+	    new File(System.getProperty("user.home") + "/.firestar/temp/data/audio/music").mkdirs();
+	    
+	    for (int i = 0; i < tracklist.size(); i++) {
+		AudioTrack at = tracklist.get(i);
+		String trackno = String.format("%02d", i);
+		progressDialog.setText("Encoding track " + (i+1) + " out of " + tracklist.size() + "...");
+		try {
+		    System.out.println("Encoding track #" + (i+1) + " \"" + at.title + " - " + at.artist + "\"...");
+		    new File(System.getProperty("user.home") + "/.firestar/temp/data/audio/music/" + trackno).mkdirs();
+		    Process p = Main.exec(new String[]{"../at9tool.exe", "-e", "-br", "144", at.path, "data/audio/music/" + trackno + "/music_stereo.at9"}, System.getProperty("user.home") + "/.firestar/temp/");
+		    p.waitFor();
+		} catch (IOException | InterruptedException ex) {
+		    Logger.getLogger(Suggs.class.getName()).log(Level.SEVERE, null, ex);
+		}
+		progressDialog.setProgressValue(i);
 	    }
-	    progressBar.setValue(i++);
-	}
-	System.out.println("Finished encoding.");
-	progressFrame.dispose();
-	parent.setEnabled(true);
+	    if (sptrack != null) {
+		progressDialog.setText("Encoding singleplayer frontend track...");
+		if (new File(sptrack).exists()) {
+		    try {
+			System.out.println("Encoding singleplayer frontend track...");
+			new File(System.getProperty("user.home") + "/.firestar/temp/data/audio/music/FEMusic").mkdirs();
+			Process p = Main.exec(new String[]{"../at9tool.exe", "-e", "-br", "144", sptrack, "data/audio/music/FEMusic/frontend_stereo.at9"}, System.getProperty("user.home") + "/.firestar/temp/");
+			p.waitFor();
+		    } catch (IOException | InterruptedException ex) {
+			Logger.getLogger(Suggs.class.getName()).log(Level.SEVERE, null, ex);
+		    }
+		}
+		progressDialog.setProgressValue(progressDialog.getProgressValue()+1);
+	    }
+	    if (mptrack != null) {
+		progressDialog.setText("Encoding multiplayer frontend track...");
+		try {
+		    assert(new File(mptrack).exists());
+		    System.out.println("Encoding multiplayer frontend track...");
+		    new File(System.getProperty("user.home") + "/.firestar/temp/data/audio/music/FEDemoMusic").mkdirs();
+		    Process p = Main.exec(new String[]{"../at9tool.exe", "-e", "-br", "144", mptrack, "data/audio/music/FEDemoMusic/frontend_stereo.at9"}, System.getProperty("user.home") + "/.firestar/temp/");
+		    p.waitFor();
+		} catch (IOException | InterruptedException ex) {
+		    Logger.getLogger(Suggs.class.getName()).log(Level.SEVERE, null, ex);
+		}
+		progressDialog.setProgressValue(progressDialog.getProgressValue()+1);
+	    }
+	    System.out.println("Finished encoding.");
+	    
+	    progressDialog.setText("Generating Music Definitions...");
+	    /*
+	    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+	    try {
+		DocumentBuilder db = dbf.newDocumentBuilder();
+		Document doc = db.parse(new File());
+		NodeList screen = doc.getElementsByTagName("Screen");
+		for (int i = 0; i < tracklist.size(); i++) {
+		    AudioTrack at = tracklist.get(i);
+		    Node node = screen.item(i);
+		}
+	    } catch (ParserConfigurationException | SAXException | IOException e) {
+		e.printStackTrace();
+	    }*/
+	    progressDialog.setProgressValue(progressDialog.getProgressValue()+1);
+	    
+	    progressDialog.destroyDialog();
+	    frame.dispose();
+	    new Clifford().Action(this, new File(System.getProperty("user.home") + "/.firestar/temp/"));
+	    System.out.println("Post Clifford");
+	    parent.setEnabled(true);
+	}).start();
     }
 }

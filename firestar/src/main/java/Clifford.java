@@ -45,14 +45,14 @@ public class Clifford implements ActionListener {
     private JButton savebtn;
     private JButton cancelbtn;
 
-    MissPiggy invoker;
+    Robin invoker;
     Main.Mod mod;
     int index;
     File directory;
 
     boolean creating;
 
-    public void Action(MissPiggy inv, int modindex) { // Editor
+    public void Action(Robin inv, int modindex) { // Editor
         invoker = inv;
         mod = Main.Mods.get(modindex);
         index = modindex;
@@ -93,7 +93,7 @@ public class Clifford implements ActionListener {
         });
     }
 
-    public void Action(MissPiggy inv, File dir) { // Generator
+    public void Action(Robin inv, File dir) { // Generator
         invoker = inv;
         directory = dir;
         creating = true;
@@ -159,7 +159,7 @@ public class Clifford implements ActionListener {
 
             Main.Mods.set(index, mod);
             invoker.frame.setEnabled(true);
-            invoker.InitializeModListInGUI();
+            if (invoker instanceof MissPiggy) ((MissPiggy)invoker).InitializeModListInGUI();
             frame.dispose();
         } else if (actionEvent.getSource() == savebtn && creating) {
             if (fName.getText().isEmpty()) {
