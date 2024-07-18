@@ -141,6 +141,7 @@ public class Clifford implements ActionListener {
             @Override
             public void windowClosing(WindowEvent e)
             {
+                Main.deleteDir(new File(Main.inpath + "temp/")); // soundtrack gen
                 invoker.setEnabled(true);
                 e.getWindow().dispose();
             }
@@ -150,6 +151,7 @@ public class Clifford implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         if (actionEvent.getSource() == cancelbtn) {
+            Main.deleteDir(new File(Main.inpath + "temp/")); // soundtrack gen
             invoker.setEnabled(true);
             frame.dispose();
         } else if (actionEvent.getSource() == savebtn && !creating) {
@@ -228,6 +230,7 @@ public class Clifford implements ActionListener {
                     return;
                 }
                 JOptionPane.showMessageDialog(frame, "Mod file created", "Success", JOptionPane.INFORMATION_MESSAGE);
+                Main.deleteDir(new File(Main.inpath + "temp/")); // soundtrack gen
                 invoker.setEnabled(true);
                 frame.dispose();
             }
