@@ -120,9 +120,7 @@ public class Gonzo {
                 System.out.println("Firestar is extracting " + s);
                 consoleDisplay.append("Firestar is extracting " + s + "\n");
                 //Process p = Runtime.getRuntime().exec(new String[]{"bash","-c","aplay /home/bonkyboo/kittens_loop.wav"}); // DEBUG
-                Process p;
-                if (!Main.windows) {p = Runtime.getRuntime().exec(new String[]{"bash","-c","cd " + System.getProperty("user.home") + "/.firestar/temp/" + ";wine ../psp2psarc.exe extract -y ../" + s});}
-                else {p = Runtime.getRuntime().exec(new String[]{new String(System.getProperty("user.home") + "\\.firestar\\psp2psarc.exe"), "extract", "-y", "..\\" + s}, null, new File(new String(System.getProperty("user.home") + "/.firestar/temp/").replace("/", "\\")));}
+                Process p = Main.exec(new String[]{"../psp2psarc.exe", "extract", "-y", "../"+s}, System.getProperty("user.home") + "/.firestar/temp/");
                 final Thread ioThread = new Thread() {
                     @Override
                     public void run() {
@@ -272,9 +270,7 @@ public class Gonzo {
         try {
             System.out.println("Firestar is compiling the final build");
             consoleDisplay.append("Firestar is compiling the final build" + "\n");
-            Process p;
-            if (!Main.windows) {p = Runtime.getRuntime().exec(new String[]{"bash","-c","cd " + System.getProperty("user.home") + "/.firestar/temp" + ";wine ../psp2psarc.exe create --skip-missing-files -j12 -a -i -y --input-file=list.txt -o " + oArcTarget});}
-            else {p = Runtime.getRuntime().exec(new String[]{new String(System.getProperty("user.home") + "\\.firestar\\psp2psarc.exe"), "create", "--skip-missing-files", "-j12", "-a", "-i", "-y", "--input-file=list.txt", "-o" + oArcTarget}, null, new File(new String(System.getProperty("user.home") + "/.firestar/temp/").replace("/", "\\")));}
+            Process p = Main.exec(new String[]{"../psp2psarc.exe", "create", "--skip-missing-files", "-j12", "-a", "-i", "-y", "--input-file=list.txt", "-o" + oArcTarget}, System.getProperty("user.home") + "/.firestar/temp/");
             final Thread ioThread = new Thread() {
                 @Override
                 public void run() {

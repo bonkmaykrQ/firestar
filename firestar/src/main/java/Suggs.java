@@ -18,11 +18,6 @@
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
-
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -31,21 +26,26 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 public class Suggs implements ActionListener, ListSelectionListener {
     public JFrame frame = new JFrame();
@@ -63,10 +63,10 @@ public class Suggs implements ActionListener, ListSelectionListener {
     private JButton deleteSongBtn;
     private JButton addSongBtn;
     private JButton moveUpBtn;
-    private JLabel dSTitleLabel;
-    private JLabel dMTitleLabel;
     private JLabel dSTitle;
     private JLabel dMTitle;
+    private JLabel dSSize;
+    private JLabel dMSize;
     private JCheckBox checkAdditive;
     private Scooter progressDialog;
     
@@ -74,16 +74,15 @@ public class Suggs implements ActionListener, ListSelectionListener {
     int curIndex = -1;
     
     public class AudioTrack {
-        public String path; // file name
+        public File path; // file name
         public String title; // audio title
 	public String artist; // audio artist
-	public int index; // track number
-	public int size; // file size in bytes
+	public long size; // file size in bytes
 	public boolean noConvert;
     }
     private static List<AudioTrack> tracklist = new ArrayList<AudioTrack>();
-    private String sptrack;
-    private String mptrack;
+    private File sptrack;
+    private File mptrack;
 
     public Suggs(JFrame parent) {
 	this.parent = parent;
@@ -151,21 +150,25 @@ public class Suggs implements ActionListener, ListSelectionListener {
     }
 
     @Override
-    public void valueChanged(ListSelectionEvent listSelectionEvent) { // TODO: change fields on form, show file size, and show MT_(track number) when selection changed.
+    public void valueChanged(ListSelectionEvent listSelectionEvent) {
 	curIndex = dSongList.getSelectedIndex();
-	System.out.println(curIndex);
 	if (curIndex >= 0) {
-	    fTitle.setText(tracklist.get(curIndex).title);
-	    fArtist.setText(tracklist.get(curIndex).artist);
+	    AudioTrack at = tracklist.get(curIndex);
+	    fTitle.setText(at.title);
+	    fArtist.setText(at.artist);
+	    dTrackNo.setText(String.format("MT_%02d", curIndex));
+	    dFileSize.setText((at.size / 1000) + "kb");
 	} else {
 	    fTitle.setText("");
 	    fArtist.setText("");
+	    dTrackNo.setText("--");
+	    dFileSize.setText("-kb");
 	}
     }
     
     private void remove(int index) {
-        if (index > 0) {
-            tracklist.remove(curIndex);
+        if (index >= 0) {
+            tracklist.remove(index);
             InitializeSongListInGUI();
         }
     }
@@ -195,7 +198,7 @@ public class Suggs implements ActionListener, ListSelectionListener {
         String[] contents = new String[tracklist.size()];
         while (i < tracklist.size()) {
             if (tracklist.get(i).title == null || tracklist.get(i).title.isEmpty())
-            {tracklist.get(i).title = new File(tracklist.get(i).path).getName();}
+            {tracklist.get(i).title = tracklist.get(i).path.getName();}
 	    if (tracklist.get(i).artist == null || tracklist.get(i).artist.isEmpty())
             {tracklist.get(i).artist = "???";}
             contents[i] = tracklist.get(i).artist + " - " + tracklist.get(i).title;
@@ -215,7 +218,9 @@ public class Suggs implements ActionListener, ListSelectionListener {
         int result = fileChooser.showOpenDialog(frame);
 	if (result == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
-	    sptrack = selectedFile.getPath();
+	    sptrack = selectedFile;
+	    dSTitle.setText(selectedFile.getName());
+	    dSSize.setText((selectedFile.length() / 1000) + "kb");
         }
     }
     
@@ -228,7 +233,9 @@ public class Suggs implements ActionListener, ListSelectionListener {
         int result = fileChooser.showOpenDialog(frame);
 	if (result == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
-	    mptrack = selectedFile.getPath();
+	    mptrack = selectedFile;
+	    dMTitle.setText(selectedFile.getName());
+	    dMSize.setText((selectedFile.length() / 1000) + "kb");
         }
     }
     
@@ -246,9 +253,13 @@ public class Suggs implements ActionListener, ListSelectionListener {
 		if (f.exists()) {
 		    System.out.println("Importing audio file \"" + f.getName() + "\"");
 		    AudioTrack track = new AudioTrack();
-		    track.path = f.getPath();
-		    track.title = f.getName();
-		    track.index = tracklist.size();
+		    track.path = f;
+		    String fname = f.getName();
+		    if (fname.contains(" - ")) {
+			track.title  = fname.substring(fname.indexOf(" - ")+3, fname.lastIndexOf("."));
+			track.artist  = fname.substring(0, fname.indexOf(" - "));
+		    } else track.title = fname;
+		    track.size = f.length();
 		    tracklist.add(track);
 		}
 	    }
@@ -261,36 +272,46 @@ public class Suggs implements ActionListener, ListSelectionListener {
 	frame.setAlwaysOnTop(false);
 	Main.deleteDir(new File(System.getProperty("user.home") + "/.firestar/temp/")); // starts with clean temp
 	new Thread(() -> {
-	    int progressSize = tracklist.size()+(sptrack != null?1:0)+(mptrack != null?1:0)+2; // Accounting for processes
+	    int progressSize = tracklist.size()+(sptrack != null?1:0)+(mptrack != null?1:0)+3; // Accounting for processes
 
 	    progressDialog = new Scooter();
 	    progressDialog.showDialog("Soundtrack Mod Generator");
 	    progressDialog.setText("Generating audio files...");
 	    progressDialog.setProgressMax(progressSize);
+	    progressDialog.setProgressValue(0);
 	    
-	    new File(System.getProperty("user.home") + "/.firestar/temp/data/audio/music").mkdirs();
+	    new File(Main.inpath + "temp/data/audio/music").mkdirs();
 	    
 	    for (int i = 0; i < tracklist.size(); i++) {
 		AudioTrack at = tracklist.get(i);
 		String trackno = String.format("%02d", i);
-		progressDialog.setText("Encoding track " + (i+1) + " out of " + tracklist.size() + "...");
-		try {
-		    System.out.println("Encoding track #" + (i+1) + " \"" + at.title + " - " + at.artist + "\"...");
-		    new File(System.getProperty("user.home") + "/.firestar/temp/data/audio/music/" + trackno).mkdirs();
-		    Process p = Main.exec(new String[]{"../at9tool.exe", "-e", "-br", "144", at.path, "data/audio/music/" + trackno + "/music_stereo.at9"}, System.getProperty("user.home") + "/.firestar/temp/");
-		    p.waitFor();
-		} catch (IOException | InterruptedException ex) {
-		    Logger.getLogger(Suggs.class.getName()).log(Level.SEVERE, null, ex);
+		if (at.path.getName().endsWith(".at9")) {
+		    try {
+			// Assume whoever made the AT9s knows what they're doing
+			Files.copy(at.path.toPath(), Paths.get(Main.inpath + "tmp/data/audio/music/" + trackno + "/music_stereo.at9"), StandardCopyOption.REPLACE_EXISTING);
+		    } catch (IOException ex) {
+			Logger.getLogger(Suggs.class.getName()).log(Level.SEVERE, null, ex);
+		    }
+		} else {
+		    progressDialog.setText("Encoding track " + (i+1) + " out of " + tracklist.size() + "...");
+		    try {
+			System.out.println("Encoding track #" + (i+1) + " \"" + at.title + " - " + at.artist + "\"...");
+			new File(Main.inpath + "temp/data/audio/music/" + trackno).mkdirs();
+			Process p = Main.exec(new String[]{Main.inpath + "at9tool.exe", "-e", "-br", "144", at.path.getPath(), "data/audio/music/" + trackno + "/music_stereo.at9"}, Main.inpath + "temp/");
+			p.waitFor();
+		    } catch (IOException | InterruptedException ex) {
+			Logger.getLogger(Suggs.class.getName()).log(Level.SEVERE, null, ex);
+		    }
 		}
-		progressDialog.setProgressValue(i);
+		progressDialog.setProgressValue(i+1);
 	    }
 	    if (sptrack != null) {
 		progressDialog.setText("Encoding singleplayer frontend track...");
-		if (new File(sptrack).exists()) {
+		if (sptrack.exists()) {
 		    try {
 			System.out.println("Encoding singleplayer frontend track...");
-			new File(System.getProperty("user.home") + "/.firestar/temp/data/audio/music/FEMusic").mkdirs();
-			Process p = Main.exec(new String[]{"../at9tool.exe", "-e", "-br", "144", sptrack, "data/audio/music/FEMusic/frontend_stereo.at9"}, System.getProperty("user.home") + "/.firestar/temp/");
+			new File(Main.inpath + "temp/data/audio/music/FEMusic").mkdirs();
+			Process p = Main.exec(new String[]{Main.inpath + "at9tool.exe", "-e", "-br", "144", sptrack.getPath(), "data/audio/music/FEMusic/frontend_stereo.at9"}, System.getProperty("user.home") + "/.firestar/temp/");
 			p.waitFor();
 		    } catch (IOException | InterruptedException ex) {
 			Logger.getLogger(Suggs.class.getName()).log(Level.SEVERE, null, ex);
@@ -301,10 +322,10 @@ public class Suggs implements ActionListener, ListSelectionListener {
 	    if (mptrack != null) {
 		progressDialog.setText("Encoding multiplayer frontend track...");
 		try {
-		    assert(new File(mptrack).exists());
+		    assert(mptrack.exists());
 		    System.out.println("Encoding multiplayer frontend track...");
-		    new File(System.getProperty("user.home") + "/.firestar/temp/data/audio/music/FEDemoMusic").mkdirs();
-		    Process p = Main.exec(new String[]{"../at9tool.exe", "-e", "-br", "144", mptrack, "data/audio/music/FEDemoMusic/frontend_stereo.at9"}, System.getProperty("user.home") + "/.firestar/temp/");
+		    new File(Main.inpath + "temp/data/audio/music/FEDemoMusic").mkdirs();
+		    Process p = Main.exec(new String[]{Main.inpath + "at9tool.exe", "-e", "-br", "144", mptrack.getPath(), "data/audio/music/FEDemoMusic/frontend_stereo.at9"}, System.getProperty("user.home") + "/.firestar/temp/");
 		    p.waitFor();
 		} catch (IOException | InterruptedException ex) {
 		    Logger.getLogger(Suggs.class.getName()).log(Level.SEVERE, null, ex);
@@ -314,25 +335,58 @@ public class Suggs implements ActionListener, ListSelectionListener {
 	    System.out.println("Finished encoding.");
 	    
 	    progressDialog.setText("Generating Music Definitions...");
-	    /*
-	    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	    try {
-		DocumentBuilder db = dbf.newDocumentBuilder();
-		Document doc = db.parse(new File());
-		NodeList screen = doc.getElementsByTagName("Screen");
-		for (int i = 0; i < tracklist.size(); i++) {
+		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+
+		Document defDoc = docBuilder.newDocument();
+		Element docScreen = defDoc.createElement("Screen");
+		docScreen.setAttribute("name", "Top");
+		for (int i = 0; i < tracklist.size(); i++) { // TODO: support for additive
 		    AudioTrack at = tracklist.get(i);
-		    Node node = screen.item(i);
+		    String trackno = String.format("%02d", i);
+		    
+		    Element trackElem = defDoc.createElement("PI_Music");
+		    trackElem.setAttribute("name", trackno);
+		    
+		    Element pathElem = defDoc.createElement("Values");
+		    pathElem.setAttribute("location", "data\\audio\\music\\"+trackno);
+		    trackElem.appendChild(pathElem);
+		    
+		    Element artistElem = defDoc.createElement("Entry");
+		    artistElem.setAttribute("Artist", at.artist);
+		    trackElem.appendChild(artistElem);
+		    
+		    Element titleElem = defDoc.createElement("Entry");
+		    titleElem.setAttribute("Label", at.title);
+		    trackElem.appendChild(titleElem);
+		    
+		    docScreen.appendChild(trackElem);
+		    System.out.println("Adding \"" + trackno + ". " + at.artist + " - " + at.title + "\" to Definition.xml");
 		}
-	    } catch (ParserConfigurationException | SAXException | IOException e) {
-		e.printStackTrace();
-	    }*/
+		defDoc.appendChild(docScreen);
+		
+		new File(Main.inpath + "temp/data/plugins/music/").mkdirs();
+		FileOutputStream output = new FileOutputStream(Main.inpath + "temp/data/plugins/music/Definition.xml");
+		TransformerFactory transformerFactory = TransformerFactory.newInstance();
+		Transformer transformer = transformerFactory.newTransformer();
+		DOMSource source = new DOMSource(defDoc);
+		StreamResult result = new StreamResult(output);
+		
+		transformer.transform(source, result);
+	    } catch (IOException | ParserConfigurationException | TransformerException ex) {
+		Logger.getLogger(Suggs.class.getName()).log(Level.SEVERE, null, ex);
+	    }
+	    progressDialog.setProgressValue(progressDialog.getProgressValue()+1);
+	    
+	    progressDialog.setText("Localizing...");
+	    System.out.println("Creating localization edits for music tracks...");
+	    // TODO: Actually do what the above print-out says
 	    progressDialog.setProgressValue(progressDialog.getProgressValue()+1);
 	    
 	    progressDialog.destroyDialog();
 	    frame.dispose();
-	    new Clifford().Action(frame, new File(System.getProperty("user.home") + "/.firestar/temp/"));
-	    System.out.println("Post Clifford");
+	    new Clifford().Action(frame, new File(Main.inpath + "temp/"));
 	    parent.setEnabled(true);
 	}).start();
     }

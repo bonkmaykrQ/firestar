@@ -179,13 +179,8 @@ public class Bert implements ActionListener {
                         System.out.println("Extracting " + arcname);
                         Fozzie popup = new Fozzie();
                         popup.displayTextOnly("Extracting " + arcname + "...", "Extracting");
-                        Process p;
                         try {
-                            if (!Main.windows) {
-                                p = Runtime.getRuntime().exec(new String[]{"bash", "-c", "cd " + Main.inpath + ";wine pkg2zip.exe -x asset.pkg " + key.toString()});
-                            } else {
-                                p = Runtime.getRuntime().exec(new String[]{Main.inpath + "pkg2zip.exe", "-x", "asset.pkg", key.toString()}, null, new File(Main.inpath));
-                            } //inpath cannot change here
+			    Process p = Main.exec(new String[]{"pkg2zip.exe", "-x", "asset.pkg", key.toString()}, Main.inpath);
                             InputStream debugin = new BufferedInputStream(p.getInputStream());
                             OutputStream debugout = new BufferedOutputStream(System.out);
                             int c;
@@ -239,11 +234,7 @@ public class Bert implements ActionListener {
                         popup.setText("<html>Decrypting protected PFS:<br/>" + extracted + "</html>", "Decrypting");
 
                         try {
-                            if (!Main.windows) {
-                                p = Runtime.getRuntime().exec(new String[]{"bash", "-c", "cd " + Main.inpath + ";wine psvpfsparser.exe -i " + extracted + " -o ./temp/ -z " + key.toString() + " -f cma.henkaku.xyz"});
-                            } else {
-                                p = Runtime.getRuntime().exec(new String[]{Main.inpath + "psvpfsparser.exe", "-i", extracted, "-o", "./temp/", "-z", key.toString(), "-f", "cma.henkaku.xyz"}, null, new File(Main.inpath));
-                            }
+			    Process p = Main.exec(new String[]{"psvpfsparser.exe", "-i", extracted, "-o", "./temp/", "-z", key.toString(), "-f", "cma.henkaku.xyz"}, Main.inpath);
                             InputStream debugin = new BufferedInputStream(p.getInputStream());
                             OutputStream debugout = new BufferedOutputStream(System.out);
                             int c;
