@@ -268,6 +268,11 @@ public class Suggs implements ActionListener, ListSelectionListener {
     }
     
     private void save() {
+		if (tracklist.isEmpty() && sptrack == null && mptrack == null) {
+			JOptionPane.showMessageDialog(frame, "Please add at least one song to the playlist.", "Error", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+
 	frame.setEnabled(false);
 	frame.setAlwaysOnTop(false);
 	Main.deleteDir(new File(System.getProperty("user.home") + "/.firestar/temp/")); // starts with clean temp
