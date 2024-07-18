@@ -285,9 +285,12 @@ public class Suggs implements ActionListener, ListSelectionListener {
 	    for (int i = 0; i < tracklist.size(); i++) {
 		AudioTrack at = tracklist.get(i);
 		String trackno = String.format("%02d", i);
+		new File(Main.inpath + "temp/data/audio/music/" + trackno).mkdirs();
 		if (at.path.getName().endsWith(".at9")) {
+		    progressDialog.setText("Copying track " + (i+1) + " out of " + tracklist.size() + "...");
 		    try {
 			// Assume whoever made the AT9s knows what they're doing
+			System.out.println("Copying track #" + (i+1) + " \"" + at.title + " - " + at.artist + "\"...");
 			Files.copy(at.path.toPath(), Paths.get(Main.inpath + "tmp/data/audio/music/" + trackno + "/music_stereo.at9"), StandardCopyOption.REPLACE_EXISTING);
 		    } catch (IOException ex) {
 			Logger.getLogger(Suggs.class.getName()).log(Level.SEVERE, null, ex);
@@ -296,7 +299,6 @@ public class Suggs implements ActionListener, ListSelectionListener {
 		    progressDialog.setText("Encoding track " + (i+1) + " out of " + tracklist.size() + "...");
 		    try {
 			System.out.println("Encoding track #" + (i+1) + " \"" + at.title + " - " + at.artist + "\"...");
-			new File(Main.inpath + "temp/data/audio/music/" + trackno).mkdirs();
 			Process p = Main.exec(new String[]{Main.inpath + "at9tool.exe", "-e", "-br", "144", at.path.getPath(), "data/audio/music/" + trackno + "/music_stereo.at9"}, Main.inpath + "temp/");
 			p.waitFor();
 		    } catch (IOException | InterruptedException ex) {
