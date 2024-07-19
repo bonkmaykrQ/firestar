@@ -99,12 +99,7 @@ public class Fozzie {
         frame.setLayout(new GridLayout());
         frame.setLocationRelativeTo(null);
         frame.setAlwaysOnTop(true);
-        try {
-            windowIcon = ImageIO.read(Main.class.getResourceAsStream("/titleIcon.png"));
-            frame.setIconImage(windowIcon);
-        } catch (IOException e) {
-            System.out.println("ERROR: Failed to find /resources/titleIcon.png. Window will not have an icon.");
-        }
+        frame.setIconImage(Main.windowIcon);
         frame.setVisible(true);
 
         label.setText(text);
