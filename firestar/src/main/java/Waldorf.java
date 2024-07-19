@@ -95,7 +95,7 @@ public class Waldorf implements ActionListener {
             frame.dispose();
         } else
         if (actionEvent.getSource() == okbtn) {
-            Main.outpath = tOutPath;
+            Main.outpath = tOutPath+"/";
             Main.checkUpdates = checkUpdatesToggle.isSelected();
             Main.writeConf();
             Main.loadConf();

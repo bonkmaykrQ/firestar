@@ -125,7 +125,7 @@ public class Kermit implements ActionListener {
                     changePage(Pages.IMPORT_LOCATION);
                     break;
                 case IMPORT_LOCATION:
-                    Main.outpath = pathInput.getText();
+                    Main.outpath = pathInput.getText()+"/";
                     pathInput.setText("");
                     dialogText.setVisible(false);frame.remove(dialogText);
                     pathInput.setVisible(false);frame.remove(pathInput);
