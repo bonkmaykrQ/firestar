@@ -263,7 +263,7 @@ public class WilkinsCoffee implements ActionListener {
                         picLabel.setText("");
                     }
                     inputContainer2.setVisible(false);
-                    Main.outpath = outPathTemp + "/";
+                    Main.outpath = outPathTemp;
                     Main.repatch = true;
                     Main.writeConf();
 
