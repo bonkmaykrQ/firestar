@@ -108,12 +108,6 @@ public class Waldorf implements ActionListener {
             if (result == JOptionPane.YES_OPTION) {
                 System.out.println("Restoring default settings");
                 new File(System.getProperty("user.home") + "/.firestar/firestar.conf").delete();
-                System.out.println("Deleting existing PSARCs");
-                new File(Main.inpath + "data.psarc").delete();
-                new File(Main.inpath + "data1.psarc").delete();
-                new File(Main.inpath + "data2.psarc").delete();
-                new File(Main.inpath + "dlc1.psarc").delete();
-                new File(Main.inpath + "dlc2.psarc").delete();
                 int result2 = JOptionPane.showConfirmDialog(frame,"Firestar will now close.", "Restore Default Settings", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE);
                 if (result2 == JOptionPane.OK_OPTION) {
                     System.exit(0);
