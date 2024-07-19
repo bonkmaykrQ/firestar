@@ -159,7 +159,7 @@ public class WilkinsCoffee implements ActionListener {
             int result = fileChooser.showOpenDialog(frame);
             if (result == JFileChooser.APPROVE_OPTION) {
                 if (fileChooser.getSelectedFile().isDirectory()) {
-                    outPathTemp = fileChooser.getSelectedFile().getAbsolutePath();
+                    outPathTemp = fileChooser.getSelectedFile().getAbsolutePath()+"/";
                     pathDisplay.setText("Export path: " + outPathTemp);
                 }
             }

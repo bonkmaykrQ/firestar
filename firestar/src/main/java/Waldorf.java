@@ -95,7 +95,7 @@ public class Waldorf implements ActionListener {
             frame.dispose();
         } else
         if (actionEvent.getSource() == okbtn) {
-            Main.outpath = tOutPath+"/";
+            Main.outpath = tOutPath;
             Main.checkUpdates = checkUpdatesToggle.isSelected();
             Main.writeConf();
             Main.loadConf();
@@ -159,7 +159,7 @@ public class Waldorf implements ActionListener {
                 int result = fileChooser.showOpenDialog(frame);
                 if (result == JFileChooser.APPROVE_OPTION) {
                     if (fileChooser.getSelectedFile().isDirectory()) {
-                        tOutPath = fileChooser.getSelectedFile().getAbsolutePath();
+                        tOutPath = fileChooser.getSelectedFile().getAbsolutePath()+"/";
                         fOutpath.setText(tOutPath);
                     }
                 }
