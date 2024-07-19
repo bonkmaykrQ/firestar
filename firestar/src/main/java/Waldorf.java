@@ -50,12 +50,7 @@ public class Waldorf implements ActionListener {
         invoker = inv;
 
         frame.add(frameContainer);
-        try {
-            BufferedImage windowIcon = ImageIO.read(Main.class.getResourceAsStream("/titleIcon.png"));
-            frame.setIconImage(windowIcon);
-        } catch (IOException e) {
-            System.out.println("ERROR: Failed to find /resources/titleIcon.png. Window will not have an icon.");
-        }
+        frame.setIconImage(Main.windowIcon);
         frame.setSize(600, 300); // 1280 800
         frame.setMinimumSize(new Dimension(200,100));
         frame.setTitle("Options");

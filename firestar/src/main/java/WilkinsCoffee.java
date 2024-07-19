@@ -32,7 +32,6 @@ import java.nio.file.Files;
 import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 
 public class WilkinsCoffee implements ActionListener {
-    BufferedImage windowIcon;
     Image logo;
     public Pages page;
     public JFrame frame = new JFrame();
@@ -82,12 +81,7 @@ public class WilkinsCoffee implements ActionListener {
         // reformat path slightly for windows
         if (Main.windows) {outPathTemp.replace("/", "\\");}
 
-        try {
-            windowIcon = ImageIO.read(Main.class.getResourceAsStream("/titleIcon.png"));
-            frame.setIconImage(windowIcon);
-        } catch (IOException e) {
-            System.out.println("ERROR: Failed to find /resources/titleIcon.png. Window will not have an icon.");
-        }
+        frame.setIconImage(Main.windowIcon);
         try {
             logo = ImageIO.read(Main.class.getResourceAsStream("/programIcon.png")).getScaledInstance(96, 96, Image.SCALE_SMOOTH);
             picLabel.setIcon(new ImageIcon(logo));picLabel.setText("");

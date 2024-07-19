@@ -23,12 +23,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
 
 public class Bert implements ActionListener {
-    BufferedImage windowIcon;
     public JFrame frame = new JFrame();
     private JPanel frameContainer;
     private JButton cancelbtn;
@@ -60,12 +58,7 @@ public class Bert implements ActionListener {
         cancelbtn.addActionListener(this);
         downloadbtn.addActionListener(this);
 
-        try {
-            windowIcon = ImageIO.read(Main.class.getResourceAsStream("/titleIcon.png"));
-            frame.setIconImage(windowIcon);
-        } catch (IOException e) {
-            System.out.println("ERROR: Failed to find /resources/titleIcon.png. Window will not have an icon.");
-        }
+        frame.setIconImage(Main.windowIcon);
 
         frame.setVisible(true);
         frame.addWindowListener(new WindowAdapter() {

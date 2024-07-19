@@ -49,7 +49,6 @@ import static java.nio.file.StandardCopyOption.*;
 import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 
 public class MissPiggy implements ActionListener {
-    BufferedImage windowIcon;
     JFrame frame = new JFrame();
     JPanel frameContainer;
     JPanel actionsContainer;
@@ -154,12 +153,7 @@ public class MissPiggy implements ActionListener {
         descriptionField.getDocument().putProperty("filterNewlines", Boolean.FALSE);
 
         // display window
-        try {
-            windowIcon = ImageIO.read(Main.class.getResourceAsStream("/titleIcon.png"));
-            frame.setIconImage(windowIcon);
-        } catch (IOException e) {
-            System.out.println("ERROR: Failed to find /resources/titleIcon.png. Window will not have an icon.");
-        }
+        frame.setIconImage(Main.windowIcon);
 
         menuBar.setBackground(new Color(25, 41, 93));
         fileMenu.setForeground(new Color(255, 255, 255));

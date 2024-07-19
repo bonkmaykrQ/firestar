@@ -60,12 +60,7 @@ public class Gonzo {
 
         frame.add(frameContainer); // initialize window contents -- will be handled by IntelliJ IDEA
 
-        try {
-            BufferedImage windowIcon = ImageIO.read(Main.class.getResourceAsStream("/titleIcon.png"));
-            frame.setIconImage(windowIcon);
-        } catch (IOException e) {
-            System.out.println("ERROR: Failed to find /resources/titleIcon.png. Window will not have an icon.");
-        }
+        frame.setIconImage(Main.windowIcon);
         frame.setSize(800, 400);
         frame.setMinimumSize(new Dimension(600,400));
         frame.setTitle("Mod Installation");

@@ -61,18 +61,12 @@ public class Ernie implements ActionListener {
     private JButton surebtn;
     
     public boolean backgroundDone = false;
-    private BufferedImage windowIcon;
 
     private JFrame parent;
 
     public Ernie(JFrame parent) {
         this.parent = parent;
-        try {
-            windowIcon = ImageIO.read(Main.class.getResourceAsStream("/titleIcon.png"));
-            frame.setIconImage(windowIcon);
-        } catch (IOException e) {
-            System.out.println("ERROR: Failed to find /resources/titleIcon.png. Window will not have an icon.");
-        }
+        frame.setIconImage(Main.windowIcon);
 	byte[] urlraw = getFile(gitapi+"/releases?draft=false&pre-release=false");
 	if (urlraw.length <= 0) {
 	   JOptionPane.showMessageDialog(frame, "Internal Error: Couldn't check for updates.", "Fatal Error", JOptionPane.ERROR_MESSAGE);
