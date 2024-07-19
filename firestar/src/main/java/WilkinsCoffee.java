@@ -66,7 +66,7 @@ public class WilkinsCoffee implements ActionListener {
         }
     }
 
-    private String outPathTemp = System.getProperty("user.home") + "/Documents";
+    private String outPathTemp = System.getProperty("user.home") + "/Documents/";
     private boolean sdkInstalled = false;
 
     public void setup() {
