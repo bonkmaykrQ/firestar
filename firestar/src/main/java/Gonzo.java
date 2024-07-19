@@ -21,13 +21,11 @@ import com.github.difflib.UnifiedDiffUtils;
 import com.github.difflib.patch.Patch;
 import net.lingala.zip4j.ZipFile;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;

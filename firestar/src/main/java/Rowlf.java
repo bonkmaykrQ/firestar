@@ -19,8 +19,6 @@
 import javax.imageio.*;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.*;
-import java.io.File;
 import java.io.IOException;
 
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;

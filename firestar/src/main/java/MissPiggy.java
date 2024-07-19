@@ -16,7 +16,6 @@
  *     along with this program.  If not, see https://www.gnu.org/licenses/.
  */
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -24,27 +23,19 @@ import javax.swing.text.DefaultCaret;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.math.RoundingMode;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.file.*;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
-import java.util.Random;
-import java.util.regex.Pattern;
 import net.lingala.zip4j.*;
-import net.lingala.zip4j.exception.ZipException;
 import org.json.JSONException;
 import org.json.JSONObject;
-import static java.nio.file.StandardCopyOption.*;
 
 import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 

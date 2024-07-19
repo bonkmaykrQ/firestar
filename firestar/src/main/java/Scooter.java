@@ -16,11 +16,8 @@
  *     along with this program.  If not, see https://www.gnu.org/licenses/.
  */
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.*;
 
 public class Scooter {
     private JFrame frame = new JFrame();

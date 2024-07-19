@@ -19,18 +19,12 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.Optional;
 
 public class Fozzie {
-    BufferedImage windowIcon;
     private JFrame frame = new JFrame();
     public JProgressBar progressBar;
     private JPanel frameContainer;
