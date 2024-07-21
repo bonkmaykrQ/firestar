@@ -313,13 +313,14 @@ public class Suggs implements ActionListener, ListSelectionListener {
 		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setMultiSelectionEnabled(multiselect);
 		fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
-		fileChooser.setFileFilter(new FileNameExtensionFilter("All Compatible Files", "mp3", "ogg", "oga", "opus", "m4a", "3gp", "wav", "wave", "aif", "aiff", "aifc", "flac", "at9"));
+		fileChooser.setFileFilter(new FileNameExtensionFilter("All Compatible Files", "mp3", "ogg", "oga", "opus", "m4a", "3gp", "wav", "wave", "aif", "aiff", "aifc", "flac", "at3", "at9"));
 		fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("MPEG Audio Layer 3", "mp3"));
 		fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("Ogg Audio", "ogg", "oga", "opus"));
 		fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("AAC or MPEG-4 Audio", "m4a", "3gp"));
 		fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("IBM/Microsoft WAVE", "wav", "wave"));
 		fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("Apple AIFF", "aif", "aiff", "aifc"));
 		fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("Free Lossless Audio Codec", "flac"));
+		fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("Sony ATRAC3", "at3"));
 		fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("Sony ATRAC9", "at9"));
 		return fileChooser;
 	}
@@ -427,7 +428,7 @@ public class Suggs implements ActionListener, ListSelectionListener {
 					at.path = new File(Main.inpath + "temp/ffmpeg/" + at.path.getName() + ".wav");
 				}
 				if (normalizeVolumes) { // normalize tracks
-					Process p = Main.exec(new String[]{Main.inpath + "ffmpeg.exe", "-i", at.path.getPath(), "-filter:a loudnorm=linear=true:i=-5.0:lra=7.0:tp=0.0", "ffmpeg/" + at.path.getName() + "_normalized.wav"}, Main.inpath + "temp/");
+					Process p = Main.exec(new String[]{Main.inpath + "ffmpeg.exe", "-i", at.path.getPath(), "-filter", "loudnorm=linear=true:i=-5.0:lra=7.0:tp=0.0", /*  force sample rate to prevent Random Stupid Bullshit™  */"-ar", "44100", "ffmpeg/" + at.path.getName() + "_normalized.wav"}, Main.inpath + "temp/");
 					p.waitFor();
 					at.path = new File(Main.inpath + "temp/ffmpeg/" + at.path.getName() + "_normalized.wav");
 				}
@@ -579,7 +580,7 @@ public class Suggs implements ActionListener, ListSelectionListener {
 	    
 	    progressDialog.destroyDialog();
 	    frame.dispose();
-		Main.deleteDir(new File(Main.inpath + "temp/ffmpeg/"));
+		//Main.deleteDir(new File(Main.inpath + "temp/ffmpeg/"));
 	    Clifford saveDialog = new Clifford();
 		saveDialog.isSoundtrack = true;
 		saveDialog.Action(frame, new File(Main.inpath + "temp/"));
