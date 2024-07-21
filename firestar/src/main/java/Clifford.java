@@ -203,6 +203,9 @@ public class Clifford implements ActionListener {
                     if (new File(directory.getAbsolutePath() + "/pack.png").exists()) {
                         zip.addFile(new File(directory.getAbsolutePath() + "/pack.png"));
                     }
+		    if (new File(directory.getAbsolutePath() + "/fscript").exists()) {
+                        zip.addFile(new File(directory.getAbsolutePath() + "/fscript"));
+                    }
 
                     JSONObject container = new JSONObject();
                     container.put("version", Integer.parseInt(fVersion.getText()));
