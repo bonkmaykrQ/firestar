@@ -71,7 +71,9 @@ public class Suggs implements ActionListener, ListSelectionListener {
     private JLabel dSSize;
     private JLabel dMSize;
     private JCheckBox checkAdditive;
-    private Scooter progressDialog;
+	private JButton spDeleteBtn;
+	private JButton mpDeleteBtn;
+	private Scooter progressDialog;
     
     JFrame parent;
     int curIndex = -1;
@@ -130,6 +132,8 @@ public class Suggs implements ActionListener, ListSelectionListener {
         fArtist.addActionListener(this);        // also update field when new item selected
         frontendMainChooseBtn.addActionListener(this);      // file picker for singleplayer campaign grid music
         frontendDemoChooseBtn.addActionListener(this);      // file picker for multiplayer lobby music
+		spDeleteBtn.addActionListener(this);
+		mpDeleteBtn.addActionListener(this);
         dSongList.addListSelectionListener(this);
 
         frame.addWindowListener(new WindowAdapter() {
@@ -201,7 +205,19 @@ public class Suggs implements ActionListener, ListSelectionListener {
 				save();
 			}
 		}
-	}
+	} else
+		if (actionEvent.getSource() == spDeleteBtn) {
+			dSTitle.setText("no track");
+			dSSize.setText("no size");
+			sptrack = null;
+			spDeleteBtn.setVisible(false);
+		} else
+		if (actionEvent.getSource() == mpDeleteBtn) {
+			dMTitle.setText("no track");
+			dMSize.setText("no size");
+			mptrack = null;
+			mpDeleteBtn.setVisible(false);
+		}
     }
 
     @Override
@@ -320,6 +336,7 @@ public class Suggs implements ActionListener, ListSelectionListener {
 			if (selectedFile.length() > 1048575) {
 				dSSize.setText((selectedFile.length() / 1048576) + " MB");
 			}
+			spDeleteBtn.setVisible(true);
         }
     }
     
@@ -331,6 +348,7 @@ public class Suggs implements ActionListener, ListSelectionListener {
 	    mptrack = selectedFile;
 	    dMTitle.setText(selectedFile.getName());
 	    dMSize.setText((selectedFile.length() / 1000) + "kb");
+		mpDeleteBtn.setVisible(true);
         }
     }
     
