@@ -288,6 +288,11 @@ public class Rizzo {
 		id = tag.substring(tag.indexOf("#")+1);
 		tag = tag.substring(0, tag.indexOf("#"));
 	    }
+	    String name = "";
+	    if (tag.contains("$")) {
+		name = tag.substring(tag.indexOf("$")+1);
+		tag = tag.substring(0, tag.indexOf("$"));
+	    }
 	    if (id.length() > 0) {
 		NodeList ns;
 		if (parent instanceof Document document) 
@@ -297,6 +302,19 @@ public class Rizzo {
 		for (int i = 0; i < ns.getLength(); i++) {
 		    Node n = ns.item(i);
 		    if (((Element)n).getAttribute("id").equals(id)) {
+			newParent = (Element)n;
+			break;
+		    }
+		}
+	    } else if (name.length() > 0) {
+		NodeList ns;
+		if (parent instanceof Document document) 
+		    ns = document.getChildNodes();
+		else
+		    ns = ((Element)parent).getChildNodes(); 
+		for (int i = 0; i < ns.getLength(); i++) {
+		    Node n = ns.item(i);
+		    if (((Element)n).getAttribute("name").equals(name)) {
 			newParent = (Element)n;
 			break;
 		    }
