@@ -17,4 +17,16 @@
  */
 
 
-public class FirescriptFormatException extends Exception { }
+public class FirescriptFormatException extends Exception {
+    public FirescriptFormatException() {
+	super();
+    }
+    
+    public FirescriptFormatException(String msg) {
+	super(msg);
+    }
+    
+    public FirescriptFormatException(String cmd, String msg) {
+	super(cmd + ": " + msg);
+    }
+}

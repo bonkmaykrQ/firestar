@@ -16,6 +16,10 @@
  *     along with this program.  If not, see https://www.gnu.org/licenses/.
  */
 
+import com.github.difflib.DiffUtils;
+import com.github.difflib.UnifiedDiffUtils;
+import com.github.difflib.patch.Patch;
+import com.github.difflib.patch.PatchFailedException;
 import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
@@ -30,8 +34,12 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.io.StringWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HexFormat;
+import java.util.List;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -44,16 +52,23 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 public class Rizzo {
     private Scanner scanner;
+    private final int maxVer = 1;
+    private int ver = 1;
+    private String workingDir;
     
-    public Rizzo(File infile) throws FileNotFoundException, FirescriptFormatException {
+    public Rizzo(File infile, String workingDir) throws FileNotFoundException, FirescriptFormatException {
+	if (!workingDir.endsWith("/")) this.workingDir = workingDir + "/";
+	else this.workingDir = workingDir;
 	scanner = new Scanner(infile);
 	parseScript(null);
     }
@@ -70,11 +85,14 @@ public class Rizzo {
 	if (args.length > 0) {
 	    if (context == null) {
 		System.out.println("Parsing Command: " + Arrays.toString(args));
-		if (args[0].equalsIgnoreCase("file")) {
-		    File newCtx = new File(Main.inpath + "temp/" + args[1]);
+		if (args[0].equalsIgnoreCase("fscript")) {
+		    ver = Integer.parseInt(args[1]); // We'll do shit with this later
+		    if (ver > maxVer) throw new FirescriptFormatException(args[0], "script too new");
+		} else if (args[0].equalsIgnoreCase("file")) {
+		    File newCtx = new File(workingDir + args[1]);
 		    System.out.println("Calling new parse: " + Arrays.toString(Arrays.copyOfRange(args, 2, args.length)));
 		    parseArgs(Arrays.copyOfRange(args, 2, args.length), newCtx);
-		}
+		} else throw new FirescriptFormatException("fscript", "unknown command '" + args[0] + "'");
 	    } else {
 		System.out.println("Parsing Command: " + Arrays.toString(args) + " with context: " + context.getClass().getName() + "@" + context.hashCode());
 		if (args[0].equals("{")) {
@@ -84,10 +102,13 @@ public class Rizzo {
 		    System.out.println("Ending context block: " + context.getClass().getName() + "@" + context.hashCode());
 		    return false;
 		} else if (context instanceof File file) {
+		    if (!file.exists()) return true;
 		    if (args[0].equalsIgnoreCase("delete")) {
 			System.out.println("Deleting: " + file.getPath());
-			if (file.getAbsolutePath().startsWith(Main.inpath + "temp/"))
-			    file.delete();
+			if (file.getAbsolutePath().startsWith(workingDir)) {
+			    if (file.isDirectory()) Main.deleteDir(file);
+			    else file.delete();
+			}
 		    } else if (args[0].equalsIgnoreCase("xml")) {
 			try {
 			    DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
@@ -112,9 +133,9 @@ public class Rizzo {
 					.replace("&#10;", "\n")
 					.replace("&#13;", "\r")
 					.replace("&#12;", "\f");
-				PrintStream ps = new PrintStream(output);
-				ps.print(xmlString);
-				ps.close();
+				try (PrintStream ps = new PrintStream(output)) {
+				    ps.print(xmlString);
+				}
 			    } catch (TransformerException ex) {
 				Logger.getLogger(Rizzo.class.getName()).log(Level.SEVERE, null, ex);
 			    }
@@ -147,7 +168,46 @@ public class Rizzo {
 			} catch (IOException ex) {
 			    Logger.getLogger(Rizzo.class.getName()).log(Level.SEVERE, null, ex);
 			}
-		    }
+		    } else if (args[0].equalsIgnoreCase("binedit")) {
+			int offset = Integer.parseInt(args[1]);
+			String bytes = args[2];
+			if (bytes.length() % 2 != 0) throw new FirescriptFormatException(args[0], "invalid length of bytes");
+			try {
+			    byte[] ba;
+			    try (FileInputStream fis = new FileInputStream(file)) {
+				ba = fis.readAllBytes();
+			    }
+			    if (offset >= ba.length) throw new FirescriptFormatException(args[0], "offset is larger than file size");
+			    else {
+				byte[] in = HexFormat.of().parseHex(bytes);
+				System.arraycopy(in, 0, ba, offset, in.length);
+				try (FileOutputStream fos = new FileOutputStream(file)) {
+				    fos.write(ba);
+				    fos.flush();
+				}
+			    }
+			} catch (IOException ex) {
+			    Logger.getLogger(Rizzo.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		    } else if (args[0].equalsIgnoreCase("patch")) {
+			try {
+			    List<String> original = Files.readAllLines(file.toPath());
+			    File patchFile = new File(workingDir + args[1]);
+			    if (!patchFile.exists()) throw new FirescriptFormatException(args[0], "patch file doesn't exist");
+			    List<String> patched = Files.readAllLines(patchFile.toPath());
+				    
+			    Patch<String> patch = UnifiedDiffUtils.parseUnifiedDiff(patched);
+			    List<String> result = DiffUtils.patch(original, patch);
+			    
+			    try (FileWriter fileWriter = new FileWriter(file)) {
+				for (String str : result) {
+				    fileWriter.write(str + "\r\n");
+				}
+			    }
+			} catch (FirescriptFormatException | PatchFailedException | IOException ex) {
+			    Logger.getLogger(Rizzo.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		    } else throw new FirescriptFormatException("file", "unknown command '" + args[0] + "'");
 		} else if (context instanceof Document document) {
 		    if (args[0].equalsIgnoreCase("modify")) {
 			Element elem = traverse(document, args[1]);
@@ -166,15 +226,39 @@ public class Rizzo {
 		    } else if (args[0].equalsIgnoreCase("delete")) {
 			Element elem = traverse(document, args[1]);
 			elem.getParentNode().removeChild(elem);
-		    }
+		    } else if (args[0].equalsIgnoreCase("merge")) {
+			// We're basically copying the file context xml command but with another xml document.
+			try {
+			    DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+			    DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+			    
+			    ReplacingInputStream ris = new ReplacingInputStream(new FileInputStream(new File(workingDir + args[1])), "&", "&amp;");
+			    Document outDoc = docBuilder.parse(ris);
+			    System.out.println(outDoc.getDocumentElement().toString());
+			    
+			    NamedNodeMap nnm = outDoc.getDocumentElement().getAttributes();
+			    for (int x = 0; x < nnm.getLength(); x++) {
+				Attr importedNode = (Attr) document.importNode(nnm.item(x), true);
+				document.getDocumentElement().setAttributeNodeNS(importedNode);
+			    }
+			    
+			    NodeList cn = outDoc.getDocumentElement().getChildNodes();
+			    for (int x = 0; x < cn.getLength(); x++) {
+				Node importedNode = document.importNode(cn.item(x), true);
+				document.getDocumentElement().appendChild(importedNode);
+			    }
+			} catch (SAXException | IOException | ParserConfigurationException ex) {
+			    Logger.getLogger(Rizzo.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		    } else throw new FirescriptFormatException("xml", "unknown command '" + args[0] + "'");
 		} else if (context instanceof Element element) {
 		    if (args[0].equalsIgnoreCase("set")) {
 			if (args[1].equalsIgnoreCase("attribute"))
 			    element.setAttribute(args[2], args[3]);
 			else if (args[1].equalsIgnoreCase("value"))
 			    element.setNodeValue(args[2]);
-		    }
-		}
+		    } else throw new FirescriptFormatException("");
+		} else throw new FirescriptFormatException("context is unknown");
 	    }
 	}
 	return true;
@@ -214,13 +298,13 @@ public class Rizzo {
 		if (parent != null) newParent = (Element)parent.getElementsByTagName(tag).item(index);
 		else newParent = (Element)doc.getElementsByTagName(tag).item(index);
 	    }
-	    if (newParent == null) throw new FirescriptFormatException();
+	    if (newParent == null) throw new FirescriptFormatException("xml: selector is invalid");
 	    else parent = newParent;
 	}
 	return parent;
     }
     
-    private static String[] translateCommandline(String line) {
+    private static String[] translateCommandline(String line) throws FirescriptFormatException {
 	if (line == null || line.length() == 0) {
 	    return new String[0];
 	}
@@ -304,7 +388,7 @@ public class Rizzo {
 	    result.add(current.toString());
 	}
 	if (state == inQuote || state == inDoubleQuote) {
-	    throw new RuntimeException("unbalanced quotes in " + line);
+	    throw new FirescriptFormatException("unbalanced quotes in " + line);
 	}
 	return result.toArray(new String[result.size()]);
     }
