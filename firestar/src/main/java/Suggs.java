@@ -114,7 +114,7 @@ public class Suggs implements ActionListener, ListSelectionListener {
         frame.add(frameContainer); // initialize window contents -- will be handled by IntelliJ IDEA
 
         frame.setSize(700, 400);
-        frame.setMinimumSize(new Dimension(650,280));
+        frame.setMinimumSize(new Dimension(700,400));
         frame.setTitle("Soundtrack Mod Generator");
         frame.setResizable(true);
         frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
