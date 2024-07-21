@@ -102,7 +102,7 @@ public class Suggs implements ActionListener, ListSelectionListener {
         frame.setLocationRelativeTo(parent);
         frame.setAlwaysOnTop(true);
 
-        cancelBtn.addActionListener(this); // TODO: put warning dialog "Are you sure? All unsaved changes will be lost."
+        cancelBtn.addActionListener(this);
         saveBtn.addActionListener(this);
         addSongBtn.addActionListener(this);     // file picker
         deleteSongBtn.addActionListener(this);  // delete from list
@@ -117,9 +117,12 @@ public class Suggs implements ActionListener, ListSelectionListener {
         frame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e)
-            {// TODO: put warning dialog "Are you sure? All unsaved changes will be lost."
-                parent.setEnabled(true);
-                e.getWindow().dispose();
+            {
+				int result = JOptionPane.showConfirmDialog(frame, "Are you sure?\nAll unsaved changes will be lost.", "Soundtrack Mod Generator", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+				if (result == JOptionPane.YES_OPTION) {
+					parent.setEnabled(true);
+					e.getWindow().dispose();
+				}
             }
         });
 
@@ -133,8 +136,11 @@ public class Suggs implements ActionListener, ListSelectionListener {
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
 	if (actionEvent.getSource() == cancelBtn) {
-	    parent.setEnabled(true);
-            frame.dispose();
+		int result = JOptionPane.showConfirmDialog(frame, "Are you sure?\nAll unsaved changes will be lost.", "Soundtrack Mod Generator", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+		if (result == JOptionPane.YES_OPTION) {
+			parent.setEnabled(true);
+			frame.dispose();
+		}
 	} else
 	if (actionEvent.getSource() == fTitle || actionEvent.getSource() == fArtist) {
 	    tracklist.get(curIndex).title = fTitle.getText();
@@ -148,7 +154,30 @@ public class Suggs implements ActionListener, ListSelectionListener {
 	if (actionEvent.getSource() == moveDownBtn) {moveDown(curIndex);} else
 	if (actionEvent.getSource() == frontendMainChooseBtn) {setSPMusic();} else 
 	if (actionEvent.getSource() == frontendDemoChooseBtn) {setMPMusic();} else
-	if (actionEvent.getSource() == saveBtn) {save();}
+	if (actionEvent.getSource() == saveBtn) {
+		if (tracklist.isEmpty() && sptrack == null && mptrack == null) {
+			JOptionPane.showMessageDialog(frame, "Please add at least one song to the playlist.", "Error", JOptionPane.ERROR_MESSAGE);
+			return;
+		} else {
+			String deets;
+			if (tracklist.isEmpty()) {
+				deets = "no songs";
+			} else {
+				deets = tracklist.size() + " songs";
+			}
+			if (sptrack != null && mptrack == null) {
+				deets = deets + " and a custom campaign menu track";
+			} else if (mptrack != null && sptrack == null) {
+				deets = deets + " and a custom lobby menu track";
+			} else if (mptrack != null && sptrack != null) {
+				deets = deets + ", a custom campaign menu track, and a custom lobby menu track";
+			}
+			int result = JOptionPane.showConfirmDialog(frame, "Your custom playlist with " + deets + " will be generated.\nPress YES to continue, or NO to continue editing.", "Soundtrack Mod Generator", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+			if (result == JOptionPane.YES_OPTION) {
+				save();
+			}
+		}
+	}
     }
 
     @Override
@@ -270,11 +299,6 @@ public class Suggs implements ActionListener, ListSelectionListener {
     }
     
     private void save() {
-		if (tracklist.isEmpty() && sptrack == null && mptrack == null) {
-			JOptionPane.showMessageDialog(frame, "Please add at least one song to the playlist.", "Error", JOptionPane.ERROR_MESSAGE);
-			return;
-		}
-
 	frame.setEnabled(false);
 	frame.setAlwaysOnTop(false);
 	Main.deleteDir(new File(System.getProperty("user.home") + "/.firestar/temp/")); // starts with clean temp
