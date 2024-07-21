@@ -28,6 +28,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.StringWriter;
 import java.nio.file.Files;
@@ -59,7 +60,7 @@ public class Rizzo {
     private int ver = 1;
     private String workingDir;
     
-    public Rizzo(FileInputStream infile, String workingDir) throws FileNotFoundException, FirescriptFormatException {
+    public Rizzo(InputStream infile, String workingDir) throws FileNotFoundException, FirescriptFormatException {
 	if (!workingDir.endsWith("/")) this.workingDir = workingDir + "/";
 	else this.workingDir = workingDir;
 	scanner = new Scanner(infile);
