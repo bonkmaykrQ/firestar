@@ -218,8 +218,13 @@ public class Gonzo {
 	// Post fscript changes
 	try (InputStream is = Main.class.getResourceAsStream("/post.fscript")) {
 	    new Rizzo(is, Main.inpath + "temp/");
-	} catch (IOException ex) {
-	    Logger.getLogger(Gonzo.class.getName()).log(Level.SEVERE, null, ex);
+	} catch (IOException | FirescriptFormatException e) {
+	    System.out.println(e.getMessage());
+            consoleDisplay.append("CRITICAL FAILURE: " + e.getMessage());
+            JOptionPane.showMessageDialog(this.frame, "CRITICAL FAILURE: " + e.getMessage(), "Fatal Error", JOptionPane.ERROR_MESSAGE);
+            frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+            AllowExit();
+            return;
 	}
 
         // create a list of the contents of data/ for psp2psarc.exe to read from
