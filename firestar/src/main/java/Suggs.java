@@ -126,6 +126,13 @@ public class Suggs implements ActionListener, ListSelectionListener {
             }
         });
 
+		fTitle.setText("");
+		fArtist.setText("");
+		dTrackNo.setText("\u200E");
+		dFileSize.setText("\u200E");
+		fTitle.setEnabled(false);
+		fArtist.setEnabled(false);
+
         frame.setVisible(true);
     }
 
@@ -184,16 +191,26 @@ public class Suggs implements ActionListener, ListSelectionListener {
     public void valueChanged(ListSelectionEvent listSelectionEvent) {
 	curIndex = dSongList.getSelectedIndex();
 	if (curIndex >= 0) {
+		fTitle.setEnabled(true);
+		fArtist.setEnabled(true);
 	    AudioTrack at = tracklist.get(curIndex);
 	    fTitle.setText(at.title);
 	    fArtist.setText(at.artist);
 	    dTrackNo.setText(String.format("MT_%02d", curIndex+1));
-	    dFileSize.setText((at.size / 1000) + "kb");
+		dFileSize.setText(at.size + " B");
+		if (at.size > 1023) {
+			dFileSize.setText((at.size / 1024) + " KB");
+		}
+		if (at.size > 1048575) {
+			dFileSize.setText((at.size / 1048576) + " MB");
+		}
 	} else {
+		fTitle.setEnabled(false);
+		fArtist.setEnabled(false);
 	    fTitle.setText("");
 	    fArtist.setText("");
-	    dTrackNo.setText("--");
-	    dFileSize.setText("-kb");
+	    dTrackNo.setText("\u200E");
+	    dFileSize.setText("\u200E");
 	}
     }
     
@@ -247,11 +264,17 @@ public class Suggs implements ActionListener, ListSelectionListener {
         fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("ATRAC9", "at9"));
 
         int result = fileChooser.showOpenDialog(frame);
-	if (result == JFileChooser.APPROVE_OPTION) {
-            File selectedFile = fileChooser.getSelectedFile();
-	    sptrack = selectedFile;
-	    dSTitle.setText(selectedFile.getName());
-	    dSSize.setText((selectedFile.length() / 1000) + "kb");
+		if (result == JFileChooser.APPROVE_OPTION) {
+        	File selectedFile = fileChooser.getSelectedFile();
+	    	sptrack = selectedFile;
+	    	dSTitle.setText(selectedFile.getName());
+			dSSize.setText(selectedFile.length() + " B");
+			if (selectedFile.length() > 1023) {
+				dSSize.setText((selectedFile.length() / 1024) + " KB");
+			}
+			if (selectedFile.length() > 1048575) {
+				dSSize.setText((selectedFile.length() / 1048576) + " MB");
+			}
         }
     }
     
