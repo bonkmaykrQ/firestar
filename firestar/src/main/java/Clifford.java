@@ -28,6 +28,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.util.ArrayList;
 
 import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
 
@@ -220,7 +221,10 @@ public class Clifford implements ActionListener {
                     if (hasScript) {
                         container.put("loaderversion", 1);
                         if (isSoundtrack) {
-                            container.put("requires", new boolean[]{false, true, false, false}); // Pull localization files for patching.
+                            ArrayList<boolean[]> requiresTemp = new ArrayList<>();
+                            requiresTemp.add(new boolean[]{true, false, false, false});
+                            requiresTemp.add(new boolean[]{false, true, false, false});
+                            container.put("requires", requiresTemp); // Pull localization files for patching.
                         }
                     } else {
                         container.put("loaderversion", 0);

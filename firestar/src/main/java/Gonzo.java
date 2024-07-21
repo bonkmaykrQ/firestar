@@ -55,6 +55,16 @@ public class Gonzo {
     // TODO 1.3: Implement requires boolean[] from Main.Mod
     // Rework system to choose the last PSARC and then add more before it when called by requires[]
     // Instead of the current system where it simply grabs them all and bloats the file.
+    //
+    // EDIT: requires[] is now an arraylist of booleans[], each a supported minimum combination of PSARCs.
+    // if any one of them is met, gonzo may continue
+    // for example:
+    // [false, true, false, false], [true, false, false, false] // user only needs either base psarc or patches PSARC, one or the other (having both is OK)
+    // [true, true, false, false] // user needs both base and patches
+    // [false, false, true, true] // user needs the HD DLC and the Fury DLC
+    //
+    // if none is found, assume "new boolean[]{false, false, false, false}" (no PSARCs required)
+    // (at least one of any 4 psarcs will already be checked for by MissPiggy so this is an okay way to implement it.)
 
     public void DeployMods(MissPiggy inv) {
         invoker = inv;
