@@ -414,7 +414,9 @@ public class Suggs implements ActionListener, ListSelectionListener {
 	    
 	    progressDialog.destroyDialog();
 	    frame.dispose();
-	    new Clifford().Action(frame, new File(Main.inpath + "temp/"));
+	    Clifford saveDialog = new Clifford();
+		saveDialog.isSoundtrack = true;
+		saveDialog.Action(frame, new File(Main.inpath + "temp/"));
 	    parent.setEnabled(true);
 	}).start();
     }

@@ -52,6 +52,10 @@ public class Gonzo {
     private MissPiggy invoker;
     public String oArcTarget = "dlc2.psarc"; // which psarc to rebuild the assets in
 
+    // TODO 1.3: Implement requires boolean[] from Main.Mod
+    // Rework system to choose the last PSARC and then add more before it when called by requires[]
+    // Instead of the current system where it simply grabs them all and bloats the file.
+
     public void DeployMods(MissPiggy inv) {
         invoker = inv;
         System.out.println("\n\nStarting mod deployment\n\n");

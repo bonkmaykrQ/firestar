@@ -47,6 +47,7 @@ public class Clifford implements ActionListener {
     Main.Mod mod;
     int index;
     File directory;
+    boolean isSoundtrack = false;
 
     boolean creating;
 
@@ -195,6 +196,7 @@ public class Clifford implements ActionListener {
             fileChooser.setFileFilter(new FileNameExtensionFilter("Firestar Mod Package", "fstar"));
             if (fileChooser.showSaveDialog(frame) == JFileChooser.APPROVE_OPTION) {
                 ZipFile zip = new ZipFile(fileChooser.getSelectedFile());
+                boolean hasScript = false;
                 try {
                     zip.addFolder(new File(directory.getAbsolutePath() + "/data"));
                     if (new File(directory.getAbsolutePath() + "/delete.txt").exists()) {
@@ -203,8 +205,9 @@ public class Clifford implements ActionListener {
                     if (new File(directory.getAbsolutePath() + "/pack.png").exists()) {
                         zip.addFile(new File(directory.getAbsolutePath() + "/pack.png"));
                     }
-		    if (new File(directory.getAbsolutePath() + "/fscript").exists()) {
+		            if (new File(directory.getAbsolutePath() + "/fscript").exists()) {
                         zip.addFile(new File(directory.getAbsolutePath() + "/fscript"));
+                        hasScript = true;
                     }
 
                     JSONObject container = new JSONObject();
@@ -212,7 +215,16 @@ public class Clifford implements ActionListener {
                     container.put("friendlyName", fName.getText());
                     container.put("author", fAuthor.getText());
                     container.put("description", fDescription.getText());
-                    container.put("loaderversion", 0); // TODO for later versions: Change depending on features inside of mod folder
+                    // todo later versions: handle logic for setting this depending on the fscript version too.
+                    // firestar 1.3 can't generate any version other than v1 so this is not necessary right now, but will become necessary when fscript features are added.
+                    if (hasScript) {
+                        container.put("loaderversion", 1);
+                        if (isSoundtrack) {
+                            container.put("requires", new boolean[]{false, true, false, false}); // Pull localization files for patching.
+                        }
+                    } else {
+                        container.put("loaderversion", 0);
+                    }
                     container.put("game", "2048");
 
                     zip.setComment(container.toString());

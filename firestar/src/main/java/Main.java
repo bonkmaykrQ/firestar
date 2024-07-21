@@ -60,7 +60,7 @@ public class Main {
         }
     }
 
-    public enum ArcKey { // install target for 2048, type used by downloader
+    public enum ArcKey { // decryption keys for 2048, type used by downloader
         BASE("KO5ifR1dQ+eHBlgi6TI0Bdkf7hng6h8aYmRgYuHkCLQNn/9ufV+01fmzjNSmwuVHnO4dEBuN8cENACqVFcgA"),
         LATEST("KO5ifR1dQ+eHBlgi6TI0Bdkf7hng6h8aYmRgYuHkCLQNn/9ufV+01fmzjNSmwuVHnO4dEBuN8cENACqVFcgA"),
         ADDON_HD("KO5ifR1dQ+eHBlgi6TI0Bdnv4uNsGG5kYGIR4Ojs7ejuis9/anXfuudVNvzgdu+9z1z+asJojA9uAACgRhTl"),
@@ -86,7 +86,7 @@ public class Main {
         public String author; // if null, "Author is unknown."
         public boolean enabled = true;
         public boolean[] requires = new boolean[]{false, false, false, false};  // TODO: load optional "requires" array from mod meta if it exists. it will be base, patches, hd dlc, and fury dlc in that order.
-                                                                                // TODO: save 'true true false false' in ost gen if neccessary (patches change localization)
+                                                                                // TODO: save 'false true false false' in ost gen if necessary (patches change localization)
     }
 
     // Mods
