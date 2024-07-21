@@ -302,7 +302,7 @@ public class Suggs implements ActionListener, ListSelectionListener {
 			try {
 			    // Assume whoever made the AT9s knows what they're doing
 			    System.out.println("Copying track #" + (i+1) + " \"" + at.artist + " - " + at.title + "\"...");
-			    Files.copy(at.path.toPath(), Paths.get(Main.inpath + "tmp/data/audio/music/" + trackno + "/music_stereo.at9"), StandardCopyOption.REPLACE_EXISTING);
+			    Files.copy(at.path.toPath(), Paths.get(Main.inpath + "temp/data/audio/music/" + trackno + "/music_stereo.at9"), StandardCopyOption.REPLACE_EXISTING);
 			} catch (IOException ex) {
 			    Logger.getLogger(Suggs.class.getName()).log(Level.SEVERE, null, ex);
 			}
