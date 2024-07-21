@@ -350,7 +350,13 @@ public class Suggs implements ActionListener, ListSelectionListener {
             File selectedFile = fileChooser.getSelectedFile();
 	    mptrack = selectedFile;
 	    dMTitle.setText(selectedFile.getName());
-	    dMSize.setText((selectedFile.length() / 1000) + "kb");
+		dMSize.setText(selectedFile.length() + " B");
+		if (selectedFile.length() > 1023) {
+			dMSize.setText((selectedFile.length() / 1024) + " KB");
+		}
+		if (selectedFile.length() > 1048575) {
+			dMSize.setText((selectedFile.length() / 1048576) + " MB");
+		}
 		mpDeleteBtn.setVisible(true);
         }
     }
@@ -423,12 +429,12 @@ public class Suggs implements ActionListener, ListSelectionListener {
 			try {
 			    System.out.println("Encoding track #" + (i+1) + " \"" + oArtist + " - " + oTitle + "\"...");
 				if (!at.path.getName().endsWith(".wav") && !at.path.getName().endsWith(".wave")) { // convert to WAV first if it's not readable by at9tool yet
-					Process p = Main.exec(new String[]{Main.inpath + "ffmpeg.exe", "-i", at.path.getPath(), "ffmpeg/" + at.path.getName() + ".wav"}, Main.inpath + "temp/");
+					Process p = Main.exec(new String[]{Main.inpath + "ffmpeg.exe", "-y", "-i", at.path.getPath(), "ffmpeg/" + at.path.getName() + ".wav"}, Main.inpath + "temp/");
 					p.waitFor();
 					at.path = new File(Main.inpath + "temp/ffmpeg/" + at.path.getName() + ".wav");
 				}
 				if (normalizeVolumes) { // normalize tracks
-					Process p = Main.exec(new String[]{Main.inpath + "ffmpeg.exe", "-i", at.path.getPath(), "-filter", "loudnorm=linear=true:i=-5.0:lra=7.0:tp=0.0", /*  force sample rate to prevent Random Stupid Bullshit™  */"-ar", "44100", "ffmpeg/" + at.path.getName() + "_normalized.wav"}, Main.inpath + "temp/");
+					Process p = Main.exec(new String[]{Main.inpath + "ffmpeg.exe", "-y", "-i", at.path.getPath(), "-filter", "loudnorm=linear=true:i=-5.0:lra=7.0:tp=0.0", /*  force sample rate to prevent Random Stupid Bullshit™  */"-ar", "44100", "ffmpeg/" + at.path.getName() + "_normalized.wav"}, Main.inpath + "temp/");
 					p.waitFor();
 					at.path = new File(Main.inpath + "temp/ffmpeg/" + at.path.getName() + "_normalized.wav");
 				}
@@ -487,9 +493,14 @@ public class Suggs implements ActionListener, ListSelectionListener {
 			try {
 			    System.out.println("Encoding singleplayer frontend track...");
 				if (!sptrack.getName().endsWith(".wav") && !sptrack.getName().endsWith(".wave")) { // convert to WAV first if it's not readable by at9tool yet
-					Process p = Main.exec(new String[]{Main.inpath + "ffmpeg.exe", "-i", sptrack.getPath(), "ffmpeg/" + sptrack.getName() + ".wav"}, Main.inpath + "temp/");
+					Process p = Main.exec(new String[]{Main.inpath + "ffmpeg.exe", "-y", "-i", sptrack.getPath(), "ffmpeg/" + sptrack.getName() + ".wav"}, Main.inpath + "temp/");
 					p.waitFor();
 					sptrack = new File(Main.inpath + "temp/ffmpeg/" + sptrack.getName() + ".wav");
+				}
+				if (normalizeVolumes) { // normalize tracks
+					Process p = Main.exec(new String[]{Main.inpath + "ffmpeg.exe", "-y", "-i", sptrack.getPath(), "-filter", "loudnorm=linear=true:i=-10.0:lra=12.0:tp=-2.0", /*  force sample rate to prevent Random Stupid Bullshit™  */"-ar", "44100", "ffmpeg/" + sptrack.getName() + "_normalized.wav"}, Main.inpath + "temp/");
+					p.waitFor();
+					sptrack = new File(Main.inpath + "temp/ffmpeg/" + sptrack.getName() + "_normalized.wav");
 				}
 			    new File(Main.inpath + "temp/data/audio/music/FEMusic").mkdirs();
 			    Process p = Main.exec(new String[]{Main.inpath + "at9tool.exe", "-e", "-br", "144", sptrack.getPath(), "data/audio/music/FEMusic/frontend_stereo.at9"}, System.getProperty("user.home") + "/.firestar/temp/");
@@ -507,9 +518,14 @@ public class Suggs implements ActionListener, ListSelectionListener {
 			assert(mptrack.exists());
 			System.out.println("Encoding multiplayer frontend track...");
 				if (!mptrack.getName().endsWith(".wav") && !mptrack.getName().endsWith(".wave")) { // convert to WAV first if it's not readable by at9tool yet
-					Process p = Main.exec(new String[]{Main.inpath + "ffmpeg.exe", "-i", mptrack.getPath(), "ffmpeg/" + mptrack.getName() + ".wav"}, Main.inpath + "temp/");
+					Process p = Main.exec(new String[]{Main.inpath + "ffmpeg.exe", "-y", "-i", mptrack.getPath(), "ffmpeg/" + mptrack.getName() + ".wav"}, Main.inpath + "temp/");
 					p.waitFor();
 					mptrack = new File(Main.inpath + "temp/ffmpeg/" + mptrack.getName() + ".wav");
+				}
+				if (normalizeVolumes) { // normalize tracks
+					Process p = Main.exec(new String[]{Main.inpath + "ffmpeg.exe", "-y", "-i", mptrack.getPath(), "-filter", "loudnorm=linear=true:i=-10.0:lra=12.0:tp=-2.0", /*  force sample rate to prevent Random Stupid Bullshit™  */"-ar", "44100", "ffmpeg/" + mptrack.getName() + "_normalized.wav"}, Main.inpath + "temp/");
+					p.waitFor();
+					mptrack = new File(Main.inpath + "temp/ffmpeg/" + mptrack.getName() + "_normalized.wav");
 				}
 			new File(Main.inpath + "temp/data/audio/music/FEDemoMusic").mkdirs();
 			Process p = Main.exec(new String[]{Main.inpath + "at9tool.exe", "-e", "-br", "144", mptrack.getPath(), "data/audio/music/FEDemoMusic/frontend_stereo.at9"}, System.getProperty("user.home") + "/.firestar/temp/");
