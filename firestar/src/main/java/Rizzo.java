@@ -107,8 +107,9 @@ public class Rizzo {
 			    DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 			    DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 			    // Mmmm, love me some INVALID XML corrections
-			    ReplacingInputStream ris = new ReplacingInputStream(new FileInputStream(file), "&", "&amp;");
+			    ReplacingInputStream ris = new ReplacingInputStream(new ReplacingInputStream(new FileInputStream(file), "&", "&amp;"), "\n", "&#10;");
 			    Document doc = docBuilder.parse(ris);
+			    Node n = doc.createProcessingInstruction(StreamResult.PI_DISABLE_OUTPUT_ESCAPING, "\n");
 			    parseArgs(Arrays.copyOfRange(args, 1, args.length), doc);
 			    try {
 				FileOutputStream output = new FileOutputStream(file);
@@ -203,7 +204,7 @@ public class Rizzo {
 		    } else throw new FirescriptFormatException("file", "unknown command '" + args[0] + "'");
 		} else if (context instanceof Document document) {
 		    if (args[0].equalsIgnoreCase("modify")) {
-			Element elem = traverse(document, args[1]);
+			Element elem = (Element)traverse(document, args[1]);
 			parseArgs(Arrays.copyOfRange(args, 2, args.length), elem);
 		    } else if (args[0].equalsIgnoreCase("create")) {
 			String newTag = args[1].substring(args[1].lastIndexOf(".")+1);
@@ -217,7 +218,7 @@ public class Rizzo {
 			traverse(document, args[1].substring(0, args[1].lastIndexOf("."))).appendChild(newElem);
 			parseArgs(Arrays.copyOfRange(args, 2, args.length), newElem);
 		    } else if (args[0].equalsIgnoreCase("delete")) {
-			Element elem = traverse(document, args[1]);
+			Element elem = (Element)traverse(document, args[1]);
 			elem.getParentNode().removeChild(elem);
 		    } else if (args[0].equalsIgnoreCase("merge")) {
 			// We're basically copying the file context xml command but with another xml document.
@@ -227,7 +228,6 @@ public class Rizzo {
 			    
 			    ReplacingInputStream ris = new ReplacingInputStream(new FileInputStream(new File(workingDir + args[1])), "&", "&amp;");
 			    Document outDoc = docBuilder.parse(ris);
-			    System.out.println(outDoc.getDocumentElement().toString());
 			    
 			    NamedNodeMap nnm = outDoc.getDocumentElement().getAttributes();
 			    for (int x = 0; x < nnm.getLength(); x++) {
@@ -247,9 +247,21 @@ public class Rizzo {
 		} else if (context instanceof Element element) {
 		    if (args[0].equalsIgnoreCase("set")) {
 			if (args[1].equalsIgnoreCase("attribute"))
-			    element.setAttribute(args[2], args[3]);
+			    // We replace newlines on XML write.
+			    element.setAttribute(args[2], args[3].replace("\\n", "&#10;"));
 			else if (args[1].equalsIgnoreCase("value"))
 			    element.setNodeValue(args[2]);
+		    } else if (args[0].equalsIgnoreCase("create")) {
+			String newTag = args[1].substring(args[1].lastIndexOf(".")+1);
+			String newID = "";
+			if (newTag.contains("#")) {
+			    newID = newTag.substring(newTag.indexOf("#")+1);
+			    newTag = newTag.substring(0, newTag.indexOf("#"));
+			}
+			Element newElem = element.getOwnerDocument().createElement(newTag);
+			if (newID != null && newID.length() > 0) newElem.setAttribute("id", newID);
+			traverse(element, args[1].substring(0, args[1].lastIndexOf("."))).appendChild(newElem);
+			parseArgs(Arrays.copyOfRange(args, 2, args.length), newElem);
 		    } else throw new FirescriptFormatException("");
 		} else throw new FirescriptFormatException("context is unknown");
 	    }
@@ -257,14 +269,14 @@ public class Rizzo {
 	return true;
     }
     
-    private Element traverse(Document doc, String selector) throws FirescriptFormatException {
-	if (selector == null || selector.length() == 0 || doc == null) {
+    private Node traverse(Node owner, String selector) throws FirescriptFormatException {
+	if (selector == null || selector.length() == 0 || owner == null) {
 	    return null;
 	}
 	String[] elems = selector.split("\\.");
-	Element parent = null;
+	Node parent = owner;
 	for (String tag : elems) {
-	    Element newParent = null;
+	    Node newParent = null;
 	    int index = 0;
 	    if (tag.contains("[")) {
 		index = Integer.parseInt(tag.substring(tag.indexOf("[")+1, tag.lastIndexOf("]")));
@@ -278,8 +290,10 @@ public class Rizzo {
 	    }
 	    if (id.length() > 0) {
 		NodeList ns;
-		if (parent != null) ns = parent.getElementsByTagName(tag);
-		else ns = doc.getElementsByTagName(tag);
+		if (parent instanceof Document document) 
+		    ns = document.getElementsByTagName(tag);
+		else
+		    ns = ((Element)parent).getElementsByTagName(tag); 
 		for (int i = 0; i < ns.getLength(); i++) {
 		    Node n = ns.item(i);
 		    if (((Element)n).getAttribute("id").equals(id)) {
@@ -288,8 +302,10 @@ public class Rizzo {
 		    }
 		}
 	    } else {
-		if (parent != null) newParent = (Element)parent.getElementsByTagName(tag).item(index);
-		else newParent = (Element)doc.getElementsByTagName(tag).item(index);
+		if (parent instanceof Document document) 
+		    newParent = document.getElementsByTagName(tag).item(index);
+		else
+		    newParent = ((Element)parent).getElementsByTagName(tag).item(index);
 	    }
 	    if (newParent == null) throw new FirescriptFormatException("xml: selector is invalid");
 	    else parent = newParent;
