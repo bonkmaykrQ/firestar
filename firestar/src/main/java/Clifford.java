@@ -222,8 +222,8 @@ public class Clifford implements ActionListener {
                         container.put("loaderversion", 1);
                         if (isSoundtrack) {
                             ArrayList<boolean[]> requiresTemp = new ArrayList<>();
-                            requiresTemp.add(new boolean[]{true, false, false, false});
                             requiresTemp.add(new boolean[]{false, true, false, false});
+                            requiresTemp.add(new boolean[]{true, false, false, false});
                             container.put("requires", requiresTemp); // Pull localization files for patching.
                         }
                     } else {

@@ -73,10 +73,12 @@ public class Suggs implements ActionListener, ListSelectionListener {
     private JCheckBox checkAdditive;
 	private JButton spDeleteBtn;
 	private JButton mpDeleteBtn;
+	private JCheckBox checkNormalize;
 	private Scooter progressDialog;
     
     JFrame parent;
     int curIndex = -1;
+	boolean normalizeVolumes = false;
     
     public class AudioTrack {
         public File path; // file name
@@ -85,7 +87,7 @@ public class Suggs implements ActionListener, ListSelectionListener {
 	public long size; // file size in bytes
 	public boolean noConvert;
     }
-    private static List<AudioTrack> tracklist = new ArrayList<AudioTrack>();
+    private List<AudioTrack> tracklist = new ArrayList<AudioTrack>();
     private File sptrack;
     private File mptrack;
 
@@ -379,6 +381,7 @@ public class Suggs implements ActionListener, ListSelectionListener {
     private void save() {
 	frame.setEnabled(false);
 	frame.setAlwaysOnTop(false);
+	normalizeVolumes = checkNormalize.isSelected();
 	Main.deleteDir(new File(System.getProperty("user.home") + "/.firestar/temp/")); // starts with clean temp
 	new Thread(() -> {
 	    int progressSize = tracklist.size()+(sptrack != null?1:0)+(mptrack != null?1:0)+1; // Accounting for processes
@@ -422,6 +425,11 @@ public class Suggs implements ActionListener, ListSelectionListener {
 					Process p = Main.exec(new String[]{Main.inpath + "ffmpeg.exe", "-i", at.path.getPath(), "ffmpeg/" + at.path.getName() + ".wav"}, Main.inpath + "temp/");
 					p.waitFor();
 					at.path = new File(Main.inpath + "temp/ffmpeg/" + at.path.getName() + ".wav");
+				}
+				if (normalizeVolumes) { // normalize tracks
+					Process p = Main.exec(new String[]{Main.inpath + "ffmpeg.exe", "-i", at.path.getPath(), "-filter:a loudnorm=linear=true:i=-5.0:lra=7.0:tp=0.0", "ffmpeg/" + at.path.getName() + "_normalized.wav"}, Main.inpath + "temp/");
+					p.waitFor();
+					at.path = new File(Main.inpath + "temp/ffmpeg/" + at.path.getName() + "_normalized.wav");
 				}
 			    Process p = Main.exec(new String[]{Main.inpath + "at9tool.exe", "-e", "-br", "144", at.path.getPath(), "data/audio/music/" + trackno + "/music_stereo.at9"}, Main.inpath + "temp/");
 			    p.waitFor();
