@@ -24,7 +24,7 @@
           <borderPainted value="false"/>
           <foreground color="-2271221"/>
           <indeterminate value="false"/>
-          <stringPainted value="true"/>
+          <stringPainted value="false"/>
           <value value="0"/>
         </properties>
       </component>

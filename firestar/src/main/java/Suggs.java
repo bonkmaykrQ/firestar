@@ -29,7 +29,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -282,7 +281,7 @@ public class Suggs implements ActionListener, ListSelectionListener {
             if (tracklist.get(i).title == null || tracklist.get(i).title.isEmpty())
             {dTitleInList = tracklist.get(i).path.getName();} else {dTitleInList = tracklist.get(i).title;}
 	    if (tracklist.get(i).artist == null || tracklist.get(i).artist.isEmpty())
-            {dArtistInList = "???";} else {dArtistInList = tracklist.get(i).artist;}
+            {dArtistInList = "Unknown Artist";} else {dArtistInList = tracklist.get(i).artist;}
             contents[i] = dArtistInList + " - " + dTitleInList;
 
             i++;
@@ -291,13 +290,24 @@ public class Suggs implements ActionListener, ListSelectionListener {
 		dSongList.setSelectedIndex(curIndex);
 		dSongList.addListSelectionListener(this);
     }
+
+	private JFileChooser commonSoundFilePicker(boolean multiselect) {
+		JFileChooser fileChooser = new JFileChooser();
+		fileChooser.setMultiSelectionEnabled(multiselect);
+		fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+		fileChooser.setFileFilter(new FileNameExtensionFilter("All Compatible Files", "mp3", "ogg", "oga", "opus", "m4a", "3gp", "wav", "wave", "aif", "aiff", "aifc", "flac", "at9"));
+		fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("MPEG Audio Layer 3", "mp3"));
+		fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("Ogg Audio", "ogg", "oga", "opus"));
+		fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("AAC or MPEG-4 Audio", "m4a", "3gp"));
+		fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("IBM/Microsoft WAVE", "wav", "wave"));
+		fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("Apple AIFF", "aif", "aiff", "aifc"));
+		fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("Free Lossless Audio Codec", "flac"));
+		fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("Sony ATRAC9", "at9"));
+		return fileChooser;
+	}
     
     private void setSPMusic() {
-	JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
-        fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("WAVE", "wav"));
-        fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("ATRAC9", "at9"));
-
+		JFileChooser fileChooser = commonSoundFilePicker(false);
         int result = fileChooser.showOpenDialog(frame);
 		if (result == JFileChooser.APPROVE_OPTION) {
         	File selectedFile = fileChooser.getSelectedFile();
@@ -314,11 +324,7 @@ public class Suggs implements ActionListener, ListSelectionListener {
     }
     
     private void setMPMusic() {
-	JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
-        fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("WAVE", "wav"));
-        fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("ATRAC9", "at9"));
-
+		JFileChooser fileChooser = commonSoundFilePicker(false);
         int result = fileChooser.showOpenDialog(frame);
 	if (result == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
@@ -329,11 +335,7 @@ public class Suggs implements ActionListener, ListSelectionListener {
     }
     
     private void addSong() {
-	JFileChooser fileChooser = new JFileChooser();
-	fileChooser.setMultiSelectionEnabled(true);
-        fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
-        fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("WAVE", "wav"));
-        fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("ATRAC9", "at9"));
+	JFileChooser fileChooser = commonSoundFilePicker(true);
 
         int result = fileChooser.showOpenDialog(frame);
 	if (result == JFileChooser.APPROVE_OPTION) {
@@ -361,23 +363,29 @@ public class Suggs implements ActionListener, ListSelectionListener {
 	frame.setAlwaysOnTop(false);
 	Main.deleteDir(new File(System.getProperty("user.home") + "/.firestar/temp/")); // starts with clean temp
 	new Thread(() -> {
-	    int progressSize = tracklist.size()+(sptrack != null?1:0)+(mptrack != null?1:0)+3; // Accounting for processes
+	    int progressSize = tracklist.size()+(sptrack != null?1:0)+(mptrack != null?1:0)+1; // Accounting for processes
 
 	    progressDialog = new Scooter();
 	    progressDialog.showDialog("Soundtrack Mod Generator");
 	    progressDialog.setText("Generating audio files...");
 	    progressDialog.setProgressMax(progressSize);
 	    progressDialog.setProgressValue(0);
-	    
+		progressDialog.progressBar.setStringPainted(false);
+
 	    try {
 		new File(Main.inpath + "temp/data/audio/music").mkdirs();
 		FileOutputStream fos = new FileOutputStream(new File(Main.inpath + "temp/fscript"));
 		PrintStream ps = new PrintStream(fos);
 		ps.println("fscript 1");
 		ps.println("# AUTOGENERATED BY FIRESTAR");
+		new File(Main.inpath + "temp/ffmpeg/").mkdirs();
 		for (int i = 0; i < tracklist.size(); i++) {
 		    AudioTrack at = tracklist.get(i);
 		    String trackno = String.format("%02d", i+1);
+			String oTitle;
+			if (at.title == null) {oTitle = "";} else {oTitle = at.title;}
+			String oArtist;
+			if (at.artist == null) {oArtist = "";} else {oArtist = at.artist;}
 		    new File(Main.inpath + "temp/data/audio/music/" + trackno).mkdirs();
 		    if (at.path.getName().endsWith(".at9")) {
 			progressDialog.setText("Copying track " + (i+1) + " out of " + tracklist.size() + "...");
@@ -391,7 +399,12 @@ public class Suggs implements ActionListener, ListSelectionListener {
 		    } else {
 			progressDialog.setText("Encoding track " + (i+1) + " out of " + tracklist.size() + "...");
 			try {
-			    System.out.println("Encoding track #" + (i+1) + " \"" + at.artist + " - " + at.title + "\"...");
+			    System.out.println("Encoding track #" + (i+1) + " \"" + oArtist + " - " + oTitle + "\"...");
+				if (!at.path.getName().endsWith(".wav") && !at.path.getName().endsWith(".wave")) { // convert to WAV first if it's not readable by at9tool yet
+					Process p = Main.exec(new String[]{Main.inpath + "ffmpeg.exe", "-i", at.path.getPath(), "ffmpeg/" + at.path.getName() + ".wav"}, Main.inpath + "temp/");
+					p.waitFor();
+					at.path = new File(Main.inpath + "temp/ffmpeg/" + at.path.getName() + ".wav");
+				}
 			    Process p = Main.exec(new String[]{Main.inpath + "at9tool.exe", "-e", "-br", "144", at.path.getPath(), "data/audio/music/" + trackno + "/music_stereo.at9"}, Main.inpath + "temp/");
 			    p.waitFor();
 			} catch (IOException | InterruptedException ex) {
@@ -400,7 +413,8 @@ public class Suggs implements ActionListener, ListSelectionListener {
 		    }
 		    String ocmd = "modify";
 		    if (i >= 12) ocmd = "create";
-		    ps.println("file \"data/plugins/languages/american/entries.xml\" xml "+ocmd+" StringTable.entry#MT_"+trackno+" set attribute \"string\" \""+at.artist.replace("\"", "\\\"")+"\\n"+at.title.replace("\"", "\\\"")+"\"");
+			String oArtistLine = oArtist.replace("\"", "\\\"")+"\\n";
+		    ps.println("file \"data/plugins/languages/american/entries.xml\" xml "+ocmd+" StringTable.entry#MT_"+trackno+" set attribute \"string\" \""+oArtistLine+oTitle.replace("\"", "\\\"")+"\"");
 		    ps.println("file \"data/audio/music/"+trackno+"/music_stereo.fft\" delete");
 		    progressDialog.setProgressValue(i+1);
 		}
@@ -412,6 +426,11 @@ public class Suggs implements ActionListener, ListSelectionListener {
 		    if (sptrack.exists()) {
 			try {
 			    System.out.println("Encoding singleplayer frontend track...");
+				if (!sptrack.getName().endsWith(".wav") && !sptrack.getName().endsWith(".wave")) { // convert to WAV first if it's not readable by at9tool yet
+					Process p = Main.exec(new String[]{Main.inpath + "ffmpeg.exe", "-i", sptrack.getPath(), "ffmpeg/" + sptrack.getName() + ".wav"}, Main.inpath + "temp/");
+					p.waitFor();
+					sptrack = new File(Main.inpath + "temp/ffmpeg/" + sptrack.getName() + ".wav");
+				}
 			    new File(Main.inpath + "temp/data/audio/music/FEMusic").mkdirs();
 			    Process p = Main.exec(new String[]{Main.inpath + "at9tool.exe", "-e", "-br", "144", sptrack.getPath(), "data/audio/music/FEMusic/frontend_stereo.at9"}, System.getProperty("user.home") + "/.firestar/temp/");
 			    p.waitFor();
@@ -427,6 +446,11 @@ public class Suggs implements ActionListener, ListSelectionListener {
 		    try {
 			assert(mptrack.exists());
 			System.out.println("Encoding multiplayer frontend track...");
+				if (!mptrack.getName().endsWith(".wav") && !mptrack.getName().endsWith(".wave")) { // convert to WAV first if it's not readable by at9tool yet
+					Process p = Main.exec(new String[]{Main.inpath + "ffmpeg.exe", "-i", mptrack.getPath(), "ffmpeg/" + mptrack.getName() + ".wav"}, Main.inpath + "temp/");
+					p.waitFor();
+					mptrack = new File(Main.inpath + "temp/ffmpeg/" + mptrack.getName() + ".wav");
+				}
 			new File(Main.inpath + "temp/data/audio/music/FEDemoMusic").mkdirs();
 			Process p = Main.exec(new String[]{Main.inpath + "at9tool.exe", "-e", "-br", "144", mptrack.getPath(), "data/audio/music/FEDemoMusic/frontend_stereo.at9"}, System.getProperty("user.home") + "/.firestar/temp/");
 			p.waitFor();
@@ -496,6 +520,7 @@ public class Suggs implements ActionListener, ListSelectionListener {
 	    
 	    progressDialog.destroyDialog();
 	    frame.dispose();
+		Main.deleteDir(new File(Main.inpath + "temp/ffmpeg/"));
 	    Clifford saveDialog = new Clifford();
 		saveDialog.isSoundtrack = true;
 		saveDialog.Action(frame, new File(Main.inpath + "temp/"));
