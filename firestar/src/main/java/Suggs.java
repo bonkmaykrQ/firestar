@@ -19,6 +19,8 @@
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
@@ -86,6 +88,23 @@ public class Suggs implements ActionListener, ListSelectionListener {
     private File sptrack;
     private File mptrack;
 
+	DocumentListener id3TagEditorHandler = new DocumentListener() {
+		@Override
+		public void insertUpdate(DocumentEvent documentEvent) {
+			updateSelectionToMatchTextFields();
+		}
+
+		@Override
+		public void removeUpdate(DocumentEvent documentEvent) {
+			updateSelectionToMatchTextFields();
+		}
+
+		@Override
+		public void changedUpdate(DocumentEvent documentEvent) {
+			updateSelectionToMatchTextFields();
+		}
+	};
+
     public Suggs(JFrame parent) {
 	this.parent = parent;
         parent.setEnabled(false);
@@ -118,11 +137,12 @@ public class Suggs implements ActionListener, ListSelectionListener {
             @Override
             public void windowClosing(WindowEvent e)
             {
-				int result = JOptionPane.showConfirmDialog(frame, "Are you sure?\nAll unsaved changes will be lost.", "Soundtrack Mod Generator", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-				if (result == JOptionPane.YES_OPTION) {
-					parent.setEnabled(true);
-					e.getWindow().dispose();
+				if (!tracklist.isEmpty() || sptrack != null || mptrack != null) {
+					int result = JOptionPane.showConfirmDialog(frame, "Are you sure?\nAll unsaved changes will be lost.", "Soundtrack Mod Generator", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+					if (result == JOptionPane.NO_OPTION) {return;}
 				}
+				parent.setEnabled(true);
+				e.getWindow().dispose();
             }
         });
 
@@ -132,6 +152,9 @@ public class Suggs implements ActionListener, ListSelectionListener {
 		dFileSize.setText("\u200E");
 		fTitle.setEnabled(false);
 		fArtist.setEnabled(false);
+
+		fTitle.getDocument().addDocumentListener(id3TagEditorHandler);
+		fArtist.getDocument().addDocumentListener(id3TagEditorHandler);
 
         frame.setVisible(true);
     }
@@ -143,17 +166,12 @@ public class Suggs implements ActionListener, ListSelectionListener {
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
 	if (actionEvent.getSource() == cancelBtn) {
-		int result = JOptionPane.showConfirmDialog(frame, "Are you sure?\nAll unsaved changes will be lost.", "Soundtrack Mod Generator", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-		if (result == JOptionPane.YES_OPTION) {
-			parent.setEnabled(true);
-			frame.dispose();
+		if (!tracklist.isEmpty() || sptrack != null || mptrack != null) {
+			int result = JOptionPane.showConfirmDialog(frame, "Are you sure?\nAll unsaved changes will be lost.", "Soundtrack Mod Generator", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+			if (result == JOptionPane.NO_OPTION) {return;}
 		}
-	} else
-	if (actionEvent.getSource() == fTitle || actionEvent.getSource() == fArtist) {
-	    tracklist.get(curIndex).title = fTitle.getText();
-	    tracklist.get(curIndex).artist = fArtist.getText();
-	    InitializeSongListInGUI();
-	    dSongList.setSelectedIndex(curIndex);
+		parent.setEnabled(true);
+		frame.dispose();
 	} else
 	if (actionEvent.getSource() == addSongBtn) {addSong();} else
 	if (actionEvent.getSource() == deleteSongBtn) {remove(curIndex);} else
@@ -189,6 +207,8 @@ public class Suggs implements ActionListener, ListSelectionListener {
 
     @Override
     public void valueChanged(ListSelectionEvent listSelectionEvent) {
+		fTitle.getDocument().removeDocumentListener(id3TagEditorHandler);
+		fArtist.getDocument().removeDocumentListener(id3TagEditorHandler);
 	curIndex = dSongList.getSelectedIndex();
 	if (curIndex >= 0) {
 		fTitle.setEnabled(true);
@@ -204,6 +224,8 @@ public class Suggs implements ActionListener, ListSelectionListener {
 		if (at.size > 1048575) {
 			dFileSize.setText((at.size / 1048576) + " MB");
 		}
+		fTitle.getDocument().addDocumentListener(id3TagEditorHandler);
+		fArtist.getDocument().addDocumentListener(id3TagEditorHandler);
 	} else {
 		fTitle.setEnabled(false);
 		fArtist.setEnabled(false);
@@ -211,8 +233,17 @@ public class Suggs implements ActionListener, ListSelectionListener {
 	    fArtist.setText("");
 	    dTrackNo.setText("\u200E");
 	    dFileSize.setText("\u200E");
+		fTitle.getDocument().addDocumentListener(id3TagEditorHandler);
+		fArtist.getDocument().addDocumentListener(id3TagEditorHandler);
 	}
     }
+
+	private void updateSelectionToMatchTextFields() {
+		tracklist.get(curIndex).title = fTitle.getText();
+		tracklist.get(curIndex).artist = fArtist.getText();
+		InitializeSongListInGUI();
+		dSongList.setSelectedIndex(curIndex);
+	}
     
     private void remove(int index) {
         if (index >= 0) {
@@ -236,6 +267,7 @@ public class Suggs implements ActionListener, ListSelectionListener {
     }
     
     private void InitializeSongListInGUI() {
+		dSongList.removeListSelectionListener(this); // prevent weird bullshit
         dSongList.clearSelection();
         dSongList.removeAll();
         dSongList.setVisibleRowCount(tracklist.size());
@@ -245,16 +277,19 @@ public class Suggs implements ActionListener, ListSelectionListener {
         int i = 0;
         String[] contents = new String[tracklist.size()];
         while (i < tracklist.size()) {
+			String dTitleInList;	// avoid editing the actual list
+			String dArtistInList;	// otherwise we cause weird JTextField behavior
             if (tracklist.get(i).title == null || tracklist.get(i).title.isEmpty())
-            {tracklist.get(i).title = tracklist.get(i).path.getName();}
+            {dTitleInList = tracklist.get(i).path.getName();} else {dTitleInList = tracklist.get(i).title;}
 	    if (tracklist.get(i).artist == null || tracklist.get(i).artist.isEmpty())
-            {tracklist.get(i).artist = "???";}
-            contents[i] = tracklist.get(i).artist + " - " + tracklist.get(i).title;
+            {dArtistInList = "???";} else {dArtistInList = tracklist.get(i).artist;}
+            contents[i] = dArtistInList + " - " + dTitleInList;
 
             i++;
         }
         dSongList.setListData(contents);
-	dSongList.setSelectedIndex(curIndex);
+		dSongList.setSelectedIndex(curIndex);
+		dSongList.addListSelectionListener(this);
     }
     
     private void setSPMusic() {
