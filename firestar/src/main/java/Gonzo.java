@@ -170,7 +170,7 @@ public class Gonzo {
 
 		    File fscript = new File(Main.inpath + "temp/fscript");
 		    if (fscript.exists()) {
-			new Rizzo(fscript, Main.inpath + "temp/"); // Lets rizz this mod up
+			new Rizzo(new FileInputStream(fscript), Main.inpath + "temp/"); // Lets rizz this mod up
 		    }
 		    
                     if (new File(System.getProperty("user.home") + "/.firestar/temp/delete.txt").isFile()) {
@@ -214,6 +214,13 @@ public class Gonzo {
                 }
             }
         }
+	
+	// Post fscript changes
+	try (InputStream is = Main.class.getResourceAsStream("/post.fscript")) {
+	    new Rizzo(is, Main.inpath + "temp/");
+	} catch (IOException ex) {
+	    Logger.getLogger(Gonzo.class.getName()).log(Level.SEVERE, null, ex);
+	}
 
         // create a list of the contents of data/ for psp2psarc.exe to read from
         List<String> oFilesList = new ArrayList<String>();

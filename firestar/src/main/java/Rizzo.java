@@ -59,7 +59,7 @@ public class Rizzo {
     private int ver = 1;
     private String workingDir;
     
-    public Rizzo(File infile, String workingDir) throws FileNotFoundException, FirescriptFormatException {
+    public Rizzo(FileInputStream infile, String workingDir) throws FileNotFoundException, FirescriptFormatException {
 	if (!workingDir.endsWith("/")) this.workingDir = workingDir + "/";
 	else this.workingDir = workingDir;
 	scanner = new Scanner(infile);
