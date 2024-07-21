@@ -413,7 +413,12 @@ public class Suggs implements ActionListener, ListSelectionListener {
 		    }
 		    String ocmd = "modify";
 		    if (i >= 12) ocmd = "create";
-			String oArtistLine = oArtist.replace("\"", "\\\"")+"\\n";
+			String oArtistLine;
+			if (!oArtist.isEmpty()) {
+				oArtistLine = oArtist.replace("\"", "\\\"")+"\\n";
+			} else {
+				oArtistLine = "";
+			}
 			int i2 = 0;
 			while (i2 < 17 /*17 languages*/) {
 				String language = "INTERNAL_ERROR";
