@@ -171,6 +171,7 @@ public class Gonzo {
 		    File fscript = new File(Main.inpath + "temp/fscript");
 		    if (fscript.exists()) {
 			new Rizzo(new FileInputStream(fscript), Main.inpath + "temp/"); // Lets rizz this mod up
+			fscript.delete();
 		    }
 		    
                     if (new File(System.getProperty("user.home") + "/.firestar/temp/delete.txt").isFile()) {

@@ -453,31 +453,31 @@ public class Suggs implements ActionListener, ListSelectionListener {
 				oArtistLine = "";
 			}
 			int i2 = 0;
-			while (i2 < 17 /*17 languages*/) {
+			while (i2 < 15 /*17 languages*/) {
 				String language = "INTERNAL_ERROR";
 				switch (i2) {
-					case 0: language = "american"; break;
-					case 1: language = "danish"; break;
-					case 2: language = "dutch"; break;
-					case 3: language = "english"; break;
-					case 4: language = "finnish"; break;
-					case 5: language = "french"; break;
-					case 6: language = "german"; break;
-					case 7: language = "italian"; break;
-					case 8: language = "japanese"; break;
-					case 9: language = "korean"; break;
-					case 10: language = "norwegian"; break;
-					case 11: language = "polish"; break;
-					case 12: language = "portuguese"; break;
-					case 13: language = "russian"; break;
-					case 14: language = "spanish"; break;
-					case 15: language = "swedish"; break;
-					case 16: language = "traditionalchinese"; break;
-					default:
-						int result = JOptionPane.showConfirmDialog(frame, "Firestar encountered an internal error.\nString 'language' exported to FSCRIPT was blank.", "Fatal Error", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
-						if (result == JOptionPane.OK_OPTION) {System.exit(1);} //user safety
-						break;
+					case 0 -> language = "american";
+					case 1 -> language = "danish";
+					case 2 -> language = "dutch";
+					case 3 -> language = "english";
+					case 4 -> language = "finnish";
+					case 5 -> language = "french";
+					case 6 -> language = "german";
+					case 7 -> language = "italian";
+					case 8 -> language = "japanese";
+					case 9 -> language = "norwegian";
+					case 10 -> language = "polish";
+					case 11 -> language = "portuguese";
+					case 12 -> language = "russian";
+					case 13 -> language = "spanish";
+					case 14 -> language = "swedish";
+					default -> {
+					    int result = JOptionPane.showConfirmDialog(frame, "Firestar encountered an internal error.\nString 'language' exported to FSCRIPT was blank.", "Fatal Error", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
+					    if (result == JOptionPane.OK_OPTION) {System.exit(1);} //user safety
+					}
 				}
+			//case 9: language = "korean"; break;
+			//case 16: language = "traditionalchinese"; break;
 				ps.println("file \"data/plugins/languages/"+language+"/entries.xml\" xml "+ocmd+" StringTable.entry#MT_"+trackno+" set attribute \"string\" \""+oArtistLine+oTitle.replace("\"", "\\\"")+"\"");
 				i2++;
 			}
@@ -596,7 +596,7 @@ public class Suggs implements ActionListener, ListSelectionListener {
 	    
 	    progressDialog.destroyDialog();
 	    frame.dispose();
-		//Main.deleteDir(new File(Main.inpath + "temp/ffmpeg/"));
+	    Main.deleteDir(new File(Main.inpath + "temp/ffmpeg/"));
 	    Clifford saveDialog = new Clifford();
 		saveDialog.isSoundtrack = true;
 		saveDialog.Action(frame, new File(Main.inpath + "temp/"));

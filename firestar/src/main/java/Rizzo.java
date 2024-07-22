@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -76,9 +77,9 @@ public class Rizzo {
     }
     
     private boolean parseArgs(String[] args, Object context) throws FirescriptFormatException {
+	System.out.println("Parsing Command: " + Arrays.toString(args));
 	if (args.length > 0) {
 	    if (context == null) {
-		System.out.println("Parsing Command: " + Arrays.toString(args));
 		if (args[0].equalsIgnoreCase("fscript")) {
 		    ver = Integer.parseInt(args[1]); // We'll do shit with this later
 		    if (ver > maxVer) throw new FirescriptFormatException(args[0], "script too new");
@@ -88,121 +89,121 @@ public class Rizzo {
 		    parseArgs(Arrays.copyOfRange(args, 2, args.length), newCtx);
 		} else throw new FirescriptFormatException("fscript", "unknown command '" + args[0] + "'");
 	    } else {
-		System.out.println("Parsing Command: " + Arrays.toString(args) + " with context: " + context.getClass().getName() + "@" + context.hashCode());
+		System.out.println("Using context: " + context.getClass().getName() + "@" + context.hashCode());
 		if (args[0].equals("{")) {
-		    System.out.println("New context parse: " + context.getClass().getName() + "@" + context.hashCode());
+		    System.out.println("New context block: " + context.getClass().getName() + "@" + context.hashCode());
 		    parseScript(context);
 		} else if (args[0].equals("}")) {
 		    System.out.println("Ending context block: " + context.getClass().getName() + "@" + context.hashCode());
 		    return false;
 		} else if (context instanceof File file) {
-		    if (!file.exists()) return true;
-		    if (args[0].equalsIgnoreCase("delete")) {
-			System.out.println("Deleting: " + file.getPath());
-			if (file.getAbsolutePath().startsWith(workingDir)) {
-			    if (file.isDirectory()) Main.deleteDir(file);
-			    else file.delete();
-			}
-		    } else if (args[0].equalsIgnoreCase("xml")) {
-			try {
-			    DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-			    DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-			    // Mmmm, love me some INVALID XML corrections
-			    ReplacingInputStream ris = new ReplacingInputStream(new ReplacingInputStream(new FileInputStream(file), "&", "&amp;"), "\n", "&#10;");
-			    Document doc = docBuilder.parse(ris);
-			    Node n = doc.createProcessingInstruction(StreamResult.PI_DISABLE_OUTPUT_ESCAPING, "\n");
-			    parseArgs(Arrays.copyOfRange(args, 1, args.length), doc);
+		    if (file.exists()) {
+			if (args[0].equalsIgnoreCase("delete")) {
+			    System.out.println("Deleting: " + file.getPath());
+			    if (file.getAbsolutePath().startsWith(workingDir)) {
+				if (file.isDirectory()) Main.deleteDir(file);
+				else file.delete();
+			    }
+			} else if (args[0].equalsIgnoreCase("xml")) {
 			    try {
-				FileOutputStream output = new FileOutputStream(file);
-				Transformer transformer = TransformerFactory.newInstance().newTransformer();
+				DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+				DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+				// Mmmm, love me some INVALID XML corrections.
+				ReplacingInputStream ris = new ReplacingInputStream(new ReplacingInputStream(new ReplacingInputStream(new FileInputStream(file), "\r\n", ""), "&", "&amp;"), "\n", "&#10;");
+				Document doc = docBuilder.parse(ris);
+				parseArgs(Arrays.copyOfRange(args, 1, args.length), doc);
+				try {
+				    FileOutputStream output = new FileOutputStream(file);
+				    Transformer transformer = TransformerFactory.newInstance().newTransformer();
 
-				StreamResult result = new StreamResult(new StringWriter());
-				DOMSource source = new DOMSource(doc);
+				    StreamResult result = new StreamResult(new StringWriter());
+				    DOMSource source = new DOMSource(doc);
 
-				transformer.transform(source, result);
-				// Look ma, I'm breaking XML standards!
-				String xmlString = result.getWriter().toString()
-					.replace("&amp;", "&")
-					.replace("&#9;", "\t")
-					.replace("&#8;", "\b")
-					.replace("&#10;", "\n")
-					.replace("&#13;", "\r")
-					.replace("&#12;", "\f");
-				try (PrintStream ps = new PrintStream(output)) {
-				    ps.print(xmlString);
+				    transformer.transform(source, result);
+				    // Look ma, I'm breaking XML standards!
+				    String xmlString = result.getWriter().toString()
+					    .replace("&amp;", "&")
+					    .replace("&#9;", "\t")
+					    .replace("&#8;", "\b")
+					    .replace("&#10;", "\n")
+					    .replace("&#13;", "\r")
+					    .replace("&#12;", "\f");
+				    try (PrintStream ps = new PrintStream(output)) {
+					ps.print(xmlString);
+				    }
+				} catch (TransformerException ex) {
+				    Logger.getLogger(Rizzo.class.getName()).log(Level.SEVERE, null, ex);
 				}
-			    } catch (TransformerException ex) {
+			    } catch (SAXException | IOException | ParserConfigurationException ex) {
 				Logger.getLogger(Rizzo.class.getName()).log(Level.SEVERE, null, ex);
 			    }
-			} catch (SAXException | IOException | ParserConfigurationException ex) {
-			    Logger.getLogger(Rizzo.class.getName()).log(Level.SEVERE, null, ex);
-			}
-		    } else if (args[0].equalsIgnoreCase("str") || args[0].equalsIgnoreCase("xstr")) {
-			try {
-			    FileInputStream fis = new FileInputStream(file);
-			    ByteArrayInputStream bais = new ByteArrayInputStream(fis.readAllBytes());
-			    fis.close();
-			    FileOutputStream fos = new FileOutputStream(file);
-			    if (args[1].equalsIgnoreCase("append")) {
-				bais.transferTo(fos);
-				for (int s = 0; s < args[2].length(); s++) {
-				    char c = args[2].charAt(s);
-				    fos.write(c);
+			} else if (args[0].equalsIgnoreCase("str") || args[0].equalsIgnoreCase("xstr")) {
+			    try {
+				FileInputStream fis = new FileInputStream(file);
+				ByteArrayInputStream bais = new ByteArrayInputStream(fis.readAllBytes());
+				fis.close();
+				FileOutputStream fos = new FileOutputStream(file);
+				if (args[1].equalsIgnoreCase("append")) {
+				    bais.transferTo(fos);
+				    for (int s = 0; s < args[2].length(); s++) {
+					char c = args[2].charAt(s);
+					fos.write(c);
+				    }
+				} else if (args[1].equalsIgnoreCase("replace") || args[1].equalsIgnoreCase("delete")) {
+				    String replacement = "";
+				    if (args[1].equalsIgnoreCase("replace")) replacement = args[3];
+				    ReplacingInputStream ris;
+				    if (args[0].equalsIgnoreCase("xstr")) ris = new ReplacingInputStream(bais, args[2], replacement, false);
+				    else ris = new ReplacingInputStream(bais, args[2], replacement);
+				    ris.transferTo(fos);
+				    ris.close();
 				}
-			    } else if (args[1].equalsIgnoreCase("replace") || args[1].equalsIgnoreCase("delete")) {
-				String replacement = "";
-				if (args[1].equalsIgnoreCase("replace")) replacement = args[3];
-				ReplacingInputStream ris;
-				if (args[0].equalsIgnoreCase("xstr")) ris = new ReplacingInputStream(bais, args[2], replacement, false);
-				else ris = new ReplacingInputStream(bais, args[2], replacement);
-				ris.transferTo(fos);
-				ris.close();
+				fos.flush();
+				fos.close();
+			    } catch (IOException ex) {
+				Logger.getLogger(Rizzo.class.getName()).log(Level.SEVERE, null, ex);
 			    }
-			    fos.flush();
-			    fos.close();
-			} catch (IOException ex) {
-			    Logger.getLogger(Rizzo.class.getName()).log(Level.SEVERE, null, ex);
-			}
-		    } else if (args[0].equalsIgnoreCase("binedit")) {
-			int offset = Integer.parseInt(args[1]);
-			String bytes = args[2];
-			if (bytes.length() % 2 != 0) throw new FirescriptFormatException(args[0], "invalid length of bytes");
-			try {
-			    byte[] ba;
-			    try (FileInputStream fis = new FileInputStream(file)) {
-				ba = fis.readAllBytes();
-			    }
-			    if (offset >= ba.length) throw new FirescriptFormatException(args[0], "offset is larger than file size");
-			    else {
-				byte[] in = HexFormat.of().parseHex(bytes);
-				System.arraycopy(in, 0, ba, offset, in.length);
-				try (FileOutputStream fos = new FileOutputStream(file)) {
-				    fos.write(ba);
-				    fos.flush();
+			} else if (args[0].equalsIgnoreCase("binedit")) {
+			    int offset = Integer.parseInt(args[1]);
+			    String bytes = args[2];
+			    if (bytes.length() % 2 != 0) throw new FirescriptFormatException(args[0], "invalid length of bytes");
+			    try {
+				byte[] ba;
+				try (FileInputStream fis = new FileInputStream(file)) {
+				    ba = fis.readAllBytes();
 				}
-			    }
-			} catch (IOException ex) {
-			    Logger.getLogger(Rizzo.class.getName()).log(Level.SEVERE, null, ex);
-			}
-		    } else if (args[0].equalsIgnoreCase("patch")) {
-			try {
-			    List<String> original = Files.readAllLines(file.toPath());
-			    File patchFile = new File(workingDir + args[1]);
-			    if (!patchFile.exists()) throw new FirescriptFormatException(args[0], "patch file doesn't exist");
-			    List<String> patched = Files.readAllLines(patchFile.toPath());
-				    
-			    Patch<String> patch = UnifiedDiffUtils.parseUnifiedDiff(patched);
-			    List<String> result = DiffUtils.patch(original, patch);
-			    
-			    try (FileWriter fileWriter = new FileWriter(file)) {
-				for (String str : result) {
-				    fileWriter.write(str + "\r\n");
+				if (offset >= ba.length) throw new FirescriptFormatException(args[0], "offset is larger than file size");
+				else {
+				    byte[] in = HexFormat.of().parseHex(bytes);
+				    System.arraycopy(in, 0, ba, offset, in.length);
+				    try (FileOutputStream fos = new FileOutputStream(file)) {
+					fos.write(ba);
+					fos.flush();
+				    }
 				}
+			    } catch (IOException ex) {
+				Logger.getLogger(Rizzo.class.getName()).log(Level.SEVERE, null, ex);
 			    }
-			} catch (FirescriptFormatException | PatchFailedException | IOException ex) {
-			    Logger.getLogger(Rizzo.class.getName()).log(Level.SEVERE, null, ex);
-			}
-		    } else throw new FirescriptFormatException("file", "unknown command '" + args[0] + "'");
+			} else if (args[0].equalsIgnoreCase("patch")) {
+			    try {
+				List<String> original = Files.readAllLines(file.toPath());
+				File patchFile = new File(workingDir + args[1]);
+				if (!patchFile.exists()) throw new FirescriptFormatException(args[0], "patch file doesn't exist");
+				List<String> patched = Files.readAllLines(patchFile.toPath());
+
+				Patch<String> patch = UnifiedDiffUtils.parseUnifiedDiff(patched);
+				List<String> result = DiffUtils.patch(original, patch);
+
+				try (FileWriter fileWriter = new FileWriter(file)) {
+				    for (String str : result) {
+					fileWriter.write(str + "\r\n");
+				    }
+				}
+			    } catch (FirescriptFormatException | PatchFailedException | IOException ex) {
+				Logger.getLogger(Rizzo.class.getName()).log(Level.SEVERE, null, ex);
+			    }
+			} else throw new FirescriptFormatException("file", "unknown command '" + args[0] + "'");
+		    } else System.out.println("fscript: file context not found, skipping.");
 		} else if (context instanceof Document document) {
 		    if (args[0].equalsIgnoreCase("modify")) {
 			Element elem = (Element)traverse(document, args[1]);
@@ -226,8 +227,7 @@ public class Rizzo {
 			try {
 			    DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 			    DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-			    
-			    ReplacingInputStream ris = new ReplacingInputStream(new FileInputStream(new File(workingDir + args[1])), "&", "&amp;");
+			    ReplacingInputStream ris = new ReplacingInputStream(new ReplacingInputStream(new ReplacingInputStream(new FileInputStream(new File(workingDir + args[1])), "\r\n", ""), "&", "&amp;"), "\n", "&#10;");
 			    Document outDoc = docBuilder.parse(ris);
 			    
 			    NamedNodeMap nnm = outDoc.getDocumentElement().getAttributes();
@@ -253,17 +253,44 @@ public class Rizzo {
 			else if (args[1].equalsIgnoreCase("value"))
 			    element.setNodeValue(args[2]);
 		    } else if (args[0].equalsIgnoreCase("create")) {
-			String newTag = args[1].substring(args[1].lastIndexOf(".")+1);
-			String newID = "";
-			if (newTag.contains("#")) {
-			    newID = newTag.substring(newTag.indexOf("#")+1);
-			    newTag = newTag.substring(0, newTag.indexOf("#"));
+			String finalTag = args[1];
+			String path = "";
+			if (finalTag.lastIndexOf(".") > 0) {
+			    path = args[1].substring(0, finalTag.lastIndexOf("."));
+			    finalTag = args[1].substring(finalTag.lastIndexOf(".")+1);
 			}
-			Element newElem = element.getOwnerDocument().createElement(newTag);
-			if (newID != null && newID.length() > 0) newElem.setAttribute("id", newID);
-			traverse(element, args[1].substring(0, args[1].lastIndexOf("."))).appendChild(newElem);
-			parseArgs(Arrays.copyOfRange(args, 2, args.length), newElem);
-		    } else throw new FirescriptFormatException("");
+			String id = "";
+			String name = "";
+			if (finalTag.contains("#")) {
+			    id = finalTag.substring(finalTag.indexOf("#")+1);
+			    finalTag = finalTag.substring(0, finalTag.indexOf("#"));
+			} else if (finalTag.contains("$")) {
+			    name = finalTag.substring(finalTag.indexOf("$")+1);
+			    finalTag = finalTag.substring(0, finalTag.indexOf("$"));
+			}
+			Element finalElem = element.getOwnerDocument().createElement(finalTag);
+			if (id != null && id.length() > 0) finalElem.setAttribute("id", id);
+			if (name != null && name.length() > 0) finalElem.setAttribute("name", name);
+			traverse(element, path).appendChild(finalElem);
+			parseArgs(Arrays.copyOfRange(args, 2, args.length), finalElem);
+		    } else if (args[0].equalsIgnoreCase("create-at")) {
+			int index = Integer.parseInt(args[1]);
+			String finalTag = args[2];
+			String id = "";
+			String name = "";
+			if (finalTag.contains("#")) {
+			    id = finalTag.substring(finalTag.indexOf("#")+1);
+			    finalTag = finalTag.substring(0, finalTag.indexOf("#"));
+			} else if (finalTag.contains("$")) {
+			    name = finalTag.substring(finalTag.indexOf("$")+1);
+			    finalTag = finalTag.substring(0, finalTag.indexOf("$"));
+			}
+			Element finalElem = element.getOwnerDocument().createElement(finalTag);
+			if (id != null && id.length() > 0) finalElem.setAttribute("id", id);
+			if (name != null && name.length() > 0) finalElem.setAttribute("name", name);
+			element.insertBefore(finalElem, element.getChildNodes().item(index));
+			parseArgs(Arrays.copyOfRange(args, 3, args.length), finalElem);
+		    } else throw new FirescriptFormatException("xml", "unknown element command '" + args[0] + "'");
 		} else throw new FirescriptFormatException("context is unknown");
 	    }
 	}
@@ -272,7 +299,7 @@ public class Rizzo {
     
     private Node traverse(Node owner, String selector) throws FirescriptFormatException {
 	if (selector == null || selector.length() == 0 || owner == null) {
-	    return null;
+	    return owner;
 	}
 	String[] elems = selector.split("\\.");
 	Node parent = owner;
@@ -302,6 +329,7 @@ public class Rizzo {
 		    ns = ((Element)parent).getElementsByTagName(tag); 
 		for (int i = 0; i < ns.getLength(); i++) {
 		    Node n = ns.item(i);
+		    if (n.getNodeName().equals("#text")) continue;
 		    if (((Element)n).getAttribute("id").equals(id)) {
 			newParent = (Element)n;
 			break;
@@ -315,6 +343,7 @@ public class Rizzo {
 		    ns = ((Element)parent).getChildNodes(); 
 		for (int i = 0; i < ns.getLength(); i++) {
 		    Node n = ns.item(i);
+		    if (n.getNodeName().equals("#text")) continue;
 		    if (((Element)n).getAttribute("name").equals(name)) {
 			newParent = (Element)n;
 			break;
