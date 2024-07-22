@@ -20,57 +20,57 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Scooter {
-    private JFrame frame = new JFrame();
-    public JProgressBar progressBar;
-    private JPanel frameContainer;
-    private JLabel label;
+	private JFrame frame = new JFrame();
+	public JProgressBar progressBar;
+	private JPanel frameContainer;
+	private JLabel label;
 
-    public void showDialog(String title) {
-	frame.add(frameContainer);
-        frame.setSize(300, 100);
-        frame.setTitle(title);
-        frame.setResizable(false);
-        frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-        frame.setLayout(new GridLayout());
-        frame.setLocationRelativeTo(null);
-        frame.setAlwaysOnTop(true);
-        frame.setIconImage(Main.windowIcon);
+	public void showDialog(String title) {
+		frame.add(frameContainer);
+		frame.setSize(300, 100);
+		frame.setTitle(title);
+		frame.setResizable(false);
+		frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+		frame.setLayout(new GridLayout());
+		frame.setLocationRelativeTo(null);
+		frame.setAlwaysOnTop(true);
+		frame.setIconImage(Main.windowIcon);
 	
-	progressBar.setStringPainted(true);
+		progressBar.setStringPainted(true);
 	
-        frame.setVisible(true);
-    }
-    
-    public void setProgressMin(int i) {
-	progressBar.setMinimum(i);
-    }
-    
-    public void setProgressValue(int i) {
-	progressBar.setValue(i);
-    }
-    
-    public void setProgressMax(int i) {
-	progressBar.setMaximum(i);
-    }
-    
-    public int getProgressMin() {
-	return progressBar.getMinimum();
-    }
-    
-    public int getProgressValue() {
-	return progressBar.getValue();
-    }
-    
-    public int getProgressMax() {
-	return progressBar.getMaximum();
-    }
+		frame.setVisible(true);
+	}
+	
+	public void setProgressMin(int i) {
+		progressBar.setMinimum(i);
+	}
+	
+	public void setProgressValue(int i) {
+		progressBar.setValue(i);
+	}
+	
+	public void setProgressMax(int i) {
+		progressBar.setMaximum(i);
+	}
+	
+	public int getProgressMin() {
+		return progressBar.getMinimum();
+	}
+	
+	public int getProgressValue() {
+		return progressBar.getValue();
+	}
+	
+	public int getProgressMax() {
+		return progressBar.getMaximum();
+	}
 
-    public void setText(String text) {
-        label.setText(text);
-    }
+	public void setText(String text) {
+		label.setText(text);
+	}
 
-    public void destroyDialog() {
-        frame.setVisible(false);
-        frame.dispose();
-    }
+	public void destroyDialog() {
+		frame.setVisible(false);
+		frame.dispose();
+	}
 }

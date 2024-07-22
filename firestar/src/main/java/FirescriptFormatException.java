@@ -16,17 +16,16 @@
  *     along with this program.  If not, see https://www.gnu.org/licenses/.
  */
 
-
 public class FirescriptFormatException extends Exception {
-    public FirescriptFormatException() {
-	super();
-    }
-    
-    public FirescriptFormatException(String msg) {
-	super(msg);
-    }
-    
-    public FirescriptFormatException(String cmd, String msg) {
-	super(cmd + ": " + msg);
-    }
+	public FirescriptFormatException() {
+		super();
+	}
+	
+	public FirescriptFormatException(String msg) {
+		super(msg);
+	}
+	
+	public FirescriptFormatException(String cmd, String msg) {
+		super(cmd + ": " + msg);
+	}
 }

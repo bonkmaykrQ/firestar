@@ -28,128 +28,128 @@ import java.io.IOException;
 import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
 
 public class Waldorf implements ActionListener {
-    private JFrame frame = new JFrame();
-    private JPanel frameContainer;
-    private JButton okbtn;
-    private JButton cancelbtn;
-    private JLabel fOutpath;
-    private JButton resetbtn;
-    private JButton bOpenFolder;
-    private JButton dwnSDKbtn;
-    private JButton dwnARCbtn;
-    private JButton fOutpathChangebtn;
-    private JCheckBox checkUpdatesToggle;
-    private JButton bDelArcs;
+	private JFrame frame = new JFrame();
+	private JPanel frameContainer;
+	private JButton okbtn;
+	private JButton cancelbtn;
+	private JLabel fOutpath;
+	private JButton resetbtn;
+	private JButton bOpenFolder;
+	private JButton dwnSDKbtn;
+	private JButton dwnARCbtn;
+	private JButton fOutpathChangebtn;
+	private JCheckBox checkUpdatesToggle;
+	private JButton bDelArcs;
 
-    MissPiggy invoker;
-    private String tOutPath = Main.outpath;
+	MissPiggy invoker;
+	private String tOutPath = Main.outpath;
 
-    public void Action(MissPiggy inv) {
-        invoker = inv;
+	public void Action(MissPiggy inv) {
+		invoker = inv;
 
-        frame.add(frameContainer);
-        frame.setIconImage(Main.windowIcon);
-        frame.setSize(600, 300); // 1280 800
-        frame.setMinimumSize(new Dimension(200,100));
-        frame.setTitle("Options");
-        frame.setResizable(false);
-        frame.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-        frame.setLayout(new GridLayout());
-        frame.setLocationRelativeTo(inv.frame);
-        frame.setAlwaysOnTop(true);
+		frame.add(frameContainer);
+		frame.setIconImage(Main.windowIcon);
+		frame.setSize(600, 300); // 1280 800
+		frame.setMinimumSize(new Dimension(200,100));
+		frame.setTitle("Options");
+		frame.setResizable(false);
+		frame.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+		frame.setLayout(new GridLayout());
+		frame.setLocationRelativeTo(inv.frame);
+		frame.setAlwaysOnTop(true);
 
-        cancelbtn.addActionListener(this);
-        okbtn.addActionListener(this);
-        resetbtn.addActionListener(this);
-        bOpenFolder.addActionListener(this);
-        bDelArcs.addActionListener(this);
-        dwnARCbtn.addActionListener(this);
-        dwnSDKbtn.addActionListener(this);
-        fOutpathChangebtn.addActionListener(this);
+		cancelbtn.addActionListener(this);
+		okbtn.addActionListener(this);
+		resetbtn.addActionListener(this);
+		bOpenFolder.addActionListener(this);
+		bDelArcs.addActionListener(this);
+		dwnARCbtn.addActionListener(this);
+		dwnSDKbtn.addActionListener(this);
+		fOutpathChangebtn.addActionListener(this);
 
-        fOutpath.setText(Main.outpath);
-        checkUpdatesToggle.setSelected(Main.checkUpdates);
+		fOutpath.setText(Main.outpath);
+		checkUpdatesToggle.setSelected(Main.checkUpdates);
 
-        frame.setVisible(true);
-        frame.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e)
-            {
-                invoker.frame.setEnabled(true);
-                e.getWindow().dispose();
-            }
-        });
-    }
+		frame.setVisible(true);
+		frame.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e)
+			{
+				invoker.frame.setEnabled(true);
+				e.getWindow().dispose();
+			}
+		});
+	}
 
-    @Override
-    public void actionPerformed(ActionEvent actionEvent) {
-        if (actionEvent.getSource() == cancelbtn) {
-            invoker.frame.setEnabled(true);
-            frame.dispose();
-        } else
-        if (actionEvent.getSource() == okbtn) {
-            Main.outpath = tOutPath;
-            Main.checkUpdates = checkUpdatesToggle.isSelected();
-            Main.writeConf();
-            Main.loadConf();
+	@Override
+	public void actionPerformed(ActionEvent actionEvent) {
+		if (actionEvent.getSource() == cancelbtn) {
+			invoker.frame.setEnabled(true);
+			frame.dispose();
+		} else
+		if (actionEvent.getSource() == okbtn) {
+			Main.outpath = tOutPath;
+			Main.checkUpdates = checkUpdatesToggle.isSelected();
+			Main.writeConf();
+			Main.loadConf();
 
-            invoker.frame.setEnabled(true);
-            frame.dispose();
-        } else
-        if (actionEvent.getSource() == resetbtn) {
-            int result = JOptionPane.showConfirmDialog(frame,"Are you sure you want to redo the initial setup?", "Restore Default Settings", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-            if (result == JOptionPane.YES_OPTION) {
-                System.out.println("Restoring default settings");
-                new File(System.getProperty("user.home") + "/.firestar/firestar.conf").delete();
-                int result2 = JOptionPane.showConfirmDialog(frame,"Firestar will now close.", "Restore Default Settings", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE);
-                if (result2 == JOptionPane.OK_OPTION) {
-                    System.exit(0);
-                }
-            }
-        } else
-        if (actionEvent.getSource() == bOpenFolder) {
-            try {
-                Desktop.getDesktop().open(new File(Main.inpath));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        } else
-        if (actionEvent.getSource() == bDelArcs) {
-            int result = JOptionPane.showConfirmDialog(frame, "All existing PSARC dumps will be deleted.\nDo you want to continue?", "Delete PSARCs", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-            if (result == JOptionPane.NO_OPTION) {return;}
-            System.out.println("User requested arc wipe, deleting existing PSARCs");
-            new File(Main.inpath + "data.psarc").delete();
-            new File(Main.inpath + "data1.psarc").delete();
-            new File(Main.inpath + "data2.psarc").delete();
-            new File(Main.inpath + "dlc1.psarc").delete();
-            new File(Main.inpath + "dlc2.psarc").delete();
-            JOptionPane.showMessageDialog(frame, "PSARC files purged.", "Delete PSARCs", JOptionPane.INFORMATION_MESSAGE);
-        } else
-        if (actionEvent.getSource() == dwnARCbtn) {
-            new Bert(invoker.frame);
-            frame.dispose();
-        } else
-        if (actionEvent.getSource() == dwnSDKbtn) {
-            Thread downloaderPopupThread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    Main.downloadDependenciesBeforeSetVisible(invoker.frame);
-                    invoker.frame.setEnabled(true);
-                }
-            });
-            downloaderPopupThread.start();
-            frame.dispose();
-        } else
-            if (actionEvent.getSource() == fOutpathChangebtn) {
-                JFileChooser fileChooser = new JFileChooser();
-                fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-                int result = fileChooser.showOpenDialog(frame);
-                if (result == JFileChooser.APPROVE_OPTION) {
-                    if (fileChooser.getSelectedFile().isDirectory()) {
-                        tOutPath = fileChooser.getSelectedFile().getAbsolutePath()+"/";
-                        fOutpath.setText(tOutPath);
-                    }
-                }
-            }
-    }
+			invoker.frame.setEnabled(true);
+			frame.dispose();
+		} else
+		if (actionEvent.getSource() == resetbtn) {
+			int result = JOptionPane.showConfirmDialog(frame,"Are you sure you want to redo the initial setup?", "Restore Default Settings", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+			if (result == JOptionPane.YES_OPTION) {
+				System.out.println("Restoring default settings");
+				new File(System.getProperty("user.home") + "/.firestar/firestar.conf").delete();
+				int result2 = JOptionPane.showConfirmDialog(frame,"Firestar will now close.", "Restore Default Settings", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE);
+				if (result2 == JOptionPane.OK_OPTION) {
+					System.exit(0);
+				}
+			}
+		} else
+		if (actionEvent.getSource() == bOpenFolder) {
+			try {
+				Desktop.getDesktop().open(new File(Main.inpath));
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+		} else
+		if (actionEvent.getSource() == bDelArcs) {
+			int result = JOptionPane.showConfirmDialog(frame, "All existing PSARC dumps will be deleted.\nDo you want to continue?", "Delete PSARCs", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+			if (result == JOptionPane.NO_OPTION) {return;}
+			System.out.println("User requested arc wipe, deleting existing PSARCs");
+			new File(Main.inpath + "data.psarc").delete();
+			new File(Main.inpath + "data1.psarc").delete();
+			new File(Main.inpath + "data2.psarc").delete();
+			new File(Main.inpath + "dlc1.psarc").delete();
+			new File(Main.inpath + "dlc2.psarc").delete();
+			JOptionPane.showMessageDialog(frame, "PSARC files purged.", "Delete PSARCs", JOptionPane.INFORMATION_MESSAGE);
+		} else
+		if (actionEvent.getSource() == dwnARCbtn) {
+			new Bert(invoker.frame);
+			frame.dispose();
+		} else
+		if (actionEvent.getSource() == dwnSDKbtn) {
+			Thread downloaderPopupThread = new Thread(new Runnable() {
+				@Override
+				public void run() {
+					Main.downloadDependenciesBeforeSetVisible(invoker.frame);
+					invoker.frame.setEnabled(true);
+				}
+			});
+			downloaderPopupThread.start();
+			frame.dispose();
+		} else
+			if (actionEvent.getSource() == fOutpathChangebtn) {
+				JFileChooser fileChooser = new JFileChooser();
+				fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+				int result = fileChooser.showOpenDialog(frame);
+				if (result == JFileChooser.APPROVE_OPTION) {
+					if (fileChooser.getSelectedFile().isDirectory()) {
+						tOutPath = fileChooser.getSelectedFile().getAbsolutePath()+"/";
+						fOutpath.setText(tOutPath);
+					}
+				}
+			}
+	}
 }
