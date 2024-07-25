@@ -20,6 +20,7 @@ import net.lingala.zip4j.ZipFile;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
+import javax.swing.text.DefaultCaret;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -76,6 +77,9 @@ public class Gonzo {
 		frame.setLocationRelativeTo(inv.frame);
 		frame.setAlwaysOnTop(true);
 		frame.setVisible(true);
+
+		DefaultCaret caret = (DefaultCaret) consoleDisplay.getCaret();
+		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 
 		File psarcHandle = new File(Main.inpath + "data.psarc");
 		data0 = psarcHandle.isFile();
@@ -164,6 +168,8 @@ public class Gonzo {
 
 					File fscript = new File(Main.inpath + "temp/fscript");
 					if (fscript.exists()) {
+						System.out.println("Firestar is applying patches from " + m.friendlyName + " by " + m.author);
+						consoleDisplay.append("Firestar is applying patches from " + m.friendlyName + " by " + m.author + "\n");
 						new Rizzo(new FileInputStream(fscript), Main.inpath + "temp/"); // Lets rizz this mod up
 						fscript.delete();
 					}
@@ -171,6 +177,8 @@ public class Gonzo {
 					if (new File(System.getProperty("user.home") + "/.firestar/temp/delete.txt").isFile()) {
 						System.out.println("Firestar is deleting files that conflict with " + m.friendlyName + " by " + m.author);
 						consoleDisplay.append("Firestar is deleting files that conflict with " + m.friendlyName + " by " + m.author + "\n");
+						System.out.println("WARNING: delete.txt is DEPRECATED. If using a mod with loaderversion >= 1 then this is bad practice, please use FSCRIPTs instead.");
+						consoleDisplay.append("WARNING: delete.txt is DEPRECATED. If using a mod with loaderversion >= 1 then this is bad practice, please use FSCRIPTs instead.");
 			
 						String deleteQueue = new String(Files.readAllBytes(Paths.get(System.getProperty("user.home") + "/.firestar/temp/delete.txt")));
 						if (Main.windows) {deleteQueue = new String(Files.readAllBytes(Paths.get(System.getProperty("user.home") + "\\.firestar\\temp\\delete.txt")));} // might be unnecessary
@@ -195,8 +203,7 @@ public class Gonzo {
 							}
 						}
 
-						// cleanup so we don't run it again for the next mod unless needed
-						// this is not necessary but good practice
+						// cleanup so we don't run it again for the next mod
 						new File(System.getProperty("user.home") + "/.firestar/temp/delete.txt").delete();
 					}
 				} catch (Exception e) {
