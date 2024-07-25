@@ -199,8 +199,9 @@ public class MissPiggy implements ActionListener {
 
 		// initialize data structures from each list entry
 		String[] pListArray = priorityList.split("\n");
-		Arrays.sort(pListArray);
+		Arrays.sort(pListArray, new NaturalOrderComparator<>(false));
 		System.out.println("Initializing modList from file with length of " + pListArray.length + " units"); //debug
+
 		for (String s : pListArray) {
 			/*
 			Do nothing if the index number is not valid.
@@ -209,7 +210,6 @@ public class MissPiggy implements ActionListener {
 
 			06/29/24 - also skip files that were manually removed but remain in the list
 			*/
-
 			File mod = new File(System.getProperty("user.home") + "/.firestar/mods/" + s.substring(s.indexOf("=") + 1).trim());
 
 			if (s.split("=")[0].matches("[0-9]+=*") &&
@@ -516,20 +516,20 @@ public class MissPiggy implements ActionListener {
 	}
 
 	private void moveUp(int index) {
-		if (index > 0) {
+		if (index > 0) { // not negative
 			Collections.swap(Main.Mods, index, index - 1);
 			System.out.println("Items moved, redeploying list");
-			InitializeModListInGUI();
-			regenerateModIndex(false);
+			regenerateModIndex(true);
+			modList.setSelectedIndex(index - 1);
 		}
 	}
 
 	private void moveDown(int index) {
-		if (index < (Main.Mods.size() - 1)) {
+		if (index < (Main.Mods.size() - 1)) { // not last in list
 			Collections.swap(Main.Mods, index, index + 1);
 			System.out.println("Items moved, redeploying list");
-			InitializeModListInGUI();
-			regenerateModIndex(false);
+			regenerateModIndex(true);
+			modList.setSelectedIndex(index + 1);
 		}
 	}
 
@@ -537,6 +537,7 @@ public class MissPiggy implements ActionListener {
 		if (index >= 0) {
 			Main.Mods.get(index).enabled = !Main.Mods.get(index).enabled;
 			regenerateModBlacklist(true);
+			modList.setSelectedIndex(index);
 		} else {
 			JOptionPane.showMessageDialog(frame, "Please select a mod to toggle first.", "Error", JOptionPane.ERROR_MESSAGE);
 		}

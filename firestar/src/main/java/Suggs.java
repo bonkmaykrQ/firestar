@@ -272,6 +272,7 @@ public class Suggs implements ActionListener, ListSelectionListener {
 	private void moveUp(int index) {
 		if (index > 0) {
 			Collections.swap(tracklist, index, index - 1);
+			curIndex--;
 			InitializeSongListInGUI();
 		}
 	}
@@ -279,6 +280,7 @@ public class Suggs implements ActionListener, ListSelectionListener {
 	private void moveDown(int index) {
 		if (index < (tracklist.size() - 1)) {
 			Collections.swap(tracklist, index, index + 1);
+			curIndex++;
 			InitializeSongListInGUI();
 		}
 	}
