@@ -123,6 +123,8 @@ public class Rizzo {
 									// Look ma, I'm breaking XML standards!
 									String xmlString = result.getWriter().toString()
 										.replace("&amp;", "&")
+										.replace("&lt;", "<")
+										.replace("&gt;", ">")
 										.replace("&#9;", "\t")
 										.replace("&#8;", "\b")
 										.replace("&#10;", "\n")
