@@ -9,13 +9,6 @@ file "data/HandlingStats/ag_systems2048/1/handlingstats.xml" {
 		set attribute "weight_distribution" "-4.0"
 		set attribute "width" "5"
 	}
-	xml modify Handling.Stats.FE {
-		set attribute "firepower" "7"
-		set attribute "handling" "6"
-		set attribute "shield" "7"
-		set attribute "speed" "4"
-		set attribute "thrust" "9"
-	}
 	xml modify Handling.Stats.Tilt {
 		set attribute "internalAmount" "1.3"
 		set attribute "internalSpeed" "5"
@@ -362,13 +355,6 @@ file "data/HandlingStats/ag_systems2048/2/handlingstats.xml" {
 		set attribute "shield" "135"
 		set attribute "weight_distribution" "-4.0"
 		set attribute "width" "5"
-	}
-	xml modify Handling.Stats.FE {
-		set attribute "firepower" "6"
-		set attribute "handling" "10"
-		set attribute "shield" "5"
-		set attribute "speed" "4"
-		set attribute "thrust" "8"
 	}
 	xml modify Handling.Stats.Tilt {
 		set attribute "internalAmount" "1.4"
@@ -717,13 +703,6 @@ file "data/HandlingStats/ag_systems2048/3/handlingstats.xml" {
 		set attribute "weight_distribution" "-4.0"
 		set attribute "width" "5"
 	}
-	xml modify Handling.Stats.FE {
-		set attribute "firepower" "6"
-		set attribute "handling" "8"
-		set attribute "shield" "3"
-		set attribute "speed" "8"
-		set attribute "thrust" "8"
-	}
 	xml modify Handling.Stats.Tilt {
 		set attribute "internalAmount" "1.4"
 		set attribute "internalSpeed" "7"
@@ -1070,13 +1049,6 @@ file "data/HandlingStats/ag_systems2048/4/handlingstats.xml" {
 		set attribute "shield" "60"
 		set attribute "weight_distribution" "-4.0"
 		set attribute "width" "5"
-	}
-	xml modify Handling.Stats.FE {
-		set attribute "firepower" "6"
-		set attribute "handling" "10"
-		set attribute "shield" "6"
-		set attribute "speed" "4"
-		set attribute "thrust" "8"
 	}
 	xml modify Handling.Stats.Tilt {
 		set attribute "internalAmount" "1.4"
@@ -1425,13 +1397,6 @@ file "data/HandlingStats/auricom2048/1/handlingstats.xml" {
 		set attribute "weight_distribution" "4.0"
 		set attribute "width" "6.0"
 	}
-	xml modify Handling.Stats.FE {
-		set attribute "firepower" "9"
-		set attribute "handling" "5"
-		set attribute "shield" "10"
-		set attribute "speed" "4"
-		set attribute "thrust" "7"
-	}
 	xml modify Handling.Stats.Tilt {
 		set attribute "internalAmount" "1.4"
 		set attribute "internalSpeed" "7"
@@ -1778,13 +1743,6 @@ file "data/HandlingStats/auricom2048/2/handlingstats.xml" {
 		set attribute "shield" "145"
 		set attribute "weight_distribution" "4.0"
 		set attribute "width" "6.0"
-	}
-	xml modify Handling.Stats.FE {
-		set attribute "firepower" "8"
-		set attribute "handling" "7"
-		set attribute "shield" "5"
-		set attribute "speed" "5"
-		set attribute "thrust" "7"
 	}
 	xml modify Handling.Stats.Tilt {
 		set attribute "internalAmount" "1.4"
@@ -2133,13 +2091,6 @@ file "data/HandlingStats/auricom2048/3/handlingstats.xml" {
 		set attribute "weight_distribution" "4.0"
 		set attribute "width" "6.0"
 	}
-	xml modify Handling.Stats.FE {
-		set attribute "firepower" "7"
-		set attribute "handling" "5"
-		set attribute "shield" "6"
-		set attribute "speed" "9"
-		set attribute "thrust" "7"
-	}
 	xml modify Handling.Stats.Tilt {
 		set attribute "internalAmount" "1.4"
 		set attribute "internalSpeed" "7"
@@ -2486,13 +2437,6 @@ file "data/HandlingStats/auricom2048/4/handlingstats.xml" {
 		set attribute "shield" "135"
 		set attribute "weight_distribution" "4.0"
 		set attribute "width" "7"
-	}
-	xml modify Handling.Stats.FE {
-		set attribute "firepower" "9"
-		set attribute "handling" "5"
-		set attribute "shield" "5"
-		set attribute "speed" "4"
-		set attribute "thrust" "7"
 	}
 	xml modify Handling.Stats.Tilt {
 		set attribute "internalAmount" "1.4"
@@ -2841,13 +2785,6 @@ file "data/HandlingStats/feisar2048/1/handlingstats.xml" {
 		set attribute "weight_distribution" "-4.0"
 		set attribute "width" "5"
 	}
-	xml modify Handling.Stats.FE {
-		set attribute "firepower" "8"
-		set attribute "handling" "6"
-		set attribute "shield" "8"
-		set attribute "speed" "3"
-		set attribute "thrust" "8"
-	}
 	xml modify Handling.Stats.Tilt {
 		set attribute "internalAmount" "1.4"
 		set attribute "internalSpeed" "7"
@@ -3194,13 +3131,6 @@ file "data/HandlingStats/feisar2048/2/handlingstats.xml" {
 		set attribute "shield" "140"
 		set attribute "weight_distribution" "-4.0"
 		set attribute "width" "5"
-	}
-	xml modify Handling.Stats.FE {
-		set attribute "firepower" "7"
-		set attribute "handling" "9"
-		set attribute "shield" "6"
-		set attribute "speed" "4"
-		set attribute "thrust" "8"
 	}
 	xml modify Handling.Stats.Tilt {
 		set attribute "internalAmount" "1.4"
@@ -3549,13 +3479,6 @@ file "data/HandlingStats/feisar2048/3/handlingstats.xml" {
 		set attribute "weight_distribution" "-4.0"
 		set attribute "width" "5"
 	}
-	xml modify Handling.Stats.FE {
-		set attribute "firepower" "6"
-		set attribute "handling" "7"
-		set attribute "shield" "4"
-		set attribute "speed" "8"
-		set attribute "thrust" "8"
-	}
 	xml modify Handling.Stats.Tilt {
 		set attribute "internalAmount" "1.4"
 		set attribute "internalSpeed" "7"
@@ -3902,13 +3825,6 @@ file "data/HandlingStats/feisar2048/4/handlingstats.xml" {
 		set attribute "shield" "133"
 		set attribute "weight_distribution" "-4.0"
 		set attribute "width" "5"
-	}
-	xml modify Handling.Stats.FE {
-		set attribute "firepower" "6"
-		set attribute "handling" "7"
-		set attribute "shield" "4"
-		set attribute "speed" "8"
-		set attribute "thrust" "8"
 	}
 	xml modify Handling.Stats.Tilt {
 		set attribute "internalAmount" "1.4"
@@ -4257,13 +4173,6 @@ file "data/HandlingStats/piranha2048/1/handlingstats.xml" {
 		set attribute "weight_distribution" "-4.0"
 		set attribute "width" "5.0"
 	}
-	xml modify Handling.Stats.FE {
-		set attribute "firepower" "9"
-		set attribute "handling" "3"
-		set attribute "shield" "9"
-		set attribute "speed" "6"
-		set attribute "thrust" "6"
-	}
 	xml modify Handling.Stats.Tilt {
 		set attribute "internalAmount" "1.3"
 		set attribute "internalSpeed" "5"
@@ -4610,13 +4519,6 @@ file "data/HandlingStats/piranha2048/2/handlingstats.xml" {
 		set attribute "shield" "133"
 		set attribute "weight_distribution" "-4.0"
 		set attribute "width" "5.0"
-	}
-	xml modify Handling.Stats.FE {
-		set attribute "firepower" "8"
-		set attribute "handling" "7"
-		set attribute "shield" "4"
-		set attribute "speed" "7"
-		set attribute "thrust" "6"
 	}
 	xml modify Handling.Stats.Tilt {
 		set attribute "internalAmount" "1.3"
@@ -4965,13 +4867,6 @@ file "data/HandlingStats/piranha2048/3/handlingstats.xml" {
 		set attribute "weight_distribution" "-4.0"
 		set attribute "width" "5.0"
 	}
-	xml modify Handling.Stats.FE {
-		set attribute "firepower" "7"
-		set attribute "handling" "4"
-		set attribute "shield" "4"
-		set attribute "speed" "10"
-		set attribute "thrust" "6"
-	}
 	xml modify Handling.Stats.Tilt {
 		set attribute "internalAmount" "1.3"
 		set attribute "internalSpeed" "5"
@@ -5318,13 +5213,6 @@ file "data/HandlingStats/piranha2048/4/handlingstats.xml" {
 		set attribute "shield" "133"
 		set attribute "weight_distribution" "-4.0"
 		set attribute "width" "3"
-	}
-	xml modify Handling.Stats.FE {
-		set attribute "firepower" "7"
-		set attribute "handling" "4"
-		set attribute "shield" "4"
-		set attribute "speed" "10"
-		set attribute "thrust" "6"
 	}
 	xml modify Handling.Stats.Tilt {
 		set attribute "internalAmount" "1.3"
@@ -5673,13 +5561,6 @@ file "data/HandlingStats/qirex2048/1/handlingstats.xml" {
 		set attribute "weight_distribution" "4.0"
 		set attribute "width" "6.0"
 	}
-	xml modify Handling.Stats.FE {
-		set attribute "firepower" "10"
-		set attribute "handling" "5"
-		set attribute "shield" "9"
-		set attribute "speed" "5"
-		set attribute "thrust" "7"
-	}
 	xml modify Handling.Stats.Tilt {
 		set attribute "internalAmount" "1.3"
 		set attribute "internalSpeed" "5"
@@ -6026,13 +5907,6 @@ file "data/HandlingStats/qirex2048/2/handlingstats.xml" {
 		set attribute "shield" "148"
 		set attribute "weight_distribution" "4.0"
 		set attribute "width" "6.0"
-	}
-	xml modify Handling.Stats.FE {
-		set attribute "firepower" "9"
-		set attribute "handling" "7"
-		set attribute "shield" "8"
-		set attribute "speed" "6"
-		set attribute "thrust" "7"
 	}
 	xml modify Handling.Stats.Tilt {
 		set attribute "internalAmount" "1.3"
@@ -6381,13 +6255,6 @@ file "data/HandlingStats/qirex2048/3/handlingstats.xml" {
 		set attribute "weight_distribution" "4.0"
 		set attribute "width" "6.0"
 	}
-	xml modify Handling.Stats.FE {
-		set attribute "firepower" "8"
-		set attribute "handling" "6"
-		set attribute "shield" "5"
-		set attribute "speed" "9"
-		set attribute "thrust" "7"
-	}
 	xml modify Handling.Stats.Tilt {
 		set attribute "internalAmount" "1.3"
 		set attribute "internalSpeed" "5"
@@ -6734,13 +6601,6 @@ file "data/HandlingStats/qirex2048/4/handlingstats.xml" {
 		set attribute "shield" "151"
 		set attribute "weight_distribution" "4.0"
 		set attribute "width" "6.0"
-	}
-	xml modify Handling.Stats.FE {
-		set attribute "firepower" "10"
-		set attribute "handling" "6"
-		set attribute "shield" "9"
-		set attribute "speed" "5"
-		set attribute "thrust" "7"
 	}
 	xml modify Handling.Stats.Tilt {
 		set attribute "internalAmount" "1.3"
@@ -7305,7 +7165,97 @@ file "data/plugins/frontend/NEWGUI/Extras_Definition_AS.xml" {
         				set attribute "x" "460"
         				set attribute "color" "FEGlobals->Blue2048"
         				set attribute "font" "NEOSANS_BOLD"
-        				set attribute string "Firestar is dedicated to the millions of\nWipEout fans like me who still hold onto\nthis game years after it's prime.\nWe couldn't do it without you. Thank you."
+        				set attribute string "Firestar is dedicated to the millions of"
+        			}
+        		}
+        		create-at 38 Text {
+        			set attribute "PushHeight" "1"
+        			create Values {
+        				set attribute "Align" "centre"
+        				set attribute "x" "460"
+        				set attribute "color" "FEGlobals->Blue2048"
+        				set attribute "font" "NEOSANS_BOLD"
+        				set attribute string "WipEout fans like me who still hold onto"
+        			}
+        		}
+        		create-at 39 Text {
+        			set attribute "PushHeight" "1"
+        			create Values {
+        				set attribute "Align" "centre"
+        				set attribute "x" "460"
+        				set attribute "color" "FEGlobals->Blue2048"
+        				set attribute "font" "NEOSANS_BOLD"
+        				set attribute string "this game years after it's prime."
+        			}
+        		}
+        		create-at 40 Text {
+        			set attribute "PushHeight" "1"
+        			create Values {
+        				set attribute "Align" "centre"
+        				set attribute "x" "460"
+        				set attribute "color" "FEGlobals->Blue2048"
+        				set attribute "font" "NEOSANS_BOLD"
+        				set attribute string "We couldn't do it without you. Thank you."
+        			}
+        		}
+        		create-at 41 Text {
+        			set attribute "PushHeight" "1"
+        			create Values {
+        				set attribute "Align" "centre"
+        				set attribute "x" "460"
+        				set attribute "color" "FEGlobals->Blue2048"
+        				set attribute "font" "NEOSANS_BOLD"
+        				set attribute string " "
+        			}
+        		}
+        		create-at 42 Text {
+        			set attribute "PushHeight" "1"
+        			create Values {
+        				set attribute "Align" "centre"
+        				set attribute "x" "460"
+        				set attribute "color" "FEGlobals->Blue2048"
+        				set attribute "font" "NEOSANS_BOLD"
+        				set attribute string " "
+        			}
+        		}
+        		create-at 43 Text {
+        			set attribute "PushHeight" "1"
+        			create Values {
+        				set attribute "Align" "centre"
+        				set attribute "x" "460"
+        				set attribute "color" "FEGlobals->Blue2048"
+        				set attribute "font" "NEOSANS_BOLD"
+        				set attribute string " "
+        			}
+        		}
+        		create-at 44 Text {
+        			set attribute "PushHeight" "1"
+        			create Values {
+        				set attribute "Align" "centre"
+        				set attribute "x" "460"
+        				set attribute "color" "FEGlobals->Blue2048"
+        				set attribute "font" "NEOSANS_BOLD"
+        				set attribute string " "
+        			}
+        		}
+        		create-at 45 Text {
+        			set attribute "PushHeight" "1"
+        			create Values {
+        				set attribute "Align" "centre"
+        				set attribute "x" "460"
+        				set attribute "color" "FEGlobals->Blue2048"
+        				set attribute "font" "NEOSANS_BOLD"
+        				set attribute string " "
+        			}
+        		}
+        		create-at 46 Text {
+        			set attribute "PushHeight" "1"
+        			create Values {
+        				set attribute "Align" "centre"
+        				set attribute "x" "460"
+        				set attribute "color" "FEGlobals->Blue2048"
+        				set attribute "font" "NEOSANS_BOLD"
+        				set attribute string " "
         			}
         		}
 	}
@@ -7535,7 +7485,97 @@ file "data/plugins/frontend/NEWGUI/Extras_Definition_EU.xml" {
         				set attribute "x" "460"
         				set attribute "color" "FEGlobals->Blue2048"
         				set attribute "font" "NEOSANS_BOLD"
-        				set attribute string "Firestar is dedicated to the millions of\nWipEout fans like me who still hold onto\nthis game years after it's prime.\nWe couldn't do it without you. Thank you."
+        				set attribute string "Firestar is dedicated to the millions of"
+        			}
+        		}
+        		create-at 38 Text {
+        			set attribute "PushHeight" "1"
+        			create Values {
+        				set attribute "Align" "centre"
+        				set attribute "x" "460"
+        				set attribute "color" "FEGlobals->Blue2048"
+        				set attribute "font" "NEOSANS_BOLD"
+        				set attribute string "WipEout fans like me who still hold onto"
+        			}
+        		}
+        		create-at 39 Text {
+        			set attribute "PushHeight" "1"
+        			create Values {
+        				set attribute "Align" "centre"
+        				set attribute "x" "460"
+        				set attribute "color" "FEGlobals->Blue2048"
+        				set attribute "font" "NEOSANS_BOLD"
+        				set attribute string "this game years after it's prime."
+        			}
+        		}
+        		create-at 40 Text {
+        			set attribute "PushHeight" "1"
+        			create Values {
+        				set attribute "Align" "centre"
+        				set attribute "x" "460"
+        				set attribute "color" "FEGlobals->Blue2048"
+        				set attribute "font" "NEOSANS_BOLD"
+        				set attribute string "We couldn't do it without you. Thank you."
+        			}
+        		}
+        		create-at 41 Text {
+        			set attribute "PushHeight" "1"
+        			create Values {
+        				set attribute "Align" "centre"
+        				set attribute "x" "460"
+        				set attribute "color" "FEGlobals->Blue2048"
+        				set attribute "font" "NEOSANS_BOLD"
+        				set attribute string " "
+        			}
+        		}
+        		create-at 42 Text {
+        			set attribute "PushHeight" "1"
+        			create Values {
+        				set attribute "Align" "centre"
+        				set attribute "x" "460"
+        				set attribute "color" "FEGlobals->Blue2048"
+        				set attribute "font" "NEOSANS_BOLD"
+        				set attribute string " "
+        			}
+        		}
+        		create-at 43 Text {
+        			set attribute "PushHeight" "1"
+        			create Values {
+        				set attribute "Align" "centre"
+        				set attribute "x" "460"
+        				set attribute "color" "FEGlobals->Blue2048"
+        				set attribute "font" "NEOSANS_BOLD"
+        				set attribute string " "
+        			}
+        		}
+        		create-at 44 Text {
+        			set attribute "PushHeight" "1"
+        			create Values {
+        				set attribute "Align" "centre"
+        				set attribute "x" "460"
+        				set attribute "color" "FEGlobals->Blue2048"
+        				set attribute "font" "NEOSANS_BOLD"
+        				set attribute string " "
+        			}
+        		}
+        		create-at 45 Text {
+        			set attribute "PushHeight" "1"
+        			create Values {
+        				set attribute "Align" "centre"
+        				set attribute "x" "460"
+        				set attribute "color" "FEGlobals->Blue2048"
+        				set attribute "font" "NEOSANS_BOLD"
+        				set attribute string " "
+        			}
+        		}
+        		create-at 46 Text {
+        			set attribute "PushHeight" "1"
+        			create Values {
+        				set attribute "Align" "centre"
+        				set attribute "x" "460"
+        				set attribute "color" "FEGlobals->Blue2048"
+        				set attribute "font" "NEOSANS_BOLD"
+        				set attribute string " "
         			}
         		}
 	}
@@ -7765,7 +7805,97 @@ file "data/plugins/frontend/NEWGUI/Extras_Definition_JP.xml" {
         				set attribute "x" "460"
         				set attribute "color" "FEGlobals->Blue2048"
         				set attribute "font" "NEOSANS_BOLD"
-        				set attribute string "Firestar is dedicated to the millions of\nWipEout fans like me who still hold onto\nthis game years after it's prime.\nWe couldn't do it without you. Thank you."
+        				set attribute string "Firestar is dedicated to the millions of"
+        			}
+        		}
+        		create-at 38 Text {
+        			set attribute "PushHeight" "1"
+        			create Values {
+        				set attribute "Align" "centre"
+        				set attribute "x" "460"
+        				set attribute "color" "FEGlobals->Blue2048"
+        				set attribute "font" "NEOSANS_BOLD"
+        				set attribute string "WipEout fans like me who still hold onto"
+        			}
+        		}
+        		create-at 39 Text {
+        			set attribute "PushHeight" "1"
+        			create Values {
+        				set attribute "Align" "centre"
+        				set attribute "x" "460"
+        				set attribute "color" "FEGlobals->Blue2048"
+        				set attribute "font" "NEOSANS_BOLD"
+        				set attribute string "this game years after it's prime."
+        			}
+        		}
+        		create-at 40 Text {
+        			set attribute "PushHeight" "1"
+        			create Values {
+        				set attribute "Align" "centre"
+        				set attribute "x" "460"
+        				set attribute "color" "FEGlobals->Blue2048"
+        				set attribute "font" "NEOSANS_BOLD"
+        				set attribute string "We couldn't do it without you. Thank you."
+        			}
+        		}
+        		create-at 41 Text {
+        			set attribute "PushHeight" "1"
+        			create Values {
+        				set attribute "Align" "centre"
+        				set attribute "x" "460"
+        				set attribute "color" "FEGlobals->Blue2048"
+        				set attribute "font" "NEOSANS_BOLD"
+        				set attribute string " "
+        			}
+        		}
+        		create-at 42 Text {
+        			set attribute "PushHeight" "1"
+        			create Values {
+        				set attribute "Align" "centre"
+        				set attribute "x" "460"
+        				set attribute "color" "FEGlobals->Blue2048"
+        				set attribute "font" "NEOSANS_BOLD"
+        				set attribute string " "
+        			}
+        		}
+        		create-at 43 Text {
+        			set attribute "PushHeight" "1"
+        			create Values {
+        				set attribute "Align" "centre"
+        				set attribute "x" "460"
+        				set attribute "color" "FEGlobals->Blue2048"
+        				set attribute "font" "NEOSANS_BOLD"
+        				set attribute string " "
+        			}
+        		}
+        		create-at 44 Text {
+        			set attribute "PushHeight" "1"
+        			create Values {
+        				set attribute "Align" "centre"
+        				set attribute "x" "460"
+        				set attribute "color" "FEGlobals->Blue2048"
+        				set attribute "font" "NEOSANS_BOLD"
+        				set attribute string " "
+        			}
+        		}
+        		create-at 45 Text {
+        			set attribute "PushHeight" "1"
+        			create Values {
+        				set attribute "Align" "centre"
+        				set attribute "x" "460"
+        				set attribute "color" "FEGlobals->Blue2048"
+        				set attribute "font" "NEOSANS_BOLD"
+        				set attribute string " "
+        			}
+        		}
+        		create-at 46 Text {
+        			set attribute "PushHeight" "1"
+        			create Values {
+        				set attribute "Align" "centre"
+        				set attribute "x" "460"
+        				set attribute "color" "FEGlobals->Blue2048"
+        				set attribute "font" "NEOSANS_BOLD"
+        				set attribute string " "
         			}
         		}
 	}
