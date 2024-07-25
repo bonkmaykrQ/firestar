@@ -47,12 +47,12 @@ public class Rowlf {
 
 		informationText.getDocument().putProperty("filterNewlines", Boolean.FALSE);
 		informationText.setHorizontalAlignment(JTextField.CENTER);
-		informationText.setText("Created by bonkmaykr, a.k.a. \"Downforce Agent\"\n" +
+		informationText.setText("Created by bonkmaykr & Wirlaburla\n" +
 				"\n" +
 				"Special thanks to:\n" +
-				"ThatOneBonk, for Thallium and for modding help\n" +
-				"Wirlaburla, for web hosting and code assistance\n" +
-				"Psygnosis, for making our favorite game ever\n" +
+				"ThatOneBonk, ChaCheeChoo, and the AGRF community\n" +
+				"Psygnosis / Studio Liverpool, SCE Europe\n" +
+				"Yifan Lu & FailOverflow, TheRadziu, NoPayStation\n" +
 				"and to all the PSVita hackers who made this possible");
 		informationText.setHighlighter(null);
 		informationText.getCaret().setVisible(false);
