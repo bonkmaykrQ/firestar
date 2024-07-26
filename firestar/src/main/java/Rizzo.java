@@ -31,7 +31,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.StringWriter;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,6 +46,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.OutputKeys;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -118,7 +118,9 @@ public class Rizzo {
 
 									StreamResult result = new StreamResult(new StringWriter());
 									DOMSource source = new DOMSource(doc);
-
+									
+									// WipEout 2048 will pretend to be happy with these self-closed tags but in actuality, it is screaming on the inside.
+									transformer.setOutputProperty(OutputKeys.METHOD, "html");
 									transformer.transform(source, result);
 									// Look ma, I'm breaking XML standards!
 									String xmlString = result.getWriter().toString()
