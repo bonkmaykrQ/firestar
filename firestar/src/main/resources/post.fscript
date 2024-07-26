@@ -7903,6 +7903,221 @@ file "data/plugins/frontend/NEWGUI/Extras_Definition_JP.xml" {
 file "data/plugins/frontend/NEWGUI/Extras_Definition_US.xml" {
 	xml modify Screen.Screen$extrasCredits.TouchScroll {
 		# <Text PushHeight="1"><Values Align="centre" x="460" scale="0.7" color="FEGlobals->Blue2048" font="default" string="Video"></Values></Text>
+		create-at 16 Text {
+			set attribute "PushHeight" "1"
+			create Values {
+				set attribute "Align" "centre"
+				set attribute "x" "460"
+				set attribute "scale" "0.82"
+				set attribute "color" "FEGlobals->Blue2048"
+				set attribute "font" "NEOSANS_BOLD"
+				set attribute string "This build is brought to you by"
+			}
+		}
+		create-at 17 Text {
+			set attribute "PushHeight" "1"
+			create Values {
+				set attribute "Align" "centre"
+				set attribute "x" "460"
+				set attribute "scale" "0.82"
+				set attribute "color" "FEGlobals->Blue2048"
+				set attribute "font" "NEOSANS_BOLD"
+				set attribute string "FIRESTAR MOD MANAGER"
+			}
+		}
+		create-at 18 Text {
+			set attribute "PushHeight" "1"
+			create Values {
+				set attribute "Align" "centre"
+				set attribute "x" "460"
+				set attribute "color" "FEGlobals->Blue2048"
+				set attribute "font" "NEOSANS_BOLD"
+				set attribute string ""
+			}
+		}
+		create-at 19 Text {
+			set attribute "PushHeight" "1"
+			create Values {
+				set attribute "Align" "centre"
+				set attribute "x" "460"
+				set attribute "scale" "0.7"
+				set attribute "color" "FEGlobals->Blue2048"
+				set attribute "font" "NEOSANS_BOLD"
+				set attribute string "Developed by"
+			}
+		}
+		create-at 20 Text {
+			set attribute "PushHeight" "1"
+			create Values {
+				set attribute "Align" "centre"
+				set attribute "x" "460"
+				set attribute "color" "FEGlobals->Blue2048"
+				set attribute "font" "NEOSANS_BOLD"
+				set attribute string "bonkmaykr"
+			}
+		}
+		create-at 21 Text {
+			set attribute "PushHeight" "1"
+			create Values {
+				set attribute "Align" "centre"
+				set attribute "x" "460"
+				set attribute "color" "FEGlobals->Blue2048"
+				set attribute "font" "NEOSANS_BOLD"
+				set attribute string "Wirlaburla"
+			}
+		}
+		create-at 22 Text {
+			set attribute "PushHeight" "1"
+			create Values {
+				set attribute "Align" "centre"
+				set attribute "x" "460"
+				set attribute "color" "FEGlobals->Blue2048"
+				set attribute "font" "NEOSANS_BOLD"
+				set attribute string " "
+			}
+		}
+		create-at 23 Text {
+			set attribute "PushHeight" "1"
+			create Values {
+				set attribute "Align" "centre"
+				set attribute "x" "460"
+				set attribute "scale" "0.7"
+				set attribute "color" "FEGlobals->Blue2048"
+				set attribute "font" "NEOSANS_BOLD"
+				set attribute string "With help from"
+			}
+		}
+		create-at 24 Text {
+			set attribute "PushHeight" "1"
+			create Values {
+				set attribute "Align" "centre"
+				set attribute "x" "460"
+				set attribute "color" "FEGlobals->Blue2048"
+				set attribute "font" "NEOSANS_BOLD"
+				set attribute string "ThatOneBonk"
+			}
+		}
+		create-at 25 Text {
+			set attribute "PushHeight" "1"
+			create Values {
+				set attribute "Align" "centre"
+				set attribute "x" "460"
+				set attribute "color" "FEGlobals->Blue2048"
+				set attribute "font" "NEOSANS_BOLD"
+				set attribute string " "
+			}
+		}
+		create-at 26 Text {
+			set attribute "PushHeight" "1"
+			create Values {
+				set attribute "Align" "centre"
+				set attribute "x" "460"
+				set attribute "scale" "0.7"
+				set attribute "color" "FEGlobals->Blue2048"
+				set attribute "font" "NEOSANS_BOLD"
+				set attribute string "Special Thanks to"
+			}
+		}
+		create-at 27 Text {
+			set attribute "PushHeight" "1"
+			create Values {
+				set attribute "Align" "centre"
+				set attribute "x" "460"
+				set attribute "color" "FEGlobals->Blue2048"
+				set attribute "font" "NEOSANS_BOLD"
+				set attribute string "Yifan Lu"
+			}
+		}
+		create-at 28 Text {
+			set attribute "PushHeight" "1"
+			create Values {
+				set attribute "Align" "centre"
+				set attribute "x" "460"
+				set attribute "color" "FEGlobals->Blue2048"
+				set attribute "font" "NEOSANS_BOLD"
+				set attribute string "TheRadziu"
+			}
+		}
+		create-at 29 Text {
+			set attribute "PushHeight" "1"
+			create Values {
+				set attribute "Align" "centre"
+				set attribute "x" "460"
+				set attribute "color" "FEGlobals->Blue2048"
+				set attribute "font" "NEOSANS_BOLD"
+				set attribute string "ChaCheeChoo"
+			}
+		}
+		create-at 30 Text {
+			set attribute "PushHeight" "1"
+			create Values {
+				set attribute "Align" "centre"
+				set attribute "x" "460"
+				set attribute "color" "FEGlobals->Blue2048"
+				set attribute "font" "NEOSANS_BOLD"
+				set attribute string "kanar"
+			}
+		}
+		create-at 31 Text {
+			set attribute "PushHeight" "1"
+			create Values {
+				set attribute "Align" "centre"
+				set attribute "x" "460"
+				set attribute "color" "FEGlobals->Blue2048"
+				set attribute "font" "NEOSANS_BOLD"
+				set attribute string "HellfireWZ"
+			}
+		}
+		create-at 32 Text {
+			set attribute "PushHeight" "1"
+			create Values {
+				set attribute "Align" "centre"
+				set attribute "x" "460"
+				set attribute "color" "FEGlobals->Blue2048"
+				set attribute "font" "NEOSANS_BOLD"
+				set attribute string "infoxicated"
+			}
+		}
+		create-at 33 Text {
+			set attribute "PushHeight" "1"
+			create Values {
+				set attribute "Align" "centre"
+				set attribute "x" "460"
+				set attribute "color" "FEGlobals->Blue2048"
+				set attribute "font" "NEOSANS_BOLD"
+				set attribute string "Coming_clean"
+			}
+		}
+		create-at 34 Text {
+			set attribute "PushHeight" "1"
+			create Values {
+				set attribute "Align" "centre"
+				set attribute "x" "460"
+				set attribute "color" "FEGlobals->Blue2048"
+				set attribute "font" "NEOSANS_BOLD"
+				set attribute string " "
+			}
+		}
+		create-at 35 Text {
+			set attribute "PushHeight" "1"
+			create Values {
+				set attribute "Align" "centre"
+				set attribute "x" "460"
+				set attribute "color" "FEGlobals->Blue2048"
+				set attribute "font" "NEOSANS_BOLD"
+				set attribute string " "
+			}
+		}
+		create-at 36 Text {
+			set attribute "PushHeight" "1"
+			create Values {
+				set attribute "Align" "centre"
+				set attribute "x" "460"
+				set attribute "color" "FEGlobals->Blue2048"
+				set attribute "font" "NEOSANS_BOLD"
+				set attribute string " "
+			}
+		}
 		create-at 37 Text {
                 			set attribute "PushHeight" "1"
                 			create Values {
