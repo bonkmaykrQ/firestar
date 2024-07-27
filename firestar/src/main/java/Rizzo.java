@@ -57,6 +57,7 @@ import org.xml.sax.SAXException;
 import org.apache.commons.text.StringEscapeUtils;
 
 public class Rizzo {
+	private final DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 	private Scanner scanner;
 	private final int maxVer = 1;
 	private int ver = 1;
@@ -78,9 +79,9 @@ public class Rizzo {
 	}
 	
 	private boolean parseArgs(String[] args, Object context) throws FirescriptFormatException {
-		System.out.println("Parsing Command: " + Arrays.toString(args));
 		if (args.length > 0) {
 			if (context == null) {
+				System.out.println("Parsing Command: " + Arrays.toString(args));
 				if (args[0].equalsIgnoreCase("fscript")) {
 					ver = Integer.parseInt(args[1]); // We'll do shit with this later
 					if (ver > maxVer) throw new FirescriptFormatException(args[0], "script too new");
@@ -90,7 +91,7 @@ public class Rizzo {
 					parseArgs(Arrays.copyOfRange(args, 2, args.length), newCtx);
 				} else throw new FirescriptFormatException("fscript", "unknown command '" + args[0] + "'");
 			} else {
-				System.out.println("Using context: " + context.getClass().getName() + "@" + context.hashCode());
+				System.out.println("Parsing Command: " + Arrays.toString(args) + " using context: " + context.getClass().getName() + "@" + context.hashCode());
 				if (args[0].equals("{")) {
 					System.out.println("New context block: " + context.getClass().getName() + "@" + context.hashCode());
 					parseScript(context);
@@ -107,7 +108,6 @@ public class Rizzo {
 							}
 						} else if (args[0].equalsIgnoreCase("xml")) {
 							try {
-								DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 								DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 								// Mmmm, love me some INVALID XML corrections.
 								ReplacingInputStream ris = new ReplacingInputStream(new ReplacingInputStream(new ReplacingInputStream(new FileInputStream(file), "\r\n", ""), "&", "&amp;"), "\n", "&#10;");
@@ -200,48 +200,61 @@ public class Rizzo {
 								Logger.getLogger(Rizzo.class.getName()).log(Level.SEVERE, null, ex);
 							}
 						} else throw new FirescriptFormatException("file", "unknown command '" + args[0] + "'");
+					} else if (args[0].equalsIgnoreCase("xml")) {
+						System.out.println("fscript: XML called but file does not exist. Using placebo...");
+						try {
+							DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+							parseArgs(Arrays.copyOfRange(args, 1, args.length), docBuilder.newDocument());
+						} catch (ParserConfigurationException ex1) {
+							Logger.getLogger(Rizzo.class.getName()).log(Level.SEVERE, null, ex1);
+							throw new FirescriptFormatException("xml", "critical document failure");
+						}
 					} else System.out.println("fscript: file context not found, skipping.");
 				} else if (context instanceof Document document) {
-					if (args[0].equalsIgnoreCase("modify")) {
-						Element elem = (Element)traverse(document, args[1]);
-						parseArgs(Arrays.copyOfRange(args, 2, args.length), elem);
-					} else if (args[0].equalsIgnoreCase("create")) {
-						String newTag = args[1].substring(args[1].lastIndexOf(".")+1);
-						String newID = "";
-						if (newTag.contains("#")) {
-							newID = newTag.substring(newTag.indexOf("#")+1);
-							newTag = newTag.substring(0, newTag.indexOf("#"));
-						}
-						Element newElem = document.createElement(newTag);
-						if (newID != null && newID.length() > 0) newElem.setAttribute("id", newID);
-						traverse(document, args[1].substring(0, args[1].lastIndexOf("."))).appendChild(newElem);
-						parseArgs(Arrays.copyOfRange(args, 2, args.length), newElem);
-					} else if (args[0].equalsIgnoreCase("delete")) {
-						Element elem = (Element)traverse(document, args[1]);
-						elem.getParentNode().removeChild(elem);
-					} else if (args[0].equalsIgnoreCase("merge")) {
-						// We're basically copying the file context xml command but with another xml document.
-						try {
-							DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-							DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-							ReplacingInputStream ris = new ReplacingInputStream(new ReplacingInputStream(new ReplacingInputStream(new FileInputStream(new File(workingDir + args[1])), "\r\n", ""), "&", "&amp;"), "\n", "&#10;");
-							Document outDoc = docBuilder.parse(ris);
-
-							NamedNodeMap nnm = outDoc.getDocumentElement().getAttributes();
-							for (int x = 0; x < nnm.getLength(); x++) {
-								Attr importedNode = (Attr) document.importNode(nnm.item(x), true);
-								document.getDocumentElement().setAttributeNodeNS(importedNode);
+					if (document.hasChildNodes()) {
+						if (args[0].equalsIgnoreCase("modify")) {
+							Element elem = (Element)traverse(document, args[1]);
+							parseArgs(Arrays.copyOfRange(args, 2, args.length), elem);
+						} else if (args[0].equalsIgnoreCase("create")) {
+							String newTag = args[1].substring(args[1].lastIndexOf(".")+1);
+							String newID = "";
+							if (newTag.contains("#")) {
+								newID = newTag.substring(newTag.indexOf("#")+1);
+								newTag = newTag.substring(0, newTag.indexOf("#"));
 							}
+							Element newElem = document.createElement(newTag);
+							if (newID != null && newID.length() > 0) newElem.setAttribute("id", newID);
+							traverse(document, args[1].substring(0, args[1].lastIndexOf("."))).appendChild(newElem);
+							parseArgs(Arrays.copyOfRange(args, 2, args.length), newElem);
+						} else if (args[0].equalsIgnoreCase("delete")) {
+							Element elem = (Element)traverse(document, args[1]);
+							elem.getParentNode().removeChild(elem);
+						} else if (args[0].equalsIgnoreCase("merge")) {
+							// We're basically copying the file context xml command but with another xml document.
+							try {
+								DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+								ReplacingInputStream ris = new ReplacingInputStream(new ReplacingInputStream(new ReplacingInputStream(new FileInputStream(new File(workingDir + args[1])), "\r\n", ""), "&", "&amp;"), "\n", "&#10;");
+								Document outDoc = docBuilder.parse(ris);
 
-							NodeList cn = outDoc.getDocumentElement().getChildNodes();
-							for (int x = 0; x < cn.getLength(); x++) {
-								Node importedNode = document.importNode(cn.item(x), true);
-								document.getDocumentElement().appendChild(importedNode);
+								NamedNodeMap nnm = outDoc.getDocumentElement().getAttributes();
+								for (int x = 0; x < nnm.getLength(); x++) {
+									Attr importedNode = (Attr) document.importNode(nnm.item(x), true);
+									document.getDocumentElement().setAttributeNodeNS(importedNode);
+								}
+
+								NodeList cn = outDoc.getDocumentElement().getChildNodes();
+								for (int x = 0; x < cn.getLength(); x++) {
+									Node importedNode = document.importNode(cn.item(x), true);
+									document.getDocumentElement().appendChild(importedNode);
+								}
+							} catch (SAXException | IOException | ParserConfigurationException ex) {
+								Logger.getLogger(Rizzo.class.getName()).log(Level.SEVERE, null, ex);
 							}
-						} catch (SAXException | IOException | ParserConfigurationException ex) {
-							Logger.getLogger(Rizzo.class.getName()).log(Level.SEVERE, null, ex);
-						}
-					} else throw new FirescriptFormatException("xml", "unknown command '" + args[0] + "'");
+						} else throw new FirescriptFormatException("xml", "unknown command '" + args[0] + "'");
+					} else {
+						System.out.println("fscript: XML document has no child nodes. Skipping...");
+						parseArgs(Arrays.copyOfRange(args, 1, args.length), document);
+					}
 				} else if (context instanceof Element element) {
 					if (args[0].equalsIgnoreCase("set")) {
 						if (args[1].equalsIgnoreCase("attribute"))
