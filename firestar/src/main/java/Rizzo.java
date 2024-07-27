@@ -54,6 +54,7 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+import org.apache.commons.text.StringEscapeUtils;
 
 public class Rizzo {
 	private Scanner scanner;
@@ -123,15 +124,7 @@ public class Rizzo {
 									transformer.setOutputProperty(OutputKeys.METHOD, "html");
 									transformer.transform(source, result);
 									// Look ma, I'm breaking XML standards!
-									String xmlString = result.getWriter().toString()
-										.replace("&amp;", "&")
-										.replace("&lt;", "<")
-										.replace("&gt;", ">")
-										.replace("&#9;", "\t")
-										.replace("&#8;", "\b")
-										.replace("&#10;", "\n")
-										.replace("&#13;", "\r")
-										.replace("&#12;", "\f");
+									String xmlString = StringEscapeUtils.unescapeHtml4(result.getWriter().toString());
 									try (PrintStream ps = new PrintStream(output)) {
 										ps.print(xmlString);
 									}
