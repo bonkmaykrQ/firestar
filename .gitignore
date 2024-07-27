@@ -28,6 +28,7 @@ out/
 ### Mac OS ###
 .DS_Store
 
+### Binaries ###
 /firestar.zip
 /run-linux.sh
 /run-win32.bat
@@ -37,4 +38,4 @@ out/
 /build/
 /.gradle/
 /gradle/
-!/gradle/wrapper/
+!/gradle/wrapper/*
