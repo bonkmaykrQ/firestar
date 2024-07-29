@@ -50,7 +50,7 @@ Firestar uses the Gradle build system. We write our code and perform all our tes
     git clone https://git.worlio.com/bonkmaykr/firestar.git
     ```
 
-3. `cd` to `firestar/` and run `./gradlew build` to make a JAR or `./gradlew run` to test your code immediately.
+3. `cd` to `firestar/` and run `gradle build` to make a JAR or `gradle run` to test your code immediately.
 - On Windows systems make sure you're running `gradlew.bat` and not the Bash script instead.
 
 # FAQ
