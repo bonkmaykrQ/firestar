@@ -196,7 +196,9 @@ public class Clifford implements ActionListener {
 			JFileChooser fileChooser = new JFileChooser();
 			fileChooser.setFileFilter(new FileNameExtensionFilter("Firestar Mod Package", "fstar"));
 			if (fileChooser.showSaveDialog(frame) == JFileChooser.APPROVE_OPTION) {
-				ZipFile zip = new ZipFile(fileChooser.getSelectedFile());
+				File modFile = fileChooser.getSelectedFile();
+				if (!modFile.getName().endsWith(".fstar")) modFile = new File(modFile.toString() + ".fstar");
+				ZipFile zip = new ZipFile(modFile);
 				boolean hasScript = false;
 				try {
 					zip.addFolder(new File(directory.getAbsolutePath() + "/data"));
