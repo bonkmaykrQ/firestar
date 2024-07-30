@@ -209,12 +209,14 @@ public class Suggs implements ActionListener, ListSelectionListener {
 			}
 		} else
 		if (actionEvent.getSource() == spDeleteBtn) {
+			dSTitle.setToolTipText(null);
 			dSTitle.setText("no track");
 			dSSize.setText("no size");
 			sptrack = null;
 			spDeleteBtn.setVisible(false);
 		} else
 		if (actionEvent.getSource() == mpDeleteBtn) {
+			dMTitle.setToolTipText(null);
 			dMTitle.setText("no track");
 			dMSize.setText("no size");
 			mptrack = null;
@@ -337,7 +339,8 @@ public class Suggs implements ActionListener, ListSelectionListener {
 		if (result == JFileChooser.APPROVE_OPTION) {
 			File selectedFile = fileChooser.getSelectedFile();
 			sptrack = selectedFile;
-			dSTitle.setText(selectedFile.getName());
+			dSTitle.setText(selectedFile.getName().substring(0, Math.min(selectedFile.getName().length(), 20)));
+			if (selectedFile.getName().length() > 20) {dSTitle.setToolTipText(selectedFile.getName());}
 			dSSize.setText(selectedFile.length() + " B");
 			if (selectedFile.length() > 1023) {
 				dSSize.setText((selectedFile.length() / 1024) + " KB");
@@ -355,7 +358,8 @@ public class Suggs implements ActionListener, ListSelectionListener {
 		if (result == JFileChooser.APPROVE_OPTION) {
 			File selectedFile = fileChooser.getSelectedFile();
 			mptrack = selectedFile;
-			dMTitle.setText(selectedFile.getName());
+			dMTitle.setText(selectedFile.getName().substring(0, Math.min(selectedFile.getName().length(), 20)));
+			if (selectedFile.getName().length() > 20) {dMTitle.setToolTipText(selectedFile.getName());}
 			dMSize.setText(selectedFile.length() + " B");
 			if (selectedFile.length() > 1023) {
 				dMSize.setText((selectedFile.length() / 1024) + " KB");

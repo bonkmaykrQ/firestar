@@ -67,7 +67,7 @@ public class Waldorf implements ActionListener {
 		dwnSDKbtn.addActionListener(this);
 		fOutpathChangebtn.addActionListener(this);
 
-		fOutpath.setText(Main.outpath);
+		updateDOutpath(Main.outpath);
 		checkUpdatesToggle.setSelected(Main.checkUpdates);
 
 		frame.setVisible(true);
@@ -79,6 +79,13 @@ public class Waldorf implements ActionListener {
 				e.getWindow().dispose();
 			}
 		});
+	}
+
+	private void updateDOutpath(String path) {
+		String s = path;
+		if (s.startsWith(System.getProperty("user.home"))) {s = "~" + s.substring(System.getProperty("user.home").length());}
+		if (s.length() > 50) {s = s.substring(0, Math.min(path.length(), 46)) + "...";fOutpath.setToolTipText(path);} else {fOutpath.setToolTipText(null);}
+		fOutpath.setText(s);
 	}
 
 	@Override
@@ -147,7 +154,7 @@ public class Waldorf implements ActionListener {
 				if (result == JFileChooser.APPROVE_OPTION) {
 					if (fileChooser.getSelectedFile().isDirectory()) {
 						tOutPath = fileChooser.getSelectedFile().getAbsolutePath()+"/";
-						fOutpath.setText(tOutPath);
+						updateDOutpath(tOutPath);
 					}
 				}
 			}
