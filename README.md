@@ -78,6 +78,21 @@ Firestar itself can run natively on the system, but it needs WINE in order to ha
 **If you are on Mac OS X you will need an older OS version that is still compatible with 32-bit applications.**
 
 # Developer Commentary
+## Programmer SOP
+When adding new features to Firestar, the Screw Gravity! team (loosely) follows this procedure:
+1. The developer prototypes the feature, in part or in full, on a Linux system.
+2. After completion, a QEMU/KVM running Windows 10 w/ VC++ 2012 libs and the latest JDK is deployed to test Firestar on.
+3. Code refactoring is done to account for Windows bugs. 
+4. The final commit is pushed.
+
+Try to stick to these conventions:
+- Avoid allowing the user to interact with the main window (MissPiggy.java) while another menu is open that alters any data, and keep this window Always-on-top. This is usually done by passing the master JFrame as a parameter to the child and telling it to freeze the parent's JFrame until the user closes that menu.
+- Keep formatting consistent and readable. 
+    - `if` statements should have a space separating the conditions and code block.
+    - Use tabs instead of repeat spaces for indentation where possible and keep one indentation per layer, avoid flattening unless appropriate.
+    - Split up long equations and statements into new lines with an operator at the start of the new line.
+    - Divide really long functions into paragraph for certain major steps.
+
 ## Third Party Code
 Firestar is built on top of the following additional software:
 - *[WINE](https://www.winehq.org/), for running the below applications across platforms.
