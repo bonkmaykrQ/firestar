@@ -19,6 +19,7 @@ dependencies {
     implementation group: 'org.json', name: 'json', version: '20240303'
     implementation group: 'io.github.java-diff-utils', name: 'java-diff-utils', version: '4.12'
 	implementation group: 'org.apache.commons', name: 'commons-text', version: '1.12.0'
+    implementation group: 'org.netbeans.external', name: 'org-apache-commons-io', version: 'RELEASE113'
 
     implementation 'com.jetbrains.intellij.java:java-gui-forms-rt:203.7148.30'
     antTask 'com.jetbrains.intellij.java:java-compiler-ant-tasks:203.7148.30'

@@ -58,7 +58,8 @@ public class Rowlf {
 		informationText.getCaret().setVisible(false);
 		informationText.setFocusable(false);
 
-		versionLabel.setText("Version " + Main.vstr + " (" + Main.vcode + ")");
+		versionLabel.setText(Main.vstr + " (" + Main.vcode + ")");
+		//if (Main.isNightly) {versionLabel.setText(versionLabel.getText() + " built " + Main.dateOfCompile);}
 		environmentLabel.setText("Running on Java " + System.getProperty("java.version") + " for " + System.getProperty("os.name"));
 
 		// display window

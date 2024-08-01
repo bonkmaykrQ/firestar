@@ -18,11 +18,13 @@
 
 import net.lingala.zip4j.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
+import org.apache.commons.io.IOUtils;
 import org.json.*;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.util.*;
 import java.util.List;
@@ -31,10 +33,15 @@ import javax.swing.*;
 
 public class Main {
 	// Build Information
-	public static final String vstr = "Release 1.3";
+	public static String vstr = "Release 1.3";
 	public static final String vcode = "Tetsuo";
 	public static final String vtag = "tetsuo-1.3"; // set to dekka-1.1 for testing
 	public static final int vint = 1;
+
+	// Jenkins Build Information
+	public static boolean isNightly = false;
+	public static final String vtagPrevious = "dekka-1.2";
+	public static String dateOfCompile = null;
 
 	// User Settings
 	public static String outpath = System.getProperty("user.home") + "/.firestar/out/"; //game assets location
@@ -47,6 +54,7 @@ public class Main {
 
 	public enum ArcTarget { // install target for 2048, type used by downloader
 		BASE("http://zeus.dl.playstation.net/cdn/UP9000/PCSA00015_00/NYEoaBGfiWymSEVZKxoyrKyBFsZNoFqxdyAIpZayZYuLLbCAArYrYXjPNhKCfXcONmhIZzZEeArycSrjiJOuNMWuWsDONUxMIQtMk.pkg"),
+		FIRST("http://gs.ww.np.dl.playstation.net/ppkg/np/PCSA00015/PCSA00015_T5/a4b7d9e35ed56e86/UP9000-PCSA00015_00-WIPEOUT2048BASE0-A0104-V0100-059564fcab8ce66d19b5a563e92677e581313205-PE.pkg"), // TODO ALLOW DATA1 DOWNLOAD
 		LATEST("http://gs.ww.np.dl.playstation.net/ppkg/np/PCSA00015/PCSA00015_T5/a4b7d9e35ed56e86/UP9000-PCSA00015_00-WIPEOUT2048BASE0-A0104-V0100-059564fcab8ce66d19b5a563e92677e581313205-PE.pkg"),
 		ADDON_HD("http://zeus.dl.playstation.net/cdn/UP9000/PCSA00015_00/JYMqGNXUKqHEyNLjbOgrWcJdnQJUMzgadRFWekbWFBXAwMeGikOyiHkXKogKIfqGhtNwKgmNWwwcrJORmRUTDzylBPwjGVnVjyDfh.pkg"),
 		ADDON_HD_FURY("http://zeus.dl.playstation.net/cdn/UP9000/PCSA00015_00/IAoJQaDpySenBmQCKiqecEPMzSdPfPcdXupxZXLTYYTuRgtsdTaHxbeejwGKRQpjJOKBdMMFzSoeEhsHYxNUasQrEzkZPeBxUEqnp.pkg");
@@ -62,6 +70,7 @@ public class Main {
 
 	public enum ArcKey { // decryption keys for 2048, type used by downloader
 		BASE("KO5ifR1dQ+eHBlgi6TI0Bdkf7hng6h8aYmRgYuHkCLQNn/9ufV+01fmzjNSmwuVHnO4dEBuN8cENACqVFcgA"),
+		FIRST("KO5ifR1dQ+eHBlgi6TI0Bdkf7hng6h8aYmRgYuHkCLQNn/9ufV+01fmzjNSmwuVHnO4dEBuN8cENACqVFcgA"),
 		LATEST("KO5ifR1dQ+eHBlgi6TI0Bdkf7hng6h8aYmRgYuHkCLQNn/9ufV+01fmzjNSmwuVHnO4dEBuN8cENACqVFcgA"),
 		ADDON_HD("KO5ifR1dQ+eHBlgi6TI0Bdnv4uNsGG5kYGIR4Ojs7ejuis9/anXfuudVNvzgdu+9z1z+asJojA9uAACgRhTl"),
 		ADDON_HD_FURY("KO5ifR1dQ+eHBlgi6TI0Bdnv4uNsFG5kYGIR4Ojs7ejuis9/3fydBRm3eCJX7biz/vVTm/2jMT64AQCCYhVy");
@@ -97,8 +106,22 @@ public class Main {
 	public static BufferedImage windowIcon;
 
 	public static void main(String[] args) {
+		// get Nightly information from Jenkins automatic builds
+		if (Main.class.getResource("/jenkinsVersionString") != null) {
+			System.out.println("=== This is a NIGHTLY BUILD! ===\n");
+			try {
+				vstr = "Nightly " + IOUtils.toString(Main.class.getResourceAsStream("/jenkinsVersionString"), StandardCharsets.UTF_8);
+				dateOfCompile = IOUtils.toString(Main.class.getResourceAsStream("/jenkinsBuildDate"), StandardCharsets.UTF_8);
+				System.out.println("Compiled on " + dateOfCompile);
+				isNightly = true;
+			} catch (Exception e) {
+				System.out.println("ERROR: Something went wrong trying to get the autobuild information! defaulting to Release values\n\n");
+				isNightly = false;
+			}
+		}
+
 		// license string
-		System.out.printf("FIRESTAR MOD MANAGER for WipEout 2048\nversion " + vstr + " (codename " + vcode + ") major " + vint + "\n" +
+		System.out.printf("FIRESTAR MOD MANAGER for WipEout 2048\n" + vstr + " (codename " + vcode + ") major " + vint + "\n" +
 				"JVM host appears to be " + System.getProperty("os.name") +
 				"\nRunning from " + System.getProperty("user.dir") +
 				"\nCopyright (C) 2024  bonkmaykr\n\nThis program is free software: you can redistribute it and/or modify\n" +
@@ -114,7 +137,6 @@ public class Main {
 				"You should have received a copy of the GNU General Public License\n" +
 				"along with this program.  If not, see https://www.gnu.org/licenses/.\n\n\n\n");
 
-		//begin
 		// load global assets
 		try {
 			fExo2 = Font.createFont(Font.TRUETYPE_FONT, Main.class.getResourceAsStream("/exo2.ttf"));

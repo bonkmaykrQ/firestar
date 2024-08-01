@@ -62,7 +62,7 @@ public class Ernie implements ActionListener {
 
 	private JFrame parent;
 
-	public Ernie(JFrame parent) {
+	public Ernie(JFrame parent, boolean isManual) {
 		this.parent = parent;
 		frame.setIconImage(Main.windowIcon);
 		byte[] urlraw = getFile(gitapi+"/releases?draft=false&pre-release=false");
@@ -72,7 +72,9 @@ public class Ernie implements ActionListener {
 			try {
 				JSONArray releases = new JSONArray(new String(urlraw, Charset.forName("utf-8")));
 				System.out.println("Updater: latest release is " + ((JSONObject)releases.get(0)).get("tag_name"));
-				if (releases.length() >= 1 && !((JSONObject)releases.get(0)).get("tag_name").equals(Main.vtag)) {
+				if (releases.length() >= 1
+				&& (!Main.isNightly && (!((JSONObject)releases.get(0)).get("tag_name").equals(Main.vtag))
+				|| (Main.isNightly && !((JSONObject)releases.get(0)).get("tag_name").equals(Main.vtagPrevious)))) {
 					System.out.println("Updater: Your version is out of date.");
 					frame.add(frameContainer);
 					notnowbtn.addActionListener(this);
@@ -97,7 +99,10 @@ public class Ernie implements ActionListener {
 						}
 					});
 					frame.setVisible(true);
-				} else { System.out.println("Updater: No updates."); }
+				} else {
+					System.out.println("Updater: No updates.");
+					if (isManual) {JOptionPane.showMessageDialog(frame, "There are no updates at this time.", "Check for Updates", JOptionPane.INFORMATION_MESSAGE);}
+				}
 			} catch (IOException | JSONException ex) {
 				Logger.getLogger(Ernie.class.getName()).log(Level.SEVERE, null, ex);
 			}

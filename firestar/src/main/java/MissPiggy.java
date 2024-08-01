@@ -172,7 +172,7 @@ public class MissPiggy implements ActionListener {
 		frame.setLayout(new GridLayout());
 		frame.setLocationRelativeTo(null);
 	
-		if (Main.checkUpdates) { StartErnie(); }
+		if (Main.checkUpdates) { StartErnie(false); }
 
 		frame.setVisible(true);
 	}
@@ -300,11 +300,11 @@ public class MissPiggy implements ActionListener {
 		createSelectionEventListener();
 	}
 	
-	private void StartErnie() {
+	private void StartErnie(boolean isManual) {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				new Ernie(frame); // changed away from runnable in order to pass params to constructor -bonk
+				new Ernie(frame, isManual); // changed away from runnable in order to pass params to constructor -bonk
 			}
 		}).start();
 	}
@@ -358,7 +358,7 @@ public class MissPiggy implements ActionListener {
 				JOptionPane.showMessageDialog(frame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 			}
 		} else
-		if (actionEvent.getSource() == helpMenu.getItem(5)) {StartErnie();} else
+		if (actionEvent.getSource() == helpMenu.getItem(5)) {StartErnie(true);} else
 		if (actionEvent.getSource() == helpMenu.getItem(6)) {new Rowlf(frame);}
 	}
 
