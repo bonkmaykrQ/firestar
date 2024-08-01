@@ -172,7 +172,7 @@ public class Bert implements ActionListener {
 						Fozzie popup = new Fozzie();
 						popup.displayTextOnly("Extracting " + arcname + "...", "Extracting");
 						try {
-							Process p = Main.exec(new String[]{"pkg2zip.exe", "-x", "asset.pkg", key.toString()}, Main.inpath);
+							Process p = Main.exec(new String[]{Main.inpath + "pkg2zip.exe", "-x", "asset.pkg", key.toString()}, Main.inpath);
 							InputStream debugin = new BufferedInputStream(p.getInputStream());
 							OutputStream debugout = new BufferedOutputStream(System.out);
 							int c;
@@ -226,7 +226,7 @@ public class Bert implements ActionListener {
 						popup.setText("<html>Decrypting protected PFS:<br/>" + extracted + "</html>", "Decrypting");
 
 						try {
-							Process p = Main.exec(new String[]{"psvpfsparser.exe", "-i", extracted, "-o", "./temp/", "-z", key.toString(), "-f", "cma.henkaku.xyz"}, Main.inpath);
+							Process p = Main.exec(new String[]{Main.inpath + "psvpfsparser.exe", "-i", extracted, "-o", "./temp/", "-z", key.toString(), "-f", "cma.henkaku.xyz"}, Main.inpath);
 							InputStream debugin = new BufferedInputStream(p.getInputStream());
 							OutputStream debugout = new BufferedOutputStream(System.out);
 							int c;
