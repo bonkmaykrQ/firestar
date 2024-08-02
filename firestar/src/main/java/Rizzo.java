@@ -47,12 +47,8 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.OutputKeys;
-import org.w3c.dom.Attr;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+
+import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 import org.apache.commons.text.StringEscapeUtils;
 
@@ -353,6 +349,7 @@ public class Rizzo {
 					ns = ((Element)parent).getChildNodes(); 
 				for (int i = 0; i < ns.getLength(); i++) {
 					Node n = ns.item(i);
+					if (n instanceof Comment) continue;
 					if (n.getNodeName().equals("#text")) continue;
 					if (((Element)n).getAttribute("name").equals(name)) {
 						newParent = (Element)n;
