@@ -31,6 +31,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -162,7 +163,9 @@ public class Gonzo {
 
 		// overwrite assets with custom ones from each mod and/or perform operations as specified in mod's delete list
 		// todo: implement RegEx functions after delete.txt
-		for (Main.Mod m : Main.Mods) {
+		List<Main.Mod> modsFlipped = Main.Mods;
+		Collections.reverse(modsFlipped);
+		for (Main.Mod m : modsFlipped) {
 			if (m.enabled) {
 				try {
 					System.out.println("Firestar is extracting " + m.friendlyName + " by " + m.author);
