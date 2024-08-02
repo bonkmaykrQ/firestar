@@ -89,7 +89,7 @@ public class Rizzo {
 					File newCtx = new File(workingDir + args[1]);
 					System.out.println("Calling new parse: " + Arrays.toString(Arrays.copyOfRange(args, 2, args.length)));
 					parseArgs(Arrays.copyOfRange(args, 2, args.length), newCtx);
-				} else throw new FirescriptFormatException("fscript", "command '" + args[0] + "' is unknown or used in inappropriate context\n\nOne of your mods has a broken FSCRIPT. It cannot be installed.");
+				} else throw new FirescriptFormatException("fscript", "command '" + args[0] + "' is unknown or used in inappropriate context");
 			} else {
 				System.out.println("Parsing Command: " + Arrays.toString(args) + " using context: " + context.getClass().getName() + "@" + context.hashCode());
 				if (args[0].equals("{")) {
@@ -199,7 +199,7 @@ public class Rizzo {
 							} catch (FirescriptFormatException | PatchFailedException | IOException ex) {
 								Logger.getLogger(Rizzo.class.getName()).log(Level.SEVERE, null, ex);
 							}
-						} else throw new FirescriptFormatException("file", "command '" + args[0] + "' is unknown or used in inappropriate context\n\nOne of your mods has a broken FSCRIPT. It cannot be installed.");
+						} else throw new FirescriptFormatException("file", "command '" + args[0] + "' is unknown or used in inappropriate context");
 					} else if (args[0].equalsIgnoreCase("xml")) {
 						System.out.println("fscript: XML called but file does not exist. Using placebo...");
 						try {
@@ -250,7 +250,7 @@ public class Rizzo {
 							} catch (SAXException | IOException | ParserConfigurationException ex) {
 								Logger.getLogger(Rizzo.class.getName()).log(Level.SEVERE, "This usually means there's non-standard formatting from the game developer which your FSCRIPT does not account for.", ex);
 							}
-						} else throw new FirescriptFormatException("xml", "command '" + args[0] + "' is unknown or used in inappropriate context\n\nOne of your mods has a broken FSCRIPT. It cannot be installed.");
+						} else throw new FirescriptFormatException("xml", "command '" + args[0] + "' is unknown or used in inappropriate context");
 					} else {
 						System.out.println("fscript: XML document has no child nodes. Skipping...");
 						parseArgs(Arrays.copyOfRange(args, 1, args.length), document);

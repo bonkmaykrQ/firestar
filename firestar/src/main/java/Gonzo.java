@@ -212,7 +212,9 @@ public class Gonzo {
 				} catch (Exception e) {
 					System.out.println(e.getMessage());
 					consoleDisplay.append("CRITICAL FAILURE: " + e.getMessage());
-					JOptionPane.showMessageDialog(this.frame, "CRITICAL FAILURE: " + e.getMessage(), "Fatal Error", JOptionPane.ERROR_MESSAGE);
+					if (e instanceof FirescriptFormatException) {JOptionPane.showMessageDialog(this.frame, "CRITICAL FAILURE: " + e.getMessage() + "\nOne of your mods has a broken FSCRIPT. It cannot be installed.", "Fatal Error", JOptionPane.ERROR_MESSAGE);} else {
+						JOptionPane.showMessageDialog(this.frame, "CRITICAL FAILURE: " + e.getMessage(), "Fatal Error", JOptionPane.ERROR_MESSAGE);
+					}
 					frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 					AllowExit();
 					return;
@@ -226,7 +228,7 @@ public class Gonzo {
 		} catch (IOException | FirescriptFormatException e) {
 			System.out.println(e.getMessage());
 			consoleDisplay.append("CRITICAL FAILURE: " + e.getMessage());
-			JOptionPane.showMessageDialog(this.frame, "CRITICAL FAILURE: " + e.getMessage(), "Fatal Error", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(this.frame, "CRITICAL FAILURE: Internal FSCRIPT Error. " + e.getMessage() + "\nThis may indicate that Firestar has been corrupted and needs reinstalling.", "Fatal Error", JOptionPane.ERROR_MESSAGE);
 			frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 			AllowExit();
 			return;
