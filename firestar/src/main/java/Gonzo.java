@@ -108,6 +108,9 @@ public class Gonzo {
 	}
 
 	private void CompatibilityRoutine() {
+		// cleanup any failed deploys to avoid scripts running when they are not supposed to be
+		Main.deleteDir(new File(System.getProperty("user.home") + "/.firestar/temp/"));
+
 		// create temporary working area for asset dump
 		new File(System.getProperty("user.home") + "/.firestar/temp/").mkdirs();
 
@@ -349,6 +352,7 @@ public class Gonzo {
 			@Override
 			public void windowClosing(WindowEvent e)
 			{
+				Main.deleteDir(new File(System.getProperty("user.home") + "/.firestar/temp/"));
 				invoker.wrapUpDeployment();
 				e.getWindow().dispose();
 			}
