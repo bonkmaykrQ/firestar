@@ -163,7 +163,7 @@ public class Gonzo {
 
 		// overwrite assets with custom ones from each mod and/or perform operations as specified in mod's delete list
 		// todo: implement RegEx functions after delete.txt
-		List<Main.Mod> modsFlipped = Main.Mods;
+		List<Main.Mod> modsFlipped = new ArrayList<>(Main.Mods);
 		Collections.reverse(modsFlipped);
 		for (Main.Mod m : modsFlipped) {
 			if (m.enabled) {
