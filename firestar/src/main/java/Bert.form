@@ -108,7 +108,7 @@
               </component>
             </children>
           </grid>
-          <grid id="1000f" layout-manager="GridLayoutManager" row-count="2" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+          <grid id="1000f" layout-manager="GridLayoutManager" row-count="3" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
             <margin top="0" left="0" bottom="0" right="0"/>
             <constraints>
               <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
@@ -120,53 +120,109 @@
             </properties>
             <border type="none"/>
             <children>
-              <component id="ec9c0" class="javax.swing.JCheckBox" binding="patchCheck">
-                <constraints>
-                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="10" fill="0" indent="0" use-parent-layout="false"/>
-                </constraints>
-                <properties>
-                  <background color="-15128227"/>
-                  <font name="Exo 2"/>
-                  <foreground color="-1"/>
-                  <horizontalTextPosition value="11"/>
-                  <text value="Updates"/>
-                </properties>
-              </component>
-              <component id="a6e9" class="javax.swing.JCheckBox" binding="baseCheck">
-                <constraints>
-                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="6" fill="0" indent="0" use-parent-layout="false"/>
-                </constraints>
-                <properties>
-                  <background color="-15128227"/>
-                  <font name="Exo 2"/>
-                  <foreground color="-1"/>
-                  <horizontalTextPosition value="10"/>
-                  <text value="Base game"/>
-                </properties>
-              </component>
               <component id="f3723" class="javax.swing.JCheckBox" binding="hdCheck">
                 <constraints>
-                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="5" fill="0" indent="0" use-parent-layout="false"/>
+                  <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="5" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
                   <background color="-15128227"/>
                   <font name="Exo 2"/>
                   <foreground color="-1"/>
                   <horizontalTextPosition value="10"/>
+                  <opaque value="false"/>
                   <text value="HD Add-On Pack"/>
+                  <verticalTextPosition value="0"/>
                 </properties>
               </component>
               <component id="5ed0c" class="javax.swing.JCheckBox" binding="furyCheck">
                 <constraints>
-                  <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
+                  <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
                   <background color="-15128227"/>
                   <font name="Exo 2"/>
                   <foreground color="-1"/>
                   <horizontalTextPosition value="11"/>
+                  <opaque value="false"/>
                   <selected value="false"/>
                   <text value="Fury Add-On Pack"/>
+                  <verticalTextPosition value="0"/>
+                </properties>
+              </component>
+              <grid id="afeb1" layout-manager="GridLayoutManager" row-count="2" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                <margin top="0" left="0" bottom="0" right="0"/>
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="1" anchor="2" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <background color="-15128227"/>
+                  <opaque value="false"/>
+                </properties>
+                <border type="none"/>
+                <children>
+                  <component id="6337e" class="javax.swing.JRadioButton" binding="baseCheck">
+                    <constraints>
+                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="10" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <background color="-15128227"/>
+                      <font name="Exo 2"/>
+                      <foreground color="-1"/>
+                      <horizontalAlignment value="0"/>
+                      <horizontalTextPosition value="11"/>
+                      <opaque value="false"/>
+                      <text value="Base Game"/>
+                    </properties>
+                  </component>
+                  <component id="5c733" class="javax.swing.JRadioButton" binding="patchCheck2">
+                    <constraints>
+                      <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="2" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <background color="-15128227"/>
+                      <font name="Exo 2"/>
+                      <foreground color="-1"/>
+                      <label value="v1.04 (Latest)"/>
+                      <opaque value="false"/>
+                      <text value="v1.04 (Latest)"/>
+                    </properties>
+                  </component>
+                  <component id="f9b10" class="javax.swing.JRadioButton" binding="patchCheck1">
+                    <constraints>
+                      <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="2" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <background color="-15128227"/>
+                      <font name="Exo 2"/>
+                      <foreground color="-1"/>
+                      <opaque value="false"/>
+                      <text value="v1.01+"/>
+                    </properties>
+                  </component>
+                  <component id="826d4" class="javax.swing.JLabel">
+                    <constraints>
+                      <grid row="0" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <background color="-15128227"/>
+                      <font name="Exo 2"/>
+                      <foreground color="-1"/>
+                      <opaque value="false"/>
+                      <text value="Select Game Version:"/>
+                    </properties>
+                  </component>
+                </children>
+              </grid>
+              <component id="45b94" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="1" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="2" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <background color="-15128227"/>
+                  <font name="Exo 2"/>
+                  <foreground color="-1"/>
+                  <opaque value="false"/>
+                  <text value="Select DLC Packs:"/>
                 </properties>
               </component>
             </children>

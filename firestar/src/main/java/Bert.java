@@ -30,8 +30,9 @@ public class Bert implements ActionListener {
 	private JPanel frameContainer;
 	private JButton cancelbtn;
 	private JButton downloadbtn;
-	private JCheckBox patchCheck;
-	private JCheckBox baseCheck;
+	private JRadioButton baseCheck;
+	private JRadioButton patchCheck1;
+	private JRadioButton patchCheck2;
 	private JCheckBox hdCheck;
 	private JCheckBox furyCheck;
 	private ButtonGroup radios = new ButtonGroup();
@@ -93,16 +94,48 @@ public class Bert implements ActionListener {
 		} else if (actionEvent.getSource() == downloadbtn) {
 			ArrayList<Main.ArcTarget> arcs = new ArrayList<Main.ArcTarget>();
 			ArrayList<Main.ArcKey> keys = new ArrayList<Main.ArcKey>();
-			if (baseCheck.isSelected()) {
+
+			// Always download predecessors to ensure no missing files
+			// Probably not necessary since I will be adding selective extraction to Gonzo,
+			// and throw errors when a lower PSARC doesn't exist, but there's no real reason not to.
+			//
+			// Of course, to avoid additional download times, we should probably
+			// avoid adding to the download list if a file already exists, unless explicitly
+			// selected (the exact radio button). The user can redownload one at a time
+			// but Firestar will not overwrite existing PSARCs otherwise.
+			if (baseCheck.isSelected()) { // I have the base game
 				arcs.add(Main.ArcTarget.BASE);
 				keys.add(Main.ArcKey.BASE);
 				System.out.println("Begin download of data (Game version 1.0)");
 			}
-			if (patchCheck.isSelected()) {
+			if (patchCheck1.isSelected()) { // I updated it once after it came out and then didn't turn my vita on for thousands of years
+				if (!new File(Main.inpath + "data.psarc").exists()) {
+					arcs.add(Main.ArcTarget.BASE);
+					keys.add(Main.ArcKey.BASE);
+					System.out.println("Begin download of data (Game version 1.0)");
+				}
+				arcs.add(Main.ArcTarget.FIRST);
+				keys.add(Main.ArcKey.FIRST);
+				System.out.println("Begin download of data1 (Game version 1.01)");
+			}
+			if (patchCheck2.isSelected()) { // I'm a normal fucking person
+				if (!new File(Main.inpath + "data.psarc").exists()) {
+					arcs.add(Main.ArcTarget.BASE);
+					keys.add(Main.ArcKey.BASE);
+					System.out.println("Begin download of data (Game version 1.0)");
+				}
+				if (!new File(Main.inpath + "data1.psarc").exists()) {
+					arcs.add(Main.ArcTarget.FIRST);
+					keys.add(Main.ArcKey.FIRST);
+					System.out.println("Begin download of data1 (Game version 1.01)");
+				}
 				arcs.add(Main.ArcTarget.LATEST);
 				keys.add(Main.ArcKey.LATEST);
 				System.out.println("Begin download of data2 (Game version 1.04)");
 			}
+
+			// DLC are installed arbitrarily, separate of the game, and can remain as checkboxes with the old logic.
+			// Likewise, the old overwrite policy applies. If the user selects these, it WILL download with no question.
 			if (hdCheck.isSelected()) {
 				arcs.add(Main.ArcTarget.ADDON_HD);
 				keys.add(Main.ArcKey.ADDON_HD);
@@ -132,9 +165,13 @@ public class Bert implements ActionListener {
 								key = Main.ArcKey.BASE.toString();
 								arcname = "Base game";
 								break;
+							case FIRST :
+								key = Main.ArcKey.FIRST.toString();
+								arcname = "Update 1.01";
+								break;
 							case LATEST :
 								key = Main.ArcKey.LATEST.toString();
-								arcname = "Updates";
+								arcname = "Update 1.04";
 								break;
 							case ADDON_HD :
 								key = Main.ArcKey.ADDON_HD.toString();
@@ -200,6 +237,9 @@ public class Bert implements ActionListener {
 						if (type == Main.ArcTarget.BASE) {
 							extracted = "app/PCSA00015";
 							name = "data.psarc";
+						} else if (type == Main.ArcTarget.FIRST) {
+							extracted = "patch/PCSA00015";
+							name = "data1.psarc";
 						} else if (type == Main.ArcTarget.LATEST) {
 							extracted = "patch/PCSA00015";
 							name = "data2.psarc";
