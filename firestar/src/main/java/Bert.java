@@ -55,6 +55,10 @@ public class Bert implements ActionListener {
 		frame.setLocationRelativeTo(parent);
 		frame.setAlwaysOnTop(true);
 
+		radios.add(baseCheck);
+		radios.add(patchCheck1);
+		radios.add(patchCheck2);
+
 		cancelbtn.addActionListener(this);
 		downloadbtn.addActionListener(this);
 

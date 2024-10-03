@@ -126,6 +126,7 @@
                 </constraints>
                 <properties>
                   <background color="-15128227"/>
+                  <focusPainted value="false"/>
                   <font name="Exo 2"/>
                   <foreground color="-1"/>
                   <horizontalTextPosition value="10"/>
@@ -140,6 +141,7 @@
                 </constraints>
                 <properties>
                   <background color="-15128227"/>
+                  <focusPainted value="false"/>
                   <font name="Exo 2"/>
                   <foreground color="-1"/>
                   <horizontalTextPosition value="11"/>
@@ -166,6 +168,7 @@
                     </constraints>
                     <properties>
                       <background color="-15128227"/>
+                      <focusPainted value="false"/>
                       <font name="Exo 2"/>
                       <foreground color="-1"/>
                       <horizontalAlignment value="0"/>
@@ -180,10 +183,12 @@
                     </constraints>
                     <properties>
                       <background color="-15128227"/>
+                      <focusPainted value="false"/>
                       <font name="Exo 2"/>
                       <foreground color="-1"/>
                       <label value="v1.04 (Latest)"/>
                       <opaque value="false"/>
+                      <selected value="true"/>
                       <text value="v1.04 (Latest)"/>
                     </properties>
                   </component>
@@ -193,6 +198,7 @@
                     </constraints>
                     <properties>
                       <background color="-15128227"/>
+                      <focusPainted value="false"/>
                       <font name="Exo 2"/>
                       <foreground color="-1"/>
                       <opaque value="false"/>
