@@ -227,6 +227,7 @@ public class Clifford implements ActionListener {
 							requiresTemp.add(new boolean[]{false, true, false, false});
 							requiresTemp.add(new boolean[]{true, false, false, false});
 							container.put("requires", requiresTemp); // Pull localization files for patching.
+							// TODO: container.put paths patched in fscript
 						}
 					} else {
 						container.put("loaderversion", 0);
