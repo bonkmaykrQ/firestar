@@ -24,8 +24,11 @@ import org.json.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.List;
 import javax.imageio.ImageIO;
@@ -238,9 +241,21 @@ public class Main {
 		Main.writeConf();
 	}
 
-	public static boolean downloadDependencies () { // todo: CHECKSUM!!!! THESE ARE EXECUTABLES!!!!!!!!!!! DON'T ALLOW MALWARE!!!!
-		boolean downloader = new Fozzie().DownloadFile("https://bonkmaykr.worlio.com/http/firestar/firesdk.zip", System.getProperty("user.home") + "/.firestar/", "firesdk.zip");
+	public static boolean downloadDependencies () {
+		boolean downloader = new Fozzie().DownloadFile("https://bonkmaykr.worlio.com/http/firestar/fire13.zip", System.getProperty("user.home") + "/.firestar/", "firesdk.zip", "Firestar dependencies");
 		if (!downloader) {return false;}
+
+        final String expectedMD5Hash = "306807955266724172476879569959042600238";  // Prevent a malicious web server takeover from installing malware on the user's computer.
+		String downloadedMD5Hash = "";											   // if this number does not match for ANY reason, cancel immediately and get a programmer.
+		try {downloadedMD5Hash = new BigInteger(1, MessageDigest.getInstance("MD5").digest(Files.readAllBytes(Paths.get(Main.inpath + "firesdk.zip")))).toString();}
+		catch (Exception e) {System.out.println("ERROR: Failed to download PSARC tool due to an internal problem.\n" + e.getMessage());}
+		if (!downloadedMD5Hash.equals(expectedMD5Hash)) {
+			System.out.println("ERROR: Downloaded PSARC tool is invalid. Check your network connection and ensure the file is not corrupt or infected.");
+			//Object[] options = {"Abort", "Retry"};
+			//int result = JOptionPane.showOptionDialog(new JFrame(), "The downloaded file failed a security check.\nPlease ensure your network connection is stable.\n\nIf this issue persists, send an email to tech support\nat bonkmaykr@screwgravity.net.", "Download Cancelled", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
+			JOptionPane.showMessageDialog(null, "The downloaded file failed a security check.\nPlease ensure your network connection is stable.\n\nIf this issue persists, send an email to tech support\nat bonkmaykr@screwgravity.net.", "Download Cancelled", JOptionPane.WARNING_MESSAGE);
+			return false;
+		}
 
 		ZipFile sdk = new ZipFile(System.getProperty("user.home") + "/.firestar/firesdk.zip");
 		try {
@@ -252,6 +267,7 @@ public class Main {
 		}
 		sdk.getFile().delete(); // cleanup
 
+		JOptionPane.showMessageDialog(null, "All remote dependencies satisfied.", "Download Completed", JOptionPane.INFORMATION_MESSAGE);
 		return true;
 	}
 

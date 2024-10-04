@@ -51,7 +51,7 @@ public class Fozzie {
 		frame.setIconImage(Main.windowIcon);
 		frame.setVisible(true);
 
-		label.setText("Downloading \"" + dname + "\"");
+		label.setText("Downloading " + dname);
 
 		try {
 			URL fileURL = new URL(url);
