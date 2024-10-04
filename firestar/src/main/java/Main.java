@@ -248,7 +248,10 @@ public class Main {
         final String expectedMD5Hash = "306807955266724172476879569959042600238";  // Prevent a malicious web server takeover from installing malware on the user's computer.
 		String downloadedMD5Hash = "";											   // if this number does not match for ANY reason, cancel immediately and get a programmer.
 		try {downloadedMD5Hash = new BigInteger(1, MessageDigest.getInstance("MD5").digest(Files.readAllBytes(Paths.get(Main.inpath + "firesdk.zip")))).toString();}
-		catch (Exception e) {System.out.println("ERROR: Failed to download PSARC tool due to an internal problem.\n" + e.getMessage());}
+		catch (Exception e) {
+			System.out.println("ERROR: Failed to download PSARC tool due to an internal problem.\n" + e.getMessage());
+			JOptionPane.showMessageDialog(null, "The file failed to download.\nPlease check your network connection and try again.\n\n" + e.getMessage(), "Download Failed", JOptionPane.WARNING_MESSAGE);
+		}
 		if (!downloadedMD5Hash.equals(expectedMD5Hash)) {
 			System.out.println("ERROR: Downloaded PSARC tool is invalid. Check your network connection and ensure the file is not corrupt or infected.");
 			//Object[] options = {"Abort", "Retry"};
