@@ -31,8 +31,11 @@ import java.math.RoundingMode;
 import java.net.URI;
 import java.nio.file.*;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Map;
+
 import net.lingala.zip4j.*;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -229,6 +232,16 @@ public class MissPiggy implements ActionListener {
 					if (metadata.has("author")) {m.author = metadata.get("author").toString();}
 					if (metadata.has("loaderversion")) {m.loaderversion = Integer.parseInt(metadata.get("loaderversion").toString());}
 					if (metadata.has("game")) {m.game = metadata.get("game").toString();}
+
+					if (m.loaderversion >= 1) {
+						// Firestar 1.3 features
+						if (metadata.has("requires"))
+							for (Object i : (ArrayList<Object>)((Map<String, Object>)metadata.toMap()).get("requires"))
+								m.requires.add(i.toString());
+						if (metadata.has("extracts"))
+							for (Object i : (ArrayList<Object>)((Map<String, Object>)metadata.toMap()).get("extracts"))
+								m.extracts.add(i.toString());
+					}
 
 					//send to list
 					Main.Mods.add(m);
@@ -460,7 +473,6 @@ public class MissPiggy implements ActionListener {
 	}
 
 	public void removeAllGUI() {
-		// todo warning dialog that nukes list when Yes is clicked
 		int result = JOptionPane.showConfirmDialog(frame, "Do you really want to delete all mods?", "Remove All", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 
 		if (result == JOptionPane.YES_OPTION) {

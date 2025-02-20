@@ -57,7 +57,7 @@ public class Main {
 
 	public enum ArcTarget { // install target for 2048, type used by downloader
 		BASE("http://zeus.dl.playstation.net/cdn/UP9000/PCSA00015_00/NYEoaBGfiWymSEVZKxoyrKyBFsZNoFqxdyAIpZayZYuLLbCAArYrYXjPNhKCfXcONmhIZzZEeArycSrjiJOuNMWuWsDONUxMIQtMk.pkg"),
-		FIRST("http://gs.ww.np.dl.playstation.net/ppkg/np/PCSA00015/PCSA00015_T5/a4b7d9e35ed56e86/UP9000-PCSA00015_00-WIPEOUT2048BASE0-A0104-V0100-059564fcab8ce66d19b5a563e92677e581313205-PE.pkg"), // TODO ALLOW DATA1 DOWNLOAD
+		FIRST("http://gs.ww.np.dl.playstation.net/ppkg/np/PCSA00015/PCSA00015_T5/a4b7d9e35ed56e86/UP9000-PCSA00015_00-WIPEOUT2048BASE0-A0104-V0100-059564fcab8ce66d19b5a563e92677e581313205-PE.pkg"),
 		LATEST("http://gs.ww.np.dl.playstation.net/ppkg/np/PCSA00015/PCSA00015_T5/a4b7d9e35ed56e86/UP9000-PCSA00015_00-WIPEOUT2048BASE0-A0104-V0100-059564fcab8ce66d19b5a563e92677e581313205-PE.pkg"),
 		ADDON_HD("http://zeus.dl.playstation.net/cdn/UP9000/PCSA00015_00/JYMqGNXUKqHEyNLjbOgrWcJdnQJUMzgadRFWekbWFBXAwMeGikOyiHkXKogKIfqGhtNwKgmNWwwcrJORmRUTDzylBPwjGVnVjyDfh.pkg"),
 		ADDON_HD_FURY("http://zeus.dl.playstation.net/cdn/UP9000/PCSA00015_00/IAoJQaDpySenBmQCKiqecEPMzSdPfPcdXupxZXLTYYTuRgtsdTaHxbeejwGKRQpjJOKBdMMFzSoeEhsHYxNUasQrEzkZPeBxUEqnp.pkg");
@@ -97,8 +97,8 @@ public class Main {
 		public int loaderversion = 0; //minimum required vint or feature level from Firestar
 		public String author; // if null, "Author is unknown."
 		public boolean enabled = true;
-		public List<boolean[]> requires = new ArrayList<>();  // TODO: load optional "requires" array from mod meta if it exists. it will be base, patches, hd dlc, and fury dlc in that order.
-															  // TODO: save 'false true false false' in ost gen if necessary (patches change localization)
+		public List<String> requires = new ArrayList<>();
+		public List<String> extracts = new ArrayList<>();
 	}
 
 	// Mods
@@ -127,7 +127,7 @@ public class Main {
 		System.out.printf("FIRESTAR MOD MANAGER for WipEout 2048\n" + vstr + " (codename " + vcode + ") major " + vint + "\n" +
 				"JVM host appears to be " + System.getProperty("os.name") +
 				"\nRunning from " + System.getProperty("user.dir") +
-				"\nCopyright (C) 2024  bonkmaykr\n\nThis program is free software: you can redistribute it and/or modify\n" +
+				"\nCopyright (C) 2025 Canithesis Interactive\n\nThis program is free software: you can redistribute it and/or modify\n" +
 				"it under the terms of the GNU General Public License as published by\n" +
 				"the Free Software Foundation, either version 3 of the License, or\n" +
 				"(at your option) any later version.\n" +
@@ -272,10 +272,6 @@ public class Main {
 
 		JOptionPane.showMessageDialog(null, "All remote dependencies satisfied.", "Download Completed", JOptionPane.INFORMATION_MESSAGE);
 		return true;
-	}
-
-	public static boolean callDownloaderStatically (String url, String folder, String name) {
-		return new Fozzie().DownloadFile(url, folder, name);
 	}
 	
 	public static Process exec(String[] cmd, String cwd) throws IOException {

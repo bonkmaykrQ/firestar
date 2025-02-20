@@ -163,12 +163,15 @@ public class Clifford implements ActionListener {
 				JOptionPane.showMessageDialog(frame, "Mod name cannot be empty.", "Error", JOptionPane.ERROR_MESSAGE);
 				return;
 			}
+
 			container.put("version", mod.version);
 			container.put("friendlyName", mod.friendlyName);
 			container.put("author", mod.author);
 			container.put("description", mod.description);
 			container.put("loaderversion", mod.loaderversion);
 			container.put("game", mod.game);
+			if (!mod.requires.isEmpty()) container.put("requires", mod.requires);
+			if (!mod.extracts.isEmpty()) container.put("extracts", mod.extracts);
 
 			try {
 				new ZipFile(System.getProperty("user.home") + "/.firestar/mods/" + mod.path.trim()).setComment(container.toString());
@@ -213,22 +216,39 @@ public class Clifford implements ActionListener {
 						hasScript = true;
 					}
 
+					ArrayList<String> requires = new ArrayList<>();
+					ArrayList<String> extracts = new ArrayList<>();
+					if (isSoundtrack) {
+						requires.add("data2.psarc");
+						extracts.add("data/plugins/music/Definition.xml");
+						extracts.add("data/plugins/languages/american/entries.xml");
+						extracts.add("data/plugins/languages/danish/entries.xml");
+						extracts.add("data/plugins/languages/dutch/entries.xml");
+						extracts.add("data/plugins/languages/english/entries.xml");
+						extracts.add("data/plugins/languages/finnish/entries.xml");
+						extracts.add("data/plugins/languages/french/entries.xml");
+						extracts.add("data/plugins/languages/german/entries.xml");
+						extracts.add("data/plugins/languages/italian/entries.xml");
+						extracts.add("data/plugins/languages/japanese/entries.xml");
+						extracts.add("data/plugins/languages/norwegian/entries.xml");
+						extracts.add("data/plugins/languages/polish/entries.xml");
+						extracts.add("data/plugins/languages/portuguese/entries.xml");
+						extracts.add("data/plugins/languages/russian/entries.xml");
+						extracts.add("data/plugins/languages/spanish/entries.xml");
+						extracts.add("data/plugins/languages/swedish/entries.xml");
+					}
+
 					JSONObject container = new JSONObject();
 					container.put("version", Integer.parseInt(fVersion.getText()));
 					container.put("friendlyName", fName.getText());
 					container.put("author", fAuthor.getText());
 					container.put("description", fDescription.getText());
+					if (!requires.isEmpty()) container.put("requires", requires);
+					if (!extracts.isEmpty()) container.put("extracts", extracts);
 					// todo later versions: handle logic for setting this depending on the fscript version too.
 					// firestar 1.3 can't generate any version other than v1 so this is not necessary right now, but will become necessary when fscript features are added.
 					if (hasScript) {
 						container.put("loaderversion", 1);
-						if (isSoundtrack) {
-							ArrayList<boolean[]> requiresTemp = new ArrayList<>();
-							requiresTemp.add(new boolean[]{false, true, false, false});
-							requiresTemp.add(new boolean[]{true, false, false, false});
-							container.put("requires", requiresTemp); // Pull localization files for patching.
-							// TODO: container.put paths patched in fscript
-						}
 					} else {
 						container.put("loaderversion", 0);
 					}
