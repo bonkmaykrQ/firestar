@@ -345,7 +345,11 @@ public class MissPiggy implements ActionListener {
 
 		if (actionEvent.getSource() == toolsMenu.getItem(0)) {metaEditorGUI(modList.getSelectedIndex());} else
 		if (actionEvent.getSource() == toolsMenu.getItem(1)) {generatorGUI();} else
-		if (actionEvent.getSource() == toolsMenu.getItem(2)) {new Suggs(frame);} else
+		if (actionEvent.getSource() == toolsMenu.getItem(2)) {
+			if (!new File(Main.inpath + "at9tool.exe").exists() || !new File(Main.inpath + "ffmpeg.exe").exists())
+			JOptionPane.showMessageDialog(frame, "Your AT9 encoders are missing.\nPlease select \"Get Dependencies\" in the Options menu.", "Error", JOptionPane.ERROR_MESSAGE);
+			else new Suggs(frame);
+		} else
 
 		if (actionEvent.getSource() == helpMenu.getItem(0)) {
 			try {

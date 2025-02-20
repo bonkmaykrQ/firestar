@@ -133,6 +133,10 @@ public class Waldorf implements ActionListener {
 			JOptionPane.showMessageDialog(frame, "PSARC files purged.", "Delete PSARCs", JOptionPane.INFORMATION_MESSAGE);
 		} else
 		if (actionEvent.getSource() == dwnARCbtn) {
+			if (!new File(Main.inpath + "pkg2zip.exe").exists() || !new File(Main.inpath + "psvpfsparser.exe").exists()) {
+				JOptionPane.showMessageDialog(frame, "Your decryption tools are missing.\nPlease select \"Get Dependencies\" in the Options menu.", "Error", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
 			new Bert(invoker.frame);
 			frame.dispose();
 		} else
