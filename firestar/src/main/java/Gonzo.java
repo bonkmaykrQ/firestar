@@ -25,10 +25,7 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.*;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -114,22 +111,42 @@ public class Gonzo {
 
 		// create temporary working area for asset dump
 		new File(System.getProperty("user.home") + "/.firestar/temp/").mkdirs();
+		new File(System.getProperty("user.home") + "/.firestar/temparcs/").mkdirs();
+
+		// Work from bottom to top, mods on top always overwrite the ones on the bottom.
+		List<Main.Mod> modsFlipped = new ArrayList<>(Main.Mods);
+		Collections.reverse(modsFlipped);
 
 		// decide which files to dump
 		List<String> dumpThese = new ArrayList<String>();
-		if (data0) {dumpThese.add("data.psarc");oArcTarget = "data.psarc";}
-		if (data1) {dumpThese.add("data1.psarc");oArcTarget = "data1.psarc";}
-		if (data2) {dumpThese.add("data2.psarc");oArcTarget = "data2.psarc";}
-		if (dlc1) {dumpThese.add("dlc1.psarc");oArcTarget = "dlc1.psarc";}
-		if (dlc2) {dumpThese.add("dlc2.psarc");oArcTarget = "dlc2.psarc";}
+		for (Main.Mod m : modsFlipped) {
+			if (m.enabled) {
+				System.out.println(m.friendlyName + " : " + m.requires.toString() + " : " + m.extracts.toString());
+				for (String r : m.requires) if (!dumpThese.contains(r)) dumpThese.add(r);
+			}
+		}
+		if (data0) oArcTarget = "data.psarc";
+		if (data1) oArcTarget = "data1.psarc";
+		if (data2) oArcTarget = "data2.psarc";
+		if (dlc1) oArcTarget = "dlc1.psarc";
+		if (dlc2) oArcTarget = "dlc2.psarc";
+		dumpThese.remove(oArcTarget); dumpThese.add(oArcTarget); // Always dump the base game last. TODO should we allow mods to specify otherwise??
+		System.out.println("List of files to dump: " + dumpThese);
 
 		// dump all assets to working area
 		for (String s : dumpThese) {
 			try {
+				if (!(new File(Main.inpath + s).exists()))
+					throw new IOException("A mod requested access to the archive \"" + s + "\" but it doesn't exist!");
+
 				System.out.println("Firestar is extracting " + s);
 				consoleDisplay.append("Firestar is extracting " + s + "\n");
-				//Process p = Runtime.getRuntime().exec(new String[]{"bash","-c","aplay /home/bonkyboo/kittens_loop.wav"}); // DEBUG
-				Process p = Main.exec(new String[]{Main.inpath + "psp2psarc.exe", "extract", "-y", "../"+s}, System.getProperty("user.home") + "/.firestar/temp/");
+				Process p;
+				if (s.equals(oArcTarget)) p = Main.exec(new String[]{Main.inpath + "psp2psarc.exe", "extract", "-y", "../"+s}, System.getProperty("user.home") + "/.firestar/temp/");
+				else {
+					new File(System.getProperty("user.home") + "/.firestar/temparcs/" + s + "/").mkdirs();
+					p = Main.exec(new String[]{Main.inpath + "psp2psarc.exe", "extract", "-y", "../../"+s}, System.getProperty("user.home") + "/.firestar/temparcs/" + s + "/");
+				}
 				final Thread ioThread = new Thread() {
 					@Override
 					public void run() {
@@ -163,14 +180,36 @@ public class Gonzo {
 
 		// overwrite assets with custom ones from each mod and/or perform operations as specified in mod's delete list
 		// todo: implement RegEx functions after delete.txt
-		List<Main.Mod> modsFlipped = new ArrayList<>(Main.Mods);
-		Collections.reverse(modsFlipped);
 		for (Main.Mod m : modsFlipped) {
 			if (m.enabled) {
 				try {
 					System.out.println("Firestar is extracting " + m.friendlyName + " by " + m.author);
 					consoleDisplay.append("Firestar is extracting " + m.friendlyName + " by " + m.author + "\n");
 					new ZipFile(System.getProperty("user.home") + "/.firestar/mods/" + m.path).extractAll(System.getProperty("user.home") + "/.firestar/temp/");
+
+					if (!m.requires.isEmpty() && !m.extracts.isEmpty()) {
+						for (String r : m.requires) {
+							for (String e : m.extracts) {
+								File f = new File(Main.inpath + "temparcs/" + r + "/" + e);
+								File f2 = new File(Main.inpath + "temp/" + e);
+								if (f2.exists()) {
+									System.out.println("File \"" + e + "\" already exists in master PSARC. Ignoring.");
+									consoleDisplay.append("File \"" + e + "\" already exists in master PSARC. Ignoring." + "\n");
+								}
+								else if (f.exists()) {
+									Path src = Paths.get(Main.inpath + "temparcs/" + r + "/" + e);
+									Path dest = Paths.get(Main.inpath + "temp/" + e);
+									System.out.println("Copying extra file " + e + " from " + r);
+									consoleDisplay.append("Copying extra file " + e + " from " + r + "\n");
+									new File(dest.getParent().toString()).mkdirs();
+									Files.copy(src, dest, StandardCopyOption.COPY_ATTRIBUTES);
+								} else throw new IOException("A mod requested access to the file \"" + e + "\" from archive " + r + " but it wasn't there!");
+							}
+						}
+					} else if (!m.extracts.isEmpty()) {
+						System.out.println("WARNING: " + m.friendlyName + " by " + m.author + "tried to extract individual files without specifying a source PSARC in requires[]. Ignoring.");
+						consoleDisplay.append("WARNING: " + m.friendlyName + " by " + m.author + "tried to extract individual files without specifying a source PSARC in requires[]. Ignoring." + "\n");
+					}
 
 					File fscript = new File(Main.inpath + "temp/fscript");
 					if (fscript.exists()) {
@@ -324,7 +363,9 @@ public class Gonzo {
 		}
 		try {
 			File tmp = new File(System.getProperty("user.home") + "/.firestar/temp/");
+			File tmp2 = new File(System.getProperty("user.home") + "/.firestar/temparcs/");
 			Main.deleteDir(tmp);
+			Main.deleteDir(tmp2);
 		} catch (Exception e) {
 			System.out.println("WARNING: Temporary files may not have been properly cleared.\n" + e.getMessage());
 			consoleDisplay.append("WARNING: Temporary files may not have been properly cleared.\n" + e.getMessage());
