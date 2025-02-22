@@ -35,6 +35,7 @@ public class Bert implements ActionListener {
 	private JRadioButton patchCheck2;
 	private JCheckBox hdCheck;
 	private JCheckBox furyCheck;
+	private JCheckBox skipBaseCheck;
 	private ButtonGroup radios = new ButtonGroup();
 
 	private JFrame invoker;
@@ -61,6 +62,9 @@ public class Bert implements ActionListener {
 
 		cancelbtn.addActionListener(this);
 		downloadbtn.addActionListener(this);
+		baseCheck.addActionListener(this);
+		patchCheck1.addActionListener(this);
+		patchCheck2.addActionListener(this);
 
 		frame.setIconImage(Main.windowIcon);
 
@@ -79,6 +83,9 @@ public class Bert implements ActionListener {
 			invoker.setEnabled(true);
 			frame.dispose();
 		}
+
+		if (new File(Main.inpath + "data2.psarc").exists())
+			skipBaseCheck.setEnabled(true);
 	}
 
 	public boolean reportWhenDownloaded(WilkinsCoffee setup) {
@@ -92,6 +99,12 @@ public class Bert implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent actionEvent) {
+		if (actionEvent.getSource() == baseCheck)
+			skipBaseCheck.setEnabled(new File(Main.inpath + "data.psarc").exists()); else
+		if (actionEvent.getSource() == patchCheck1)
+			skipBaseCheck.setEnabled(new File(Main.inpath + "data1.psarc").exists()); else
+		if (actionEvent.getSource() == patchCheck2)
+			skipBaseCheck.setEnabled(new File(Main.inpath + "data2.psarc").exists()); else
 		if (actionEvent.getSource() == cancelbtn) {
 			invoker.setEnabled(true);
 			frame.dispose();
@@ -108,34 +121,40 @@ public class Bert implements ActionListener {
 			// selected (the exact radio button). The user can redownload one at a time
 			// but Firestar will not overwrite existing PSARCs otherwise.
 			if (baseCheck.isSelected()) { // I have the base game
-				arcs.add(Main.ArcTarget.BASE);
-				keys.add(Main.ArcKey.BASE);
-				System.out.println("Begin download of data (Game version 1.0)");
+				if (!skipBaseCheck.isSelected() || !new File(Main.inpath + "data.psarc").exists()) {
+					arcs.add(Main.ArcTarget.BASE);
+					keys.add(Main.ArcKey.BASE);
+					System.out.println("Queued download of data (Game version 1.0)");
+				}
 			}
 			if (patchCheck1.isSelected()) { // I updated it once after it came out and then didn't turn my vita on for thousands of years
 				if (!new File(Main.inpath + "data.psarc").exists()) {
 					arcs.add(Main.ArcTarget.BASE);
 					keys.add(Main.ArcKey.BASE);
-					System.out.println("Begin download of data (Game version 1.0)");
+					System.out.println("Queued download of data (Game version 1.0)");
 				}
-				arcs.add(Main.ArcTarget.FIRST);
-				keys.add(Main.ArcKey.FIRST);
-				System.out.println("Begin download of data1 (Game version 1.01)");
+				if (!skipBaseCheck.isSelected() || !new File(Main.inpath + "data1.psarc").exists()) {
+					arcs.add(Main.ArcTarget.FIRST);
+					keys.add(Main.ArcKey.FIRST);
+					System.out.println("Queued download of data1 (Game version 1.01)");
+				}
 			}
 			if (patchCheck2.isSelected()) { // I'm a normal fucking person
 				if (!new File(Main.inpath + "data.psarc").exists()) {
 					arcs.add(Main.ArcTarget.BASE);
 					keys.add(Main.ArcKey.BASE);
-					System.out.println("Begin download of data (Game version 1.0)");
+					System.out.println("Queued download of data (Game version 1.0)");
 				}
 				if (!new File(Main.inpath + "data1.psarc").exists()) {
 					arcs.add(Main.ArcTarget.FIRST);
 					keys.add(Main.ArcKey.FIRST);
-					System.out.println("Begin download of data1 (Game version 1.01)");
+					System.out.println("Queued download of data1 (Game version 1.01)");
 				}
-				arcs.add(Main.ArcTarget.LATEST);
-				keys.add(Main.ArcKey.LATEST);
-				System.out.println("Begin download of data2 (Game version 1.04)");
+				if (!skipBaseCheck.isSelected() || !new File(Main.inpath + "data2.psarc").exists()) {
+					arcs.add(Main.ArcTarget.LATEST);
+					keys.add(Main.ArcKey.LATEST);
+					System.out.println("Queued download of data2 (Game version 1.04)");
+				}
 			}
 
 			// DLC are installed arbitrarily, separate of the game, and can remain as checkboxes with the old logic.
@@ -143,15 +162,17 @@ public class Bert implements ActionListener {
 			if (hdCheck.isSelected()) {
 				arcs.add(Main.ArcTarget.ADDON_HD);
 				keys.add(Main.ArcKey.ADDON_HD);
-				System.out.println("Begin download of dlc1 (HD DLC)");
+				System.out.println("Queued download of dlc1 (HD DLC)");
 			}
 			if (furyCheck.isSelected()) {
 				arcs.add(Main.ArcTarget.ADDON_HD_FURY);
 				keys.add(Main.ArcKey.ADDON_HD_FURY);
-				System.out.println("Begin download of dlc2 (Fury DLC)");
+				System.out.println("Queued download of dlc2 (Fury DLC)");
 			}
 			if (arcs.isEmpty()) {
+				frame.setVisible(false);
 				JOptionPane.showMessageDialog(invoker, "Select one or more asset packs.", "Error", JOptionPane.ERROR_MESSAGE);
+				frame.setVisible(true);
 				return;
 			}
 
