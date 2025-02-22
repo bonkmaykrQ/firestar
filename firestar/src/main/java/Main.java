@@ -108,7 +108,7 @@ public class Main {
 	public static Font fExo2;
 	public static BufferedImage windowIcon;
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException {
 		// get Nightly information from Jenkins automatic builds
 		if (Main.class.getResource("/jenkinsVersionString") != null) {
 			System.out.println("=== This is a NIGHTLY BUILD! ===\n");
@@ -139,6 +139,9 @@ public class Main {
 				"\n" +
 				"You should have received a copy of the GNU General Public License\n" +
 				"along with this program.  If not, see https://www.gnu.org/licenses/.\n\n\n\n");
+
+		// display splash screen
+		new Beaker();
 
 		// load global assets
 		try {
