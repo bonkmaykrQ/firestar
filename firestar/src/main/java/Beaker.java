@@ -41,7 +41,7 @@ public class Beaker {
         splashImg.setIcon(new ImageIcon(logo));splashImg.setText("");
 
         // display window
-        frame.setSize(640, 480);
+        frame.setSize(640, 450);
         frame.setTitle("Firestar Mod Manager");
         frame.setUndecorated(true);
         frame.setResizable(false);
