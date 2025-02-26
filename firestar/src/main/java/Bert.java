@@ -36,6 +36,13 @@ public class Bert implements ActionListener {
 	private JCheckBox hdCheck;
 	private JCheckBox furyCheck;
 	private JCheckBox skipBaseCheck;
+	private JPanel installedList;
+	private JLabel ipcBase;
+	private JLabel ipcPatch1;
+	private JLabel ipcPatch2;
+	private JLabel ipcDlcHD;
+	private JLabel ipcDlcFury;
+	private JPanel installedListMargin;
 	private ButtonGroup radios = new ButtonGroup();
 
 	private JFrame invoker;
@@ -65,6 +72,8 @@ public class Bert implements ActionListener {
 		baseCheck.addActionListener(this);
 		patchCheck1.addActionListener(this);
 		patchCheck2.addActionListener(this);
+
+		refreshChecklist();
 
 		frame.setIconImage(Main.windowIcon);
 
@@ -340,5 +349,21 @@ public class Bert implements ActionListener {
 			});
 			downloaderPopupThread.start();
 		}
+	}
+
+	private void refreshChecklist() {
+		ImageIcon positive = new ImageIcon(Main.class.getResource("/lightPositive.png"));
+		ImageIcon negative = new ImageIcon(Main.class.getResource("/lightNegative.png"));
+
+		if(new File(Main.inpath + "data.psarc").exists())
+			ipcBase.setIcon(positive); else ipcBase.setIcon(negative);
+		if(new File(Main.inpath + "data1.psarc").exists())
+			ipcPatch1.setIcon(positive); else ipcPatch1.setIcon(negative);
+		if(new File(Main.inpath + "data2.psarc").exists())
+			ipcPatch2.setIcon(positive); else ipcPatch2.setIcon(negative);
+		if(new File(Main.inpath + "dlc1.psarc").exists())
+			ipcDlcHD.setIcon(positive); else ipcDlcHD.setIcon(negative);
+		if(new File(Main.inpath + "dlc2.psarc").exists())
+			ipcDlcFury.setIcon(positive); else ipcDlcFury.setIcon(negative);
 	}
 }
