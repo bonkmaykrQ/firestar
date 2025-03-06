@@ -9,12 +9,12 @@
 # Installation
 The latest version of Firestar will always be available from [Releases](https://git.worlio.com/bonkmaykr/firestar/releases).  
 If you aren't sure which file to get:
-- **Windows:** Download the latest installer [here](https://files.worlio.com/users/bonkmaykr/tools/firestar/latest/firestar_1.2_installer_windows.exe).
+- **Windows:** Download the latest installer [here](https://screwgravity.net/firestar/builds/stable/tetsuo/firestar_1.3_installer_winnt_x86-64.exe).
 - **Linux:** Install one of the packages from the [Releases](https://git.worlio.com/bonkmaykr/firestar/releases) page:
   - Ubuntu, Mint, PopOS: `sudo dpkg -i firestar_ver_arch.deb` or `gdebi firestar_ver_arch.deb`
   - Fedora, Mageia, OpenSUSE, AlmaLinux: `sudo rpm -i firestar-ver-arch.rpm`
   - Arch, EndeavourOS, CachyOS, Steam Deck: `sudo pacman -U firestar-ver-arch.pkg.tar.zst`
-- **All Platforms:** Grab the [Portable ZIP](https://files.worlio.com/users/bonkmaykr/tools/firestar/latest/firestar_dekka-1.2_portable.zip), extract it, and run the JAR file.
+- **All Platforms:** Grab the [JAR](https://screwgravity.net/firestar/builds/stable/tetsuo/firestar_1.3_portable.jar) and run it.
 
 # System Requirements
 - Windows 8 or newer, Mac OS X 10.14 or older, any modern version of Linux/BSD
