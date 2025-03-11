@@ -36,9 +36,9 @@ import javax.swing.*;
 
 public class Main {
 	// Build Information
-	public static String vstr = "Release 1.3";
+	public static String vstr = "Release 1.3.1";
 	public static final String vcode = "Tetsuo";
-	public static final String vtag = "tetsuo-1.3"; // set to dekka-1.1 for testing
+	public static final String vtag = "tetsuo-1.3.1"; // set to dekka-1.1 for testing
 	public static final int vint = 1;
 
 	// Jenkins Build Information
