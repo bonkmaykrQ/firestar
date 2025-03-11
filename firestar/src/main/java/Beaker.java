@@ -31,7 +31,7 @@ public class Beaker {
 
     public Beaker() throws InterruptedException {
         try {
-            logo = ImageIO.read(Main.class.getResourceAsStream("/splash"+(int)(Math.random()*11)+".png")).getScaledInstance(640, 400, Image.SCALE_SMOOTH);
+            logo = ImageIO.read(Main.class.getResourceAsStream("/splash"+(int)(Math.random()*10)+".png")).getScaledInstance(640, 400, Image.SCALE_SMOOTH);
         } catch (IOException e) {
             System.out.println("ERROR: Uhhhhhhhhhhh........... what?");
             return;
@@ -51,7 +51,7 @@ public class Beaker {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
 
-        Thread.sleep(2000);
+        Thread.sleep(3000);
 
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.dispose();

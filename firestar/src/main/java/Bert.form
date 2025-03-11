@@ -63,7 +63,7 @@
                 <properties>
                   <font name="Exo 2"/>
                   <foreground color="-1"/>
-                  <text value=" If you add/remove DLC in the future, you will need to change this setting again."/>
+                  <text value="Downloading a game update will automatically download its previous versions."/>
                 </properties>
               </component>
             </children>

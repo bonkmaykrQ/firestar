@@ -43,7 +43,7 @@ public class Main {
 
 	// Jenkins Build Information
 	public static boolean isNightly = false;
-	public static final String vtagPrevious = "tetsuo-1.3";
+	public static final String vtagPrevious = "tetsuo-1.3.1";
 	public static String dateOfCompile = null;
 
 	// User Settings
