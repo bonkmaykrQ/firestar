@@ -4,7 +4,7 @@
 
 ## Get Started: [>> CLICK HERE <<](https://git.worlio.com/bonkmaykr/firestar/wiki)
 
-![](https://files.worlio.com/users/bonkmaykr/http/git/embed/2024-07-12_15-02.png)
+![](https://files.worlio.com/users/bonkmaykr/http/git/embed/ScreenShot.'Main'.0x8000024.20250820.135157.png)
 
 # Installation
 The latest version of Firestar will always be available from [Releases](https://git.worlio.com/bonkmaykr/firestar/releases).  
@@ -51,7 +51,6 @@ Firestar uses the Gradle build system. We write our code and perform all our tes
     ```
 
 3. `cd` to `firestar/` and run `gradle build` to make a JAR or `gradle run` to test your code immediately.
-- On Windows systems make sure you're running `gradlew.bat` and not the Bash script instead.
 
 # FAQ
 ## Can I use this on a Vita without enso/HEN?
@@ -78,21 +77,6 @@ Firestar itself can run natively on the system, but it needs WINE in order to ha
 **If you are on Mac OS X you will need an older OS version that is still compatible with 32-bit applications.**
 
 # Developer Commentary
-## Programmer SOP
-When adding new features to Firestar, the Screw Gravity! team (loosely) follows this procedure:
-1. The developer prototypes the feature, in part or in full, on a Linux system.
-2. After completion, a QEMU/KVM running Windows 10 w/ VC++ 2012 libs and the latest JDK is deployed to test Firestar on.
-3. Code refactoring is done to account for Windows bugs. 
-4. The final commit is pushed.
-
-Try to stick to these conventions:
-- Avoid allowing the user to interact with the main window (MissPiggy.java) while another menu is open that alters any data, and keep this window Always-on-top. This is usually done by passing the master JFrame as a parameter to the child and telling it to freeze the parent's JFrame until the user closes that menu.
-- Keep formatting consistent and readable. 
-    - `if` statements should have a space separating the conditions and code block.
-    - Use tabs instead of repeat spaces for indentation where possible and keep one indentation per layer, avoid flattening unless appropriate.
-    - Split up long equations and statements into new lines with an operator at the start of the new line.
-    - Divide really long functions into paragraph for certain major steps.
-
 ## Third Party Code
 Firestar is built on top of the following additional software:
 - *[WINE](https://www.winehq.org/), for running the below applications across platforms.
@@ -118,6 +102,3 @@ Cross-platform support with no hassle, a built-in UI framework, and I don't need
 
 ## Why the name "Firestar"?
 Firestar was a secret track in the original WipEout which you unlocked after beating the game at least once, the mod manager is just named after that. Major versions are named after pilots or tracks. Internal class names are named after Muppets characters as this is the same naming convention that Sony used to codename parts inside the PSVita's SOC.
-
-## Fast Mode vs. Compatibility Mode
-"Fast Mode" was a legacy option that was scrapped before it could be developed. It skipped the creation of a PSARC file and simply dumped the final game assets to their destination folder. This works great for emulators, and doesn't require proprietary stolen SDKs from SCE. However the filesystem on the Playstation Vita really hated this method and would glitch out when this was done, causing textures to be corrupted once placed on the memory card. The WipEout engine has no fault tolerance for malformed or missing assets, so it just crashes instantly when it encounters one. This is where Compatibility mode comes from, which is the default setting for 2048.
